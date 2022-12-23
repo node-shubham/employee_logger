@@ -4,6 +4,7 @@
 	
 	int main()
 	{
+		printf("hello world");
 		
 		
 		while(1)
