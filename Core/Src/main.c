@@ -65,7 +65,7 @@ unsigned char symbol_key1 = {'@'};
 unsigned char num = {'0'};
 
 bool UC_FLAG =1;
-bool BTN_FLAG =0;
+bool BTN_FLAG =1;
 
 	
 	/*if(UC_FLAG)
