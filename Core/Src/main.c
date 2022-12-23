@@ -64,8 +64,8 @@ unsigned char symbol_key[] = {'!','#','%','_','&','-','+','(',')','/'};
 unsigned char symbol_key1 = {'@'};
 unsigned char num = {'0'};
 
-bool UC_FLAG =1;
-bool BTN_FLAG =1;
+bool UC_FLAG =0;
+bool BTN_FLAG =0;
 
 	
 	/*if(UC_FLAG)
@@ -145,8 +145,11 @@ int main(void)
 		
 		if(touchX >= 50 && touchX <= 145 && touchY >= 290 && touchY <= 350)
 		{
-			UC_FLAG = !UC_FLAG;
-			keypad2();	
+			if(BTN_FLAG == 0)
+			{
+				UC_FLAG = !UC_FLAG;
+				keypad2();
+			}	
 		}
 		if(touchX >= 50 && touchX <= 145 && touchY >= 360 && touchY <= 420)
 		{
@@ -476,6 +479,7 @@ void keypad2(void)
 					if(BTN_FLAG)
 					{
 						print_char(87+x,73+y,num+j,BLACK);
+						
 					}
 					else
 					{
