@@ -35,5 +35,5 @@ smart_attendance/main.o: ..\Core\Src\main.c ..\Core\Inc\main.h \
   C:\Keil_v5\ARM\ARMCLANG\Bin\..\include\stdio.h \
   C:\Keil_v5\ARM\ARMCLANG\Bin\..\include\stdlib.h ..\MDK-ARM\ssd1963.h \
   ..\MDK-ARM\types.h ..\MDK-ARM\fonts.h ..\MDK-ARM\xpt2046.h \
-  C:\Keil_v5\ARM\ARMCLANG\Bin\..\include\stdbool.h \
+  ..\MDK-ARM\fonts.h C:\Keil_v5\ARM\ARMCLANG\Bin\..\include\stdbool.h \
   C:\Keil_v5\ARM\ARMCLANG\Bin\..\include\math.h

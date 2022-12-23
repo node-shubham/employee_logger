@@ -87,6 +87,8 @@ void Error_Handler(void);
 #define INPUT_3_GPIO_Port GPIOB
 #define XPT_CS_Pin GPIO_PIN_12
 #define XPT_CS_GPIO_Port GPIOB
+#define test_git_Pin GPIO_PIN_12
+#define test_git_GPIO_Port GPIOA
 #define RD_Pin GPIO_PIN_8
 #define RD_GPIO_Port GPIOB
 #define RST_Pin GPIO_PIN_9
