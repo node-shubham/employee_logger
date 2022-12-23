@@ -4,12 +4,13 @@
 	
 	int main()
 	{
-		printf("hello world");
+		printf("hello world\n");
 		
 		
 		while(1)
 		{
 			var++;
+			printf("var : %d",var);
 		}
 	
 	}
