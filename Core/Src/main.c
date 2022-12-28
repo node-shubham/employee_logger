@@ -185,30 +185,18 @@ int main(void)
 				{
 					if(touchX >= 50+x && touchX <= 110+x && touchY >= 50+y && touchY <= 110+y)
 					{
-						char_cnt++;
+						HAL_Delay(200);						
 						str[char_cnt]= key1[j];
 						if(UC_FLAG)
 						{				      
-							print_char(260+(char_cnt*16),100,str[char_cnt],BLUE);
-							
+							print_char(200+(char_cnt*20),110,str[char_cnt],BLUE);							
 						}
 						else
 						{
-							print_char(260+(char_cnt*16),100,str[char_cnt]+32,BLUE);
+							print_char(200+(char_cnt*20),110,str[char_cnt]+32,BLUE);
 						}
-						/*
-						string[p] = key1[j];
-						if(UC_FLAG)
-						{
-				      
-							print_char(260+l,100,string[p],BLUE);
-							
-						}
-						else
-						{
-							print_char(260+l,100,key1[j]+32,BLUE);
-						}
-						*/
+						char_cnt++;
+
 					
 					}
 				}
@@ -218,7 +206,7 @@ int main(void)
 				}
 				
 				x+=70;
-				l+=12;
+
 			}
 			k=1;
 			
