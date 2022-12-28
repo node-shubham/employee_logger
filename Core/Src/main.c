@@ -52,6 +52,8 @@ SPI_HandleTypeDef hspi2;
 UART_HandleTypeDef huart1;
 
 /* USER CODE BEGIN PV */
+uint8_t char_cnt=0;
+char str[50]={0};
 
 uint16_t touchX = 0;
 uint16_t touchY = 0;
@@ -173,7 +175,8 @@ int main(void)
 			string[a] = temp;
 	  }		
 		
-		
+		/*****************************************************************************/
+		#if 1
 		for(int i=0; i<3; i++)
 		{
 			for(int j=0; j<=9-(i*2-k); j++)
@@ -182,6 +185,18 @@ int main(void)
 				{
 					if(touchX >= 50+x && touchX <= 110+x && touchY >= 50+y && touchY <= 110+y)
 					{
+						char_cnt++;
+						str[char_cnt]= key1[j];
+						if(UC_FLAG)
+						{				      
+							print_char(260+(char_cnt*16),100,str[char_cnt],BLUE);
+							
+						}
+						else
+						{
+							print_char(260+(char_cnt*16),100,str[char_cnt]+32,BLUE);
+						}
+						/*
 						string[p] = key1[j];
 						if(UC_FLAG)
 						{
@@ -193,7 +208,7 @@ int main(void)
 						{
 							print_char(260+l,100,key1[j]+32,BLUE);
 						}
-						
+						*/
 					
 					}
 				}
@@ -208,6 +223,8 @@ int main(void)
 			k=1;
 			
 		}
+		#endif
+		/*****************************************************************************/
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
