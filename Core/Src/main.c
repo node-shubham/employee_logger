@@ -63,9 +63,12 @@ unsigned char key3[] = {'Z','X','C','V','B','N','M'};
 unsigned char symbol_key[] = {'!','#','%','_','&','-','+','(',')','/'};
 unsigned char symbol_key1 = {'@'};
 unsigned char num = {'0'};
+unsigned char string[100];
 
 bool UC_FLAG =0;
 bool BTN_FLAG =0;
+
+
 
 	
 	/*if(UC_FLAG)
@@ -143,7 +146,11 @@ int main(void)
 		touchY = (470 - getY());
 		HAL_Delay(100);
 		
-		if(touchX >= 50 && touchX <= 145 && touchY >= 290 && touchY <= 350)
+		int temp,x=0,y=150,k=0,l=0,p=0;
+		Set_Font(&Font16x24);
+		
+		
+		if(touchX >= 50 && touchX <= 145 && touchY >= 340 && touchY <= 400)
 		{
 			if(BTN_FLAG == 0)
 			{
@@ -151,10 +158,55 @@ int main(void)
 				keypad2();
 			}	
 		}
-		if(touchX >= 50 && touchX <= 145 && touchY >= 360 && touchY <= 420)
+		if(touchX >= 50 && touchX <= 145 && touchY >= 410 && touchY <= 470)
 		{
 			BTN_FLAG = !BTN_FLAG;
 			keypad2();
+		}
+		int a =0;
+
+		for(int i=0; i<10; i++)
+		{
+			
+			temp = string[i];
+			string[i] = string[a];
+			string[a] = temp;
+	  }		
+		
+		
+		for(int i=0; i<3; i++)
+		{
+			for(int j=0; j<=9-(i*2-k); j++)
+			{
+				if(i == 0)
+				{
+					if(touchX >= 50+x && touchX <= 110+x && touchY >= 50+y && touchY <= 110+y)
+					{
+						string[p] = key1[j];
+						if(UC_FLAG)
+						{
+				      
+							print_char(260+l,100,string[p],BLUE);
+							
+						}
+						else
+						{
+							print_char(260+l,100,key1[j]+32,BLUE);
+						}
+						
+					
+					}
+				}
+				if(i == 1)
+				{
+					
+				}
+				
+				x+=70;
+				l+=12;
+			}
+			k=1;
+			
 		}
     /* USER CODE END WHILE */
 
@@ -466,7 +518,7 @@ void keypad2(void)
 {
 	Set_Font(&Font16x26);
 	fill_screen(WHITE);
-	int x=0,y=100,k=0;
+	int x=0,y=150,k=0;
 	for(int i=0; i<3; i++)
 	{
 		for(int j=0; j<=9-(i*2-k); j++)
@@ -574,6 +626,9 @@ void keypad2(void)
 	
 	draw_rect(225,565,260+y,320+y,KEY_COLOR); // space
 	print_string(375,275+y,"Space",BLACK);
+	
+	draw_rect(190,600,100,140,BLUE);
+	draw_rect(190,600,150,190,BLUE);
 
 }
 
