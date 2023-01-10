@@ -1,0 +1,13 @@
+../Core/Src/main.c:83:5:main	8	static
+../Core/Src/main.c:121:6:sysclock_config	80	static
+../Core/Src/main.c:151:6:gpio_init	40	static
+../Core/Src/main.c:214:6:uart_init	8	static
+../Core/Src/main.c:231:6:tim5_init	8	static
+../Core/Src/main.c:246:6:spi1_init	8	static
+../Core/Src/main.c:267:6:spi2_init	8	static
+../Core/Src/main.c:288:6:i2c2_init	8	static
+../Core/Src/main.c:302:6:HAL_TIM_PeriodElapsedCallback	16	static
+../Core/Src/main.c:324:13:read_touch	8	static
+../Core/Src/main.c:333:6:check_validcard	48	static
+../Core/Src/main.c:350:6:rfid_app	16	static
+../Core/Src/main.c:375:6:error_handler	8	static
