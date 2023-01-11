@@ -1,5 +1,0 @@
-../Core/Src/msp.c:14:6:HAL_MspInit	16	static
-../Core/Src/msp.c:22:6:HAL_UART_MspInit	48	static
-../Core/Src/msp.c:45:6:HAL_SPI_MspInit	56	static
-../Core/Src/msp.c:77:6:HAL_TIM_Base_MspInit	24	static
-../Core/Src/msp.c:89:6:HAL_I2C_MspInit	48	static
