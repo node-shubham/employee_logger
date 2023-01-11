@@ -1,5 +1,0 @@
-../ssd1963/src/display_config.c:6:6:test_color	8	static
-../ssd1963/src/display_config.c:27:6:test_pixel	8	static
-../ssd1963/src/display_config.c:39:6:test_increment	48	static
-../ssd1963/src/display_config.c:59:6:v_slider	40	static
-../ssd1963/src/display_config.c:66:6:h_slider	40	static
