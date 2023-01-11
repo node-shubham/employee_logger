@@ -11,6 +11,14 @@ RM := rm -rf
 -include sources.mk
 -include ssd1963/src/subdir.mk
 -include ssd1963/inc/subdir.mk
+-include mrfc522/src/subdir.mk
+-include ThirdParty/SEGGER/SEGGER/Syscalls/subdir.mk
+-include ThirdParty/SEGGER/SEGGER/subdir.mk
+-include ThirdParty/SEGGER/OS/subdir.mk
+-include ThirdParty/SEGGER/Config/subdir.mk
+-include ThirdParty/FreeRTOS/portable/MemMang/subdir.mk
+-include ThirdParty/FreeRTOS/portable/GCC/ARM_CM4F/subdir.mk
+-include ThirdParty/FreeRTOS/subdir.mk
 -include Drivers/STM32F4xx_HAL_Driver/Src/subdir.mk
 -include Core/Startup/subdir.mk
 -include Core/Src/subdir.mk

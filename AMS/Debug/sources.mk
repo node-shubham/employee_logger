@@ -24,6 +24,14 @@ SUBDIRS := \
 Core/Src \
 Core/Startup \
 Drivers/STM32F4xx_HAL_Driver/Src \
+ThirdParty/FreeRTOS \
+ThirdParty/FreeRTOS/portable/GCC/ARM_CM4F \
+ThirdParty/FreeRTOS/portable/MemMang \
+ThirdParty/SEGGER/Config \
+ThirdParty/SEGGER/OS \
+ThirdParty/SEGGER/SEGGER \
+ThirdParty/SEGGER/SEGGER/Syscalls \
+mrfc522/src \
 ssd1963/inc \
 ssd1963/src \
 

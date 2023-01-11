@@ -19,19 +19,58 @@ void HAL_MspInit(void)
 
 }
 
+void HAL_UART_MspInit(UART_HandleTypeDef *huart)
+{
+	// enable the peripheral clock
+	__HAL_RCC_GPIOA_CLK_ENABLE();
+	__HAL_RCC_USART1_CLK_ENABLE();
+
+	GPIO_InitTypeDef gpio_uart;
+
+	gpio_uart.Pin = GPIO_PIN_9 | GPIO_PIN_10;
+	gpio_uart.Mode 	=GPIO_MODE_AF_PP;
+	gpio_uart.Speed = GPIO_SPEED_FREQ_LOW;
+	gpio_uart.Pull = GPIO_PULLUP;
+	gpio_uart.Alternate = GPIO_AF7_USART1;
+
+	HAL_GPIO_Init(GPIOA, &gpio_uart);
+
+	// enable NVIC irq line
+	HAL_NVIC_EnableIRQ(USART1_IRQn);
+	HAL_NVIC_SetPriority(USART1_IRQn, 15, 0);
+
+}
+
 
 void HAL_SPI_MspInit(SPI_HandleTypeDef *hspi)
 {
-	__HAL_RCC_SPI2_CLK_ENABLE();
-	__HAL_RCC_GPIOB_CLK_ENABLE();
-
 	GPIO_InitTypeDef spi_pins;
-	spi_pins.Pin = (GPIO_PIN_12 | GPIO_PIN_13 |GPIO_PIN_14 |GPIO_PIN_15) ; // for SPI NSS select - NSS_HARD options
-	spi_pins.Mode = GPIO_MODE_AF_PP;
-	spi_pins.Pull = GPIO_NOPULL;
-	spi_pins.Alternate = GPIO_AF5_SPI2;
 
-	HAL_GPIO_Init(GPIOB, &spi_pins);
+	if(hspi->Instance == SPI1)
+	{
+		__HAL_RCC_SPI1_CLK_ENABLE();
+		__HAL_RCC_GPIOA_CLK_ENABLE();
+
+		spi_pins.Pin = (GPIO_PIN_5 | GPIO_PIN_6 |GPIO_PIN_7);
+		spi_pins.Mode = GPIO_MODE_AF_PP;
+		spi_pins.Pull = GPIO_NOPULL;
+		spi_pins.Alternate = GPIO_AF5_SPI1;
+
+		HAL_GPIO_Init(GPIOA, &spi_pins);
+	}
+
+	if(hspi->Instance == SPI2)
+	{
+		__HAL_RCC_SPI2_CLK_ENABLE();
+		__HAL_RCC_GPIOB_CLK_ENABLE();
+
+		spi_pins.Pin = (GPIO_PIN_12 | GPIO_PIN_13 |GPIO_PIN_14 |GPIO_PIN_15) ; // for SPI NSS select - NSS_HARD options
+		spi_pins.Mode = GPIO_MODE_AF_PP;
+		spi_pins.Pull = GPIO_NOPULL;
+		spi_pins.Alternate = GPIO_AF5_SPI2;
+
+		HAL_GPIO_Init(GPIOB, &spi_pins);
+	}
 
 }
 
