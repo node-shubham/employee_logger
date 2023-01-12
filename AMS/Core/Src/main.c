@@ -98,7 +98,7 @@ static void display_handler(void * param)
 		read_touch();
 		HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
 		SEGGER_SYSVIEW_PrintfTarget("Toggle Blue LED");
-		vTaskDelay(pdMS_TO_TICKS(300));
+		vTaskDelay(pdMS_TO_TICKS(1000));
 
 	}
 }
@@ -123,8 +123,13 @@ int main()
 	ssd1963_setup();
 	XPT2046_Init();
 #endif
+Front_Page();
+Menu_Page();
+Admin_Login();
+Login_Page();
 
 
+	while(1);
 	/* Timebase start 100ms */
 	//HAL_TIM_Base_Start_IT(&tim5);
 

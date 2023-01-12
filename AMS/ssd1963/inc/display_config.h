@@ -53,7 +53,12 @@ void print_grid(void);
 void test_point(void);
 void test_point1(void);
 void background_page(void);
+
+
 void Front_Page(void);
+void Menu_Page(void);
+void Admin_Login(void);
+void Login_Page(void);
 
 ////////////////////////////// THEME SPECIFIC COLORS  //////////////////////////////
 
