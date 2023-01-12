@@ -1,9 +1,9 @@
 ssd1963/src/display_config.o: ../ssd1963/src/display_config.c \
- E:/GIT_AMS_FREERTOS/AMS/ssd1963/inc/display_config.h \
- E:/GIT_AMS_FREERTOS/AMS/ssd1963/inc/ssd1963.h \
- E:/GIT_AMS_FREERTOS/AMS/ssd1963/inc/display_config.h \
- E:/GIT_AMS_FREERTOS/AMS/ssd1963/inc/types.h \
- E:/GIT_AMS_FREERTOS/AMS/ssd1963/inc/fonts.h ../Core/Inc/main.h \
+ E:/EDIT\ \ \ WORKSPACE/AMS/ssd1963/inc/display_config.h \
+ E:/EDIT\ \ \ WORKSPACE/AMS/ssd1963/inc/ssd1963.h \
+ E:/EDIT\ \ \ WORKSPACE/AMS/ssd1963/inc/display_config.h \
+ E:/EDIT\ \ \ WORKSPACE/AMS/ssd1963/inc/types.h \
+ E:/EDIT\ \ \ WORKSPACE/AMS/ssd1963/inc/fonts.h ../Core/Inc/main.h \
  ../Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
  ../Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f401xc.h \
  ../Drivers/CMSIS/Include/core_cm4.h \
@@ -36,11 +36,11 @@ ssd1963/src/display_config.o: ../ssd1963/src/display_config.c \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
  ../Core/Inc/pin_def.h
-E:/GIT_AMS_FREERTOS/AMS/ssd1963/inc/display_config.h:
-E:/GIT_AMS_FREERTOS/AMS/ssd1963/inc/ssd1963.h:
-E:/GIT_AMS_FREERTOS/AMS/ssd1963/inc/display_config.h:
-E:/GIT_AMS_FREERTOS/AMS/ssd1963/inc/types.h:
-E:/GIT_AMS_FREERTOS/AMS/ssd1963/inc/fonts.h:
+E:/EDIT\ \ \ WORKSPACE/AMS/ssd1963/inc/display_config.h:
+E:/EDIT\ \ \ WORKSPACE/AMS/ssd1963/inc/ssd1963.h:
+E:/EDIT\ \ \ WORKSPACE/AMS/ssd1963/inc/display_config.h:
+E:/EDIT\ \ \ WORKSPACE/AMS/ssd1963/inc/types.h:
+E:/EDIT\ \ \ WORKSPACE/AMS/ssd1963/inc/fonts.h:
 ../Core/Inc/main.h:
 ../Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h:
 ../Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f401xc.h:

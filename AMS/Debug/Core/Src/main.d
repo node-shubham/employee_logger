@@ -30,30 +30,31 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- ../Core/Inc/user_global.h E:/GIT_AMS_FREERTOS/AMS/ssd1963/inc/ssd1963.h \
- E:/GIT_AMS_FREERTOS/AMS/ssd1963/inc/display_config.h \
- E:/GIT_AMS_FREERTOS/AMS/ssd1963/inc/ssd1963.h \
- E:/GIT_AMS_FREERTOS/AMS/ssd1963/inc/types.h \
- E:/GIT_AMS_FREERTOS/AMS/ssd1963/inc/fonts.h ../Core/Inc/pin_def.h \
- E:/GIT_AMS_FREERTOS/AMS/ssd1963/inc/xpt2046.h \
- E:/GIT_AMS_FREERTOS/AMS/mrfc522/inc/mfrc522.h \
- E:/GIT_AMS_FREERTOS/AMS/mrfc522/inc/mfrc522_config.h \
- E:/GIT_AMS_FREERTOS/AMS/ThirdParty/FreeRTOS/include/FreeRTOS.h \
- E:/GIT_AMS_FREERTOS/AMS/ThirdParty/FreeRTOS/FreeRTOSConfig.h \
- E:/GIT_AMS_FREERTOS/AMS/ThirdParty/SEGGER/OS/SEGGER_SYSVIEW_FreeRTOS.h \
- E:/GIT_AMS_FREERTOS/AMS/ThirdParty/SEGGER/SEGGER/SEGGER_SYSVIEW.h \
- E:/GIT_AMS_FREERTOS/AMS/ThirdParty/SEGGER/SEGGER/SEGGER.h \
- E:/GIT_AMS_FREERTOS/AMS/ThirdParty/SEGGER/Config/Global.h \
- E:/GIT_AMS_FREERTOS/AMS/ThirdParty/SEGGER/SEGGER/SEGGER_SYSVIEW_ConfDefaults.h \
- E:/GIT_AMS_FREERTOS/AMS/ThirdParty/SEGGER/Config/SEGGER_SYSVIEW_Conf.h \
- E:/GIT_AMS_FREERTOS/AMS/ThirdParty/SEGGER/Config/SEGGER_RTT_Conf.h \
- E:/GIT_AMS_FREERTOS/AMS/ThirdParty/FreeRTOS/include/projdefs.h \
- E:/GIT_AMS_FREERTOS/AMS/ThirdParty/FreeRTOS/include/portable.h \
- E:/GIT_AMS_FREERTOS/AMS/ThirdParty/FreeRTOS/include/deprecated_definitions.h \
- E:/GIT_AMS_FREERTOS/AMS/ThirdParty/FreeRTOS/portable/GCC/ARM_CM4F/portmacro.h \
- E:/GIT_AMS_FREERTOS/AMS/ThirdParty/FreeRTOS/include/mpu_wrappers.h \
- E:/GIT_AMS_FREERTOS/AMS/ThirdParty/FreeRTOS/include/task.h \
- E:/GIT_AMS_FREERTOS/AMS/ThirdParty/FreeRTOS/include/list.h
+ ../Core/Inc/user_global.h \
+ E:/EDIT\ \ \ WORKSPACE/AMS/ssd1963/inc/ssd1963.h \
+ E:/EDIT\ \ \ WORKSPACE/AMS/ssd1963/inc/display_config.h \
+ E:/EDIT\ \ \ WORKSPACE/AMS/ssd1963/inc/ssd1963.h \
+ E:/EDIT\ \ \ WORKSPACE/AMS/ssd1963/inc/types.h \
+ E:/EDIT\ \ \ WORKSPACE/AMS/ssd1963/inc/fonts.h ../Core/Inc/pin_def.h \
+ E:/EDIT\ \ \ WORKSPACE/AMS/ssd1963/inc/xpt2046.h \
+ E:/EDIT\ \ \ WORKSPACE/AMS/mrfc522/inc/mfrc522.h \
+ E:/EDIT\ \ \ WORKSPACE/AMS/mrfc522/inc/mfrc522_config.h \
+ E:/EDIT\ \ \ WORKSPACE/AMS/ThirdParty/FreeRTOS/include/FreeRTOS.h \
+ E:/EDIT\ \ \ WORKSPACE/AMS/ThirdParty/FreeRTOS/FreeRTOSConfig.h \
+ E:/EDIT\ \ \ WORKSPACE/AMS/ThirdParty/SEGGER/OS/SEGGER_SYSVIEW_FreeRTOS.h \
+ E:/EDIT\ \ \ WORKSPACE/AMS/ThirdParty/SEGGER/SEGGER/SEGGER_SYSVIEW.h \
+ E:/EDIT\ \ \ WORKSPACE/AMS/ThirdParty/SEGGER/SEGGER/SEGGER.h \
+ E:/EDIT\ \ \ WORKSPACE/AMS/ThirdParty/SEGGER/Config/Global.h \
+ E:/EDIT\ \ \ WORKSPACE/AMS/ThirdParty/SEGGER/SEGGER/SEGGER_SYSVIEW_ConfDefaults.h \
+ E:/EDIT\ \ \ WORKSPACE/AMS/ThirdParty/SEGGER/Config/SEGGER_SYSVIEW_Conf.h \
+ E:/EDIT\ \ \ WORKSPACE/AMS/ThirdParty/SEGGER/Config/SEGGER_RTT_Conf.h \
+ E:/EDIT\ \ \ WORKSPACE/AMS/ThirdParty/FreeRTOS/include/projdefs.h \
+ E:/EDIT\ \ \ WORKSPACE/AMS/ThirdParty/FreeRTOS/include/portable.h \
+ E:/EDIT\ \ \ WORKSPACE/AMS/ThirdParty/FreeRTOS/include/deprecated_definitions.h \
+ E:/EDIT\ \ \ WORKSPACE/AMS/ThirdParty/FreeRTOS/portable/GCC/ARM_CM4F/portmacro.h \
+ E:/EDIT\ \ \ WORKSPACE/AMS/ThirdParty/FreeRTOS/include/mpu_wrappers.h \
+ E:/EDIT\ \ \ WORKSPACE/AMS/ThirdParty/FreeRTOS/include/task.h \
+ E:/EDIT\ \ \ WORKSPACE/AMS/ThirdParty/FreeRTOS/include/list.h
 ../Core/Inc/main.h:
 ../Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h:
 ../Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f401xc.h:
@@ -87,28 +88,28 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h:
 ../Core/Inc/user_global.h:
-E:/GIT_AMS_FREERTOS/AMS/ssd1963/inc/ssd1963.h:
-E:/GIT_AMS_FREERTOS/AMS/ssd1963/inc/display_config.h:
-E:/GIT_AMS_FREERTOS/AMS/ssd1963/inc/ssd1963.h:
-E:/GIT_AMS_FREERTOS/AMS/ssd1963/inc/types.h:
-E:/GIT_AMS_FREERTOS/AMS/ssd1963/inc/fonts.h:
+E:/EDIT\ \ \ WORKSPACE/AMS/ssd1963/inc/ssd1963.h:
+E:/EDIT\ \ \ WORKSPACE/AMS/ssd1963/inc/display_config.h:
+E:/EDIT\ \ \ WORKSPACE/AMS/ssd1963/inc/ssd1963.h:
+E:/EDIT\ \ \ WORKSPACE/AMS/ssd1963/inc/types.h:
+E:/EDIT\ \ \ WORKSPACE/AMS/ssd1963/inc/fonts.h:
 ../Core/Inc/pin_def.h:
-E:/GIT_AMS_FREERTOS/AMS/ssd1963/inc/xpt2046.h:
-E:/GIT_AMS_FREERTOS/AMS/mrfc522/inc/mfrc522.h:
-E:/GIT_AMS_FREERTOS/AMS/mrfc522/inc/mfrc522_config.h:
-E:/GIT_AMS_FREERTOS/AMS/ThirdParty/FreeRTOS/include/FreeRTOS.h:
-E:/GIT_AMS_FREERTOS/AMS/ThirdParty/FreeRTOS/FreeRTOSConfig.h:
-E:/GIT_AMS_FREERTOS/AMS/ThirdParty/SEGGER/OS/SEGGER_SYSVIEW_FreeRTOS.h:
-E:/GIT_AMS_FREERTOS/AMS/ThirdParty/SEGGER/SEGGER/SEGGER_SYSVIEW.h:
-E:/GIT_AMS_FREERTOS/AMS/ThirdParty/SEGGER/SEGGER/SEGGER.h:
-E:/GIT_AMS_FREERTOS/AMS/ThirdParty/SEGGER/Config/Global.h:
-E:/GIT_AMS_FREERTOS/AMS/ThirdParty/SEGGER/SEGGER/SEGGER_SYSVIEW_ConfDefaults.h:
-E:/GIT_AMS_FREERTOS/AMS/ThirdParty/SEGGER/Config/SEGGER_SYSVIEW_Conf.h:
-E:/GIT_AMS_FREERTOS/AMS/ThirdParty/SEGGER/Config/SEGGER_RTT_Conf.h:
-E:/GIT_AMS_FREERTOS/AMS/ThirdParty/FreeRTOS/include/projdefs.h:
-E:/GIT_AMS_FREERTOS/AMS/ThirdParty/FreeRTOS/include/portable.h:
-E:/GIT_AMS_FREERTOS/AMS/ThirdParty/FreeRTOS/include/deprecated_definitions.h:
-E:/GIT_AMS_FREERTOS/AMS/ThirdParty/FreeRTOS/portable/GCC/ARM_CM4F/portmacro.h:
-E:/GIT_AMS_FREERTOS/AMS/ThirdParty/FreeRTOS/include/mpu_wrappers.h:
-E:/GIT_AMS_FREERTOS/AMS/ThirdParty/FreeRTOS/include/task.h:
-E:/GIT_AMS_FREERTOS/AMS/ThirdParty/FreeRTOS/include/list.h:
+E:/EDIT\ \ \ WORKSPACE/AMS/ssd1963/inc/xpt2046.h:
+E:/EDIT\ \ \ WORKSPACE/AMS/mrfc522/inc/mfrc522.h:
+E:/EDIT\ \ \ WORKSPACE/AMS/mrfc522/inc/mfrc522_config.h:
+E:/EDIT\ \ \ WORKSPACE/AMS/ThirdParty/FreeRTOS/include/FreeRTOS.h:
+E:/EDIT\ \ \ WORKSPACE/AMS/ThirdParty/FreeRTOS/FreeRTOSConfig.h:
+E:/EDIT\ \ \ WORKSPACE/AMS/ThirdParty/SEGGER/OS/SEGGER_SYSVIEW_FreeRTOS.h:
+E:/EDIT\ \ \ WORKSPACE/AMS/ThirdParty/SEGGER/SEGGER/SEGGER_SYSVIEW.h:
+E:/EDIT\ \ \ WORKSPACE/AMS/ThirdParty/SEGGER/SEGGER/SEGGER.h:
+E:/EDIT\ \ \ WORKSPACE/AMS/ThirdParty/SEGGER/Config/Global.h:
+E:/EDIT\ \ \ WORKSPACE/AMS/ThirdParty/SEGGER/SEGGER/SEGGER_SYSVIEW_ConfDefaults.h:
+E:/EDIT\ \ \ WORKSPACE/AMS/ThirdParty/SEGGER/Config/SEGGER_SYSVIEW_Conf.h:
+E:/EDIT\ \ \ WORKSPACE/AMS/ThirdParty/SEGGER/Config/SEGGER_RTT_Conf.h:
+E:/EDIT\ \ \ WORKSPACE/AMS/ThirdParty/FreeRTOS/include/projdefs.h:
+E:/EDIT\ \ \ WORKSPACE/AMS/ThirdParty/FreeRTOS/include/portable.h:
+E:/EDIT\ \ \ WORKSPACE/AMS/ThirdParty/FreeRTOS/include/deprecated_definitions.h:
+E:/EDIT\ \ \ WORKSPACE/AMS/ThirdParty/FreeRTOS/portable/GCC/ARM_CM4F/portmacro.h:
+E:/EDIT\ \ \ WORKSPACE/AMS/ThirdParty/FreeRTOS/include/mpu_wrappers.h:
+E:/EDIT\ \ \ WORKSPACE/AMS/ThirdParty/FreeRTOS/include/task.h:
+E:/EDIT\ \ \ WORKSPACE/AMS/ThirdParty/FreeRTOS/include/list.h:

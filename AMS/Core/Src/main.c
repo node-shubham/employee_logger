@@ -124,6 +124,7 @@ int main()
 	XPT2046_Init();
 #endif
 
+	Front_Page();
 
 	/* Timebase start 100ms */
 	//HAL_TIM_Base_Start_IT(&tim5);
