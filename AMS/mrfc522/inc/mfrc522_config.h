@@ -22,8 +22,8 @@ extern SPI_HandleTypeDef spi1;
 #define MFRC522_CS_PORT		GPIOB
 #define MFRC522_CS_PIN		(1<<0)
 
-#define MFRC522_RST_PORT	GPIOA
-#define MFRC522_RST_PIN		(1<<8)
+#define MFRC522_RST_PORT	GPIOB
+#define MFRC522_RST_PIN		(1<<1)
 
 
 uint8_t check_validcard(void);

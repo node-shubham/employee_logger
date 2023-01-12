@@ -21,24 +21,26 @@ void HAL_MspInit(void)
 
 void HAL_UART_MspInit(UART_HandleTypeDef *huart)
 {
-	// enable the peripheral clock
-	__HAL_RCC_GPIOA_CLK_ENABLE();
-	__HAL_RCC_USART1_CLK_ENABLE();
-
 	GPIO_InitTypeDef gpio_uart;
 
-	gpio_uart.Pin = GPIO_PIN_9 | GPIO_PIN_10;
-	gpio_uart.Mode 	=GPIO_MODE_AF_PP;
-	gpio_uart.Speed = GPIO_SPEED_FREQ_LOW;
-	gpio_uart.Pull = GPIO_PULLUP;
-	gpio_uart.Alternate = GPIO_AF7_USART1;
+	if(huart->Instance == USART1)		/* currently using for debugging */
+	{
+		// enable the peripheral clock
+		__HAL_RCC_GPIOA_CLK_ENABLE();
+		__HAL_RCC_USART1_CLK_ENABLE();
 
-	HAL_GPIO_Init(GPIOA, &gpio_uart);
+		gpio_uart.Pin = GPIO_PIN_9 | GPIO_PIN_10;
+		gpio_uart.Mode 	=GPIO_MODE_AF_PP;
+		gpio_uart.Speed = GPIO_SPEED_FREQ_LOW;
+		gpio_uart.Pull = GPIO_PULLUP;
+		gpio_uart.Alternate = GPIO_AF7_USART1;
 
-	// enable NVIC irq line
-	HAL_NVIC_EnableIRQ(USART1_IRQn);
-	HAL_NVIC_SetPriority(USART1_IRQn, 15, 0);
+		HAL_GPIO_Init(GPIOA, &gpio_uart);
 
+		// enable NVIC irq line
+		HAL_NVIC_EnableIRQ(USART1_IRQn);
+		HAL_NVIC_SetPriority(USART1_IRQn, 15, 0);
+	}
 }
 
 
@@ -46,20 +48,20 @@ void HAL_SPI_MspInit(SPI_HandleTypeDef *hspi)
 {
 	GPIO_InitTypeDef spi_pins;
 
-	if(hspi->Instance == SPI1)
+	if(hspi->Instance == SPI1)		/* using in RFID */
 	{
 		__HAL_RCC_SPI1_CLK_ENABLE();
-		__HAL_RCC_GPIOA_CLK_ENABLE();
+		__HAL_RCC_GPIOB_CLK_ENABLE();
 
-		spi_pins.Pin = (GPIO_PIN_5 | GPIO_PIN_6 |GPIO_PIN_7);
+		spi_pins.Pin = (GPIO_PIN_3 | GPIO_PIN_4 |GPIO_PIN_5);
 		spi_pins.Mode = GPIO_MODE_AF_PP;
 		spi_pins.Pull = GPIO_NOPULL;
 		spi_pins.Alternate = GPIO_AF5_SPI1;
 
-		HAL_GPIO_Init(GPIOA, &spi_pins);
+		HAL_GPIO_Init(GPIOB, &spi_pins);
 	}
 
-	if(hspi->Instance == SPI2)
+	if(hspi->Instance == SPI2)		/* using in touch  */
 	{
 		__HAL_RCC_SPI2_CLK_ENABLE();
 		__HAL_RCC_GPIOB_CLK_ENABLE();
@@ -76,7 +78,7 @@ void HAL_SPI_MspInit(SPI_HandleTypeDef *hspi)
 
 void HAL_TIM_Base_MspInit(TIM_HandleTypeDef *htim)
 {
-	if(htim->Instance == TIM5)
+	if(htim->Instance == TIM5)		/* 100ms - TimeBase */
 	{
 		__HAL_RCC_TIM5_CLK_ENABLE();
 		HAL_NVIC_SetPriority(TIM5_IRQn, 5, 0);
