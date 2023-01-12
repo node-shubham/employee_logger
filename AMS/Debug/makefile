@@ -70,8 +70,8 @@ all: main-build
 main-build: AMS.elf secondary-outputs
 
 # Tool invocations
-AMS.elf AMS.map: $(OBJS) $(USER_OBJS) E:\GIT_AMS_FREERTOS\AMS\STM32F401CCUX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "AMS.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"E:\GIT_AMS_FREERTOS\AMS\STM32F401CCUX_FLASH.ld" --specs=nosys.specs -Wl,-Map="AMS.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+AMS.elf AMS.map: $(OBJS) $(USER_OBJS) E:\EDIT\ \ \ WORKSPACE\AMS\STM32F401CCUX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "AMS.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"E:\EDIT   WORKSPACE\AMS\STM32F401CCUX_FLASH.ld" --specs=nosys.specs -Wl,-Map="AMS.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

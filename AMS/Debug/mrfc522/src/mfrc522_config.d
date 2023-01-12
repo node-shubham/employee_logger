@@ -1,5 +1,6 @@
 mrfc522/src/mfrc522_config.o: ../mrfc522/src/mfrc522_config.c \
- E:/GIT_AMS_FREERTOS/AMS/mrfc522/inc/mfrc522_config.h ../Core/Inc/main.h \
+ E:/EDIT\ \ \ WORKSPACE/AMS/mrfc522/inc/mfrc522_config.h \
+ ../Core/Inc/main.h \
  ../Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
  ../Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f401xc.h \
  ../Drivers/CMSIS/Include/core_cm4.h \
@@ -31,7 +32,7 @@ mrfc522/src/mfrc522_config.o: ../mrfc522/src/mfrc522_config.c \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
-E:/GIT_AMS_FREERTOS/AMS/mrfc522/inc/mfrc522_config.h:
+E:/EDIT\ \ \ WORKSPACE/AMS/mrfc522/inc/mfrc522_config.h:
 ../Core/Inc/main.h:
 ../Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h:
 ../Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f401xc.h:

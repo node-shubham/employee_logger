@@ -68,3 +68,13 @@ void h_slider(u32 x, u32 y,u32 len, u32 color)
 	draw_roundrect(x,x+len,y,y+15,color);
 	fill_area(x+2,x+len-2,y+2,y+13,0x00627d);
 }
+
+void Front_Page(void)
+{
+	Set_Font(&Font16x26);
+
+	fill_screen(WHITE);
+	print_image(310, 170, 150, 100, logo);
+	print_string(180, 290, "Attendance Management System", 0x1d6791);
+
+}
