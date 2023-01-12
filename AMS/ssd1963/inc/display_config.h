@@ -33,14 +33,14 @@
 #define write_8bit(data) \
 		{ \
 	SSD1963_DATAPORT->BSRR = (0x00FF <<16); \
-	GPIOA->BSRR = (((data) & SSD1963_D0) <<0); \
-	GPIOA->BSRR = (((data) & SSD1963_D1) <<0); \
-	GPIOA->BSRR = (((data) & SSD1963_D2) <<0); \
-	GPIOA->BSRR = (((data) & SSD1963_D3) <<0); \
-	GPIOA->BSRR = (((data) & SSD1963_D4) <<0); \
-	GPIOA->BSRR = (((data) & SSD1963_D5) <<0); \
-	GPIOA->BSRR = (((data) & SSD1963_D6) <<0); \
-	GPIOA->BSRR = (((data) & SSD1963_D7) <<0); \
+	GPIOA->BSRR = (((data) & (1<<0)) <<0); \
+	GPIOA->BSRR = (((data) & (1<<1)) <<0); \
+	GPIOA->BSRR = (((data) & (1<<2)) <<0); \
+	GPIOA->BSRR = (((data) & (1<<3)) <<0); \
+	GPIOA->BSRR = (((data) & (1<<4)) <<0); \
+	GPIOA->BSRR = (((data) & (1<<5)) <<0); \
+	GPIOA->BSRR = (((data) & (1<<6)) <<0); \
+	GPIOA->BSRR = (((data) & (1<<7)) <<0); \
 		}
 
 
