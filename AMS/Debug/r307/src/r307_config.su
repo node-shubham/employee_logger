@@ -1,0 +1,15 @@
+../r307/src/r307_config.c:406:10:uart6_avail	0	static
+../r307/src/r307_config.c:410:10:uart6_read	0	static
+../r307/src/r307_config.c:414:6:uart6_write	0	static
+../r307/src/r307_config.c:304:10:read_template.part.0	48	static
+../r307/src/r307_config.c:11:6:r307_init	16	static
+../r307/src/r307_config.c:65:6:templates_mainloop	32	static
+../r307/src/r307_config.c:85:9:get_free_id	24	static
+../r307/src/r307_config.c:106:6:matchprints_mainloop	32	static
+../r307/src/r307_config.c:146:6:search_database	32	static
+../r307/src/r307_config.c:120:6:fingerprint_match_loop	16	static
+../r307/src/r307_config.c:135:6:searchdb_mainloop	8	static
+../r307/src/r307_config.c:214:6:enroll_finger	24	static
+../r307/src/r307_config.c:38:6:enroll_mainloop	16	static
+../r307/src/r307_config.c:304:10:read_template	16	static
+../r307/src/r307_config.c:366:6:match_prints	24	static

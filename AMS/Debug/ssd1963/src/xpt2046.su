@@ -1,0 +1,4 @@
+../ssd1963/src/xpt2046.c:10:10:getRaw	48	static
+../ssd1963/src/xpt2046.c:27:10:getX	40	static
+../ssd1963/src/xpt2046.c:35:10:getY	40	static
+../ssd1963/src/xpt2046.c:43:6:XPT2046_Init	24	static

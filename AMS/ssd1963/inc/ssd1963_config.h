@@ -1,0 +1,133 @@
+	#ifndef __SSD1963_CONFIG_H__
+	#define __SSD1963_CONFIG_H__
+
+	
+	#include "types.h"
+	#include "fonts.h"
+	#include "stdlib.h"
+	#include "main.h"
+	#include "stdbool.h"
+
+	extern char emp_name[24];
+	extern char *desgn_ptr;
+	extern char *role_ptr;
+	extern char *card_ptr;
+
+	extern bool UC_FLAG;
+	extern bool NUM_FLAG;
+	extern bool drop_btn;
+	extern bool keypad_down;
+
+	extern unsigned char symbol_key[3][10];
+	extern unsigned char char_key[3][10];
+
+	extern uint8_t active_role;
+	extern uint8_t sub_page;
+	extern uint8_t idx;
+		
+//  #define SSD1963_PIN_CS	(1 << 8)
+//	#define SSD1963_PIN_RS	(1 << 7)
+//	#define SSD1963_PIN_RD	(1 << 0)
+//	#define SSD1963_PIN_WR	(1 << 1)
+//	#define SSD1963_PIN_RST	(1 << 2)
+
+	
+	#define write_8bit(data) \
+	{ \
+			  GPIOB->BSRR = (0x07C0 <<16); \
+			  GPIOC->BSRR = (0xE000 <<16); \
+		                                 \
+				GPIOC->BSRR = (((data) & (1<<0)) <<15); \
+				GPIOC->BSRR = (((data) & (1<<1)) <<13); \
+				GPIOC->BSRR = (((data) & (1<<2)) <<11); \
+				GPIOB->BSRR = (((data) & (1<<3)) <<6); \
+				GPIOB->BSRR = (((data) & (1<<4)) <<4); \
+				GPIOB->BSRR = (((data) & (1<<5)) <<2); \
+				GPIOB->BSRR = (((data) & (1<<6)) <<0); \
+				GPIOB->BSRR = (((data) & (1<<7)) <<3); \
+	}
+	
+///////////////////////  APLLICATION SPECIFIC FUNCTIONS  /////////////////////////
+
+	void test_color(void); 		 
+	void test_pixel(void);
+	void test_increment(u32 p, s16 q);
+	void v_slider(u32 x, u32 y,u32 len, u32 color);
+	void h_slider(u32 x, u32 y,u32 len, u32 color);
+	void print_grid(void);
+	void test_point(void);
+	void test_point1(void);
+	void background_page(void);
+	void Front_Page(void);
+
+
+	void Front_screen(void);
+	void Admin_screen(void);
+	void User_Management(void);
+	void login_page(s16 x, s16 y);
+	void thumb_page(void);
+	void admin_menu(void);
+  void PageKeyPad(void);
+
+	void BackBtn(void);
+	void touchBack(void);
+	void Tick_logo(void);
+	void table_page(void);
+	void cursor(void);
+	void dropdown(char * arr[],u32 NumOfBox,s16 x1,s16 x2,s16 y1);
+	void clear_dropdown(void);
+	void attendence_search(void);
+	void Role_Page(void);
+	void AllUser_Page(void);
+
+
+	void NewEntry_page(void);
+	void NewUser_Name(void);
+	void NewUser_Desig(s32 x1, s32 x2, s32 y1, s32 y2);
+	void NewUser_Role(void);
+	void NewUser_Card(void);
+
+	void NewUser_Desig1(void);
+	void NewUser_Role1(void);
+	void NewUser_Card1(void);
+	void SaveAndExit (void);
+
+
+	void table_page(void);
+	void therapy_timer(void);
+	void beauty_health(void);
+	void time_calc(uint32_t therapy_time);
+
+	void table_button(void);
+	void table_element(void);
+
+	void fill_UpTriangle(s16 x, s16 y, u16 size, u32 colour);   /// created by naveen
+	void fill_DownTriangle(s16 x, s16 y, u16 size, u32 colour);   /// created by naveen
+	void fill_LeftTriangle(s16 x, s16 y, u16 size, u32 colour);   /// created by naveen
+	void fill_RightTriangle(s16 x, s16 y, u16 size, u32 colour);   /// created by naveen
+	void symbol_dwn_Arrow (u32 x, u32 y, u32 color);
+
+	void Up_Button(s16 x, s16 y, u16 size, u32 circle_colour, u32 Button_colour);   /// created by naveen
+	void Down_Button(s16 x, s16 y, u16 size, u32 circle_colour, u32 Button_colour);   /// created by naveen
+	void Left_Button(s16 x, s16 y, u16 size, u32 circle_colour, u32 Button_colour);   /// created by naveen
+	void Right_Button(s16 x, s16 y, u16 size, u32 circle_colour, u32 Button_colour);   /// created by naveen
+
+
+	void table_init(void);
+	void table_update(u32 touchX, u32 touchY);
+	//////////////////////////////////THEME SPECIFIC COLORS ////////////////////////////////////////
+	
+	#define bg_color	0xDF711B			//0x007267
+	#define button_fill_color 0xd9611d//0xB61919
+	#define button2_fill_color 0x52b788//0x74c69d//0x40916c//0x52b788//0xB61919
+	#define border_color 0xad4d17	//0xc3571a//0xFFB740		//0xb7fff8
+	#define card_border_color 0xb7fff8	
+	#define slider_fill_color 0x083434
+	
+	#define table_color 0xb7e4c7
+	#define table_color_2 0xd8f3dc
+	#define table_border_color 0x52b788//0x40916c
+	
+	#endif
+	
+	

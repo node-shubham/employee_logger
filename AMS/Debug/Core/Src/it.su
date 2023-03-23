@@ -1,0 +1,2 @@
+../Core/Src/it.c:22:6:TIM5_IRQHandler	0	static
+../Core/Src/it.c:29:6:TIM1_TRG_COM_TIM11_IRQHandler	0	static
