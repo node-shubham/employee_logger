@@ -354,63 +354,64 @@ void PageKeyPad(void)
 		Set_Font(&Font16x24);
 		int x=0,x1=0,y=31,y1=0,k=0;
 		//draw_roundrect(104,696,228,462,BLUE);
-		fill_roundrect(100,700,230,472,PURPLE,PURPLE);
+		fill_roundrect(135,655,208,430,KEYPAD_COLOR,0xfffafa);
+		fill_roundrect(137,653,210,428,WHITE,KEYPAD_COLOR);
 		for(int i=0; i<3; i++)
 		{
-			x1+=30*i;
+			x1+=25*i;
 			for(int j=0; j<=9-(i*2-k); j++)
 			{
-				fill_roundrect(x1+105+x,x1+155+x,y1+205+y,y1+255+y,0xcccccc,PURPLE);
-				fill_roundrect(x1+107+x,x1+153+x,y1+207+y,y1+253+y,KEYPAD_COLOR ,0xcccccc);
+				fill_roundrect(x1+150+x,x1+190+x,y1+190+y,y1+230+y,0x737373,WHITE);
+				fill_roundrect(x1+152+x,x1+188+x,y1+192+y,y1+228+y,KEYPAD_COLOR ,0x737373);
 
 				if(UC_FLAG)
 				{
 					if(NUM_FLAG)
 					{
-						print_char(x1+130+x,y1+220+y,symbol_key[i][j],BTN_COLOR);
+						print_char(x1+160+x,y1+200+y,symbol_key[i][j],WHITE);
 					}
 					else
 					{
-						print_char(x1+130+x,y1+220+y,char_key[i][j],BTN_COLOR);
+						print_char(x1+160+x,y1+200+y,char_key[i][j],WHITE);
 					}
 				}
 				else
 				{
 					if(NUM_FLAG)
 					{
-						print_char(x1+130+x,y1+220+y,symbol_key[i][j],BTN_COLOR);
+						print_char(x1+160+x,y1+200+y,symbol_key[i][j],WHITE);
 					}
 					else
 					{
-						print_char(x1+130+x,y1+220+y,char_key[i][j],BTN_COLOR);
+						print_char(x1+160+x,y1+200+y,char_key[i][j],WHITE);
 					}
 				}
-				x+=60;
+				x+=50;
 			}
 			x=0;
 			k=1;
-			y1+=60;
+			y1+=50;
 		}
-		fill_roundrect(105,185,325+y,375+y,0xcccccc,PURPLE);
-		fill_roundrect(107,183,327+y,373+y,KEYPAD_COLOR,0xcccccc); // Caps
-		print_string(120,340+y,"Caps",BTN_COLOR);
+		fill_roundrect(150,215,290+y,330+y,0x737373,WHITE);
+		fill_roundrect(152,213,292+y,328+y,KEYPAD_COLOR,0x737373); // Caps
+		print_string(155,300+y,"Caps",WHITE);
 
-		fill_roundrect(105,245,385+y,435+y,0xcccccc,PURPLE);
-		fill_roundrect(107,243,387+y,433+y,KEYPAD_COLOR,0xcccccc);	//Num
-		print_string(150,400+y,"Num",BTN_COLOR);
+		fill_roundrect(175,265,340+y,380+y,0x737373,WHITE);
+		fill_roundrect(177,263,342+y,378+y,KEYPAD_COLOR,0x737373);	//Num
+		print_string(195,350+y,"Num",WHITE);
 
-		fill_roundrect(555,695,385+y,435+y,0xcccccc,PURPLE);
-		fill_roundrect(557,693,387+y,433+y,KEYPAD_COLOR,0xcccccc);  // keypad DOWN.
-		symbol(620,390+y,'D',BTN_COLOR); //DOWN ARROW.
+		fill_roundrect(525,615,340+y,380+y,0x737373,WHITE);
+		fill_roundrect(527,613,342+y,378+y,KEYPAD_COLOR,0x737373);  // keypad DOWN.
+		symbol(565,335+y,'D',WHITE); //DOWN ARROW.
 
 
-		fill_roundrect(255,545,385+y,435+y,0xcccccc,PURPLE);
-		fill_roundrect(257,543,387+y,433+y,KEYPAD_COLOR,0xcccccc); // space
-		print_string(360,400+y,"Space",BTN_COLOR);
+		fill_roundrect(275,515,340+y,380+y,0x737373,WHITE);
+		fill_roundrect(277,513,342+y,378+y,KEYPAD_COLOR,0x737373); // space
+		print_string(360,350+y,"Space",WHITE);
 
-		fill_roundrect(615,695,325+y,375+y,0xcccccc,PURPLE);
-		fill_roundrect(617,693,327+y,373+y,KEYPAD_COLOR,0xcccccc); // BackSpace
-		print_string(625,340+y,"Back",BTN_COLOR);
+		fill_roundrect(575,640,290+y,330+y,0x737373,WHITE);
+		fill_roundrect(577,638,292+y,328+y,KEYPAD_COLOR,0x737373); // BackSpace
+		print_string(580,300+y,"Back",WHITE);
 		x=0;
 		x1=0;
 		y=0;
@@ -464,13 +465,15 @@ void attendence_search(void)
  	uint8_t table_y = 22;
 	//fill_screen(PURPLE);
 	fill_area(100,700,0,480,PURPLE);
+	//fill_roundrect(73, 705, 36, 464,0xcccccc,PURPLE);
+	//fill_roundrect(77,701,40,460,0xfffafa,0xcccccc);
 	//fill_area(0,800,0,70+10,0x74c69d);
 	//fill_roundrect(130,530,25,75,0x9900ff, 0x74c69d);
-	fill_roundrect(190,590,36,84,0xcedcfd,PURPLE);	//   Search box
-	fill_roundrect2(193,587,39,81,0xe7eefe);
-	draw_roundrect(190,590,36,84,BLUE);
-	fill_roundrect(620,720,36,84,0xb6cbbb,PURPLE); //   Search button
-	fill_roundrect(625,715,41,79,0xe7eefe,0xcedcfd);
+	fill_roundrect(108,540,40,88,0xcedcfd,PURPLE);	//   Search box
+	fill_roundrect2(111 ,537,43,85,0xe7eefe);
+	//draw_roundrect(170,570,46,94,BLUE);
+	fill_roundrect(570,670,40,88,0xb6cbbb,PURPLE); //   Search button
+	fill_roundrect2(573,667,43,85,0xe7eefe);
 	//print_string(590,40,"SEARCH",0x737373);
 
 ///////////////////////////// for button  //////////////////////////////////////////////////////
@@ -493,46 +496,47 @@ void attendence_search(void)
 
 ////////////////////////// for table  ///////////////////////////////////////////////////////////
 
+  	fill_roundrect(94, 684, 115, 440, 0xcedcfd, PURPLE);
 //	fill_area(20,730,90,140+3,0x74c69d);
-	fill_area(70,720,143-table_y,193+3-table_y,0x8c8c8c);
-	fill_area(70,720,196-table_y,246+3-table_y,table_color);
-	fill_area(70,720,249-table_y,299+3-table_y,table_color_2);
-	fill_area(70,720,302-table_y,352+3-table_y,table_color);
-	fill_area(70,720,355-table_y,405+3-table_y,table_color_2);
-	fill_area(70,720,408-table_y,458+3-table_y,table_color);
+	fill_area(100,678,149-table_y,192+3-table_y,0xcedcfd);
+	fill_area(100,678,200-table_y,245+3-table_y,table_color);
+	fill_area(100,678,252-table_y,297+3-table_y,table_color_2);
+	fill_area(100,678,304-table_y,349+3-table_y,table_color);
+	fill_area(100,678,356-table_y,401+3-table_y,table_color_2);
+	fill_area(100,678,408-table_y,453+3-table_y,table_color);
 
 
-	draw_rect(70,720,143-table_y,461-table_y,table_border_color);
+	//draw_rect(70,720,143-table_y,461-table_y,table_border_color);
 
-	draw_vl(70+90,143-table_y,318,table_border_color);
-	draw_vl(390+100,143-table_y,318,table_border_color);
+	draw_vl(100+65,143-table_y,318,table_border_color);
+	draw_vl(390+140,143-table_y,318,table_border_color);
 	draw_vl(170+435,143-table_y,318,table_border_color);
 
-
+/*
 //	draw_hl(20,143,710,table_border_color);
 	draw_hl(70,196-table_y,650,table_border_color);
 	draw_hl(70,249-table_y,650,table_border_color);
 	draw_hl(70,302-table_y,650,table_border_color);
 	draw_hl(70,355-table_y,650,table_border_color);
 	draw_hl(70,408-table_y,650,table_border_color);
-
+*/
 /////////////////////////////for string  ///////////////////////////////////////////////////////
 
 	Set_Font(&Font12x18);
-	print_string(635,50,"SEARCH",0x737373);
+	print_string(585,55,"SEARCH",0x737373);
 
 
 //	print_int(4, 400, 25+5, 1, 1, WHITE);
 //	print_string(200,50,"NAVEEN PRAKASH MAURYA",0x737373);
 //	print_string(760,20+5,"6",WHITE);
-	print_string(95,163-table_y,"ID",WHITE);
-	print_string(330,163-table_y,"NAME",WHITE);
-	print_string(500,163-table_y,"IN",WHITE);
-	print_string(615,163-table_y,"OUT",WHITE);
+	print_string(122,163-table_y,"ID",0x737373);
+	print_string(330,163-table_y,"NAME",0x737373);
+	print_string(535,163-table_y,"IN",0x737373);
+	print_string(615,163-table_y,"OUT",0x737373);
 //	print_string(170,216-table_y,"NAVEEN PRAKASH MAURYA",0x9900ff);
 //	print_string(90,216-table_y,"E001",0x9900ff);
-  print_string(505,216-table_y,"09:30",0x9900ff);
-	print_string(615,216-table_y,"06:00",0x9900ff);
+	print_string(540,216-table_y,"09:30",0x737373);
+	print_string(615,216-table_y,"06:00",0x737373);
 	BackBtn();
 }
 
@@ -540,6 +544,7 @@ void attendence_search(void)
 
 void Role_Page(void)
 {
+
   uint8_t table_y = 22;
 	fill_screen(PURPLE);
 
@@ -608,6 +613,8 @@ void AllUser_Page(void)
   uint8_t table_y = 22;
 	//fill_screen(PURPLE);
 	fill_area(150,720,80,439,PURPLE);
+	fill_roundrect(45, 725, 96, 464,0xcccccc,PURPLE);
+	fill_roundrect(49,721,100,460,0xfffafa,0xcccccc);
 	//button_2(20,90,15,65,table_color,0x74c69d);  //   Back button
 	//button_2(600,750,36,84,0xe7eefe,0x74c69d);
 
@@ -620,13 +627,13 @@ void AllUser_Page(void)
 	fill_circle(760, 180-table_y, 20, 0xcedcfd);
 	fill_circle(760, 180-table_y, 18, 0xe7eefe);
 	symbol(760, 175-table_y, '^', 0x737373);
-
+/*
 	for(int i = 4; i<195; i=i+8)
 	 {
 	   draw_vl(760, 179+i, 3, 0xe7eefe);
 		 draw_vl(759, 179+i, 3, 0xe7eefe);
 	 }
-
+*/
 	//draw_circle(760, 418-table_y+1, 20, 0x9900ff);
 	fill_circle(760, 418-table_y, 20, 0xcedcfd);
 	fill_circle(760, 418-table_y, 18, 0xe7eefe);
@@ -634,29 +641,31 @@ void AllUser_Page(void)
 
 /////////////////////////////////////////////// for table  ///////////////////////////////////////////////////////////
 
+  	fill_roundrect(64, 476, 121, 439, 0xcedcfd, 0xfffafa);
 //	fill_area(20,730,90,140+3,0x74c69d);
-	fill_area(70,470,143-table_y,193+3-table_y,0x8c8c8c);
-	fill_area(70,470,196-table_y,246+3-table_y,table_color);
-	fill_area(70,470,249-table_y,299+3-table_y,table_color_2);
-	fill_area(70,470,302-table_y,352+3-table_y,table_color);
-	fill_area(70,470,355-table_y,405+3-table_y,table_color_2);
-	fill_area(70,470,408-table_y,458+3-table_y,table_color);
+	fill_area(70,470,149-table_y,192+3-table_y,0xcedcfd);
+	fill_area(70,470,200-table_y,245+3-table_y,table_color);
+	fill_area(70,470,252-table_y,297+3-table_y,table_color_2);
+	fill_area(70,470,304-table_y,349+3-table_y,table_color);
+	fill_area(70,470,356-table_y,401+3-table_y,table_color_2);
+	fill_area(70,470,408-table_y,453+3-table_y,table_color);
 
 
-	draw_rect(70,470,143-table_y,461-table_y,table_border_color);
 
-	draw_vl(70+90,143-table_y,318,table_border_color);
-	draw_vl(470,143-table_y,318,table_border_color);
+//	draw_rect(70,470,143-table_y,461-table_y,table_border_color);
+
+	draw_vl(70+65,143-table_y,318,table_border_color);
+//	draw_vl(470,143-table_y,318,table_border_color);
 //	draw_vl(120+460,143-table_y,318,table_border_color);
 
-
+/*
 //	draw_hl(20,143,710,table_border_color);
 	draw_hl(70,196-table_y,400,table_border_color);
 	draw_hl(70,249-table_y,400,table_border_color);
 	draw_hl(70,302-table_y,400,table_border_color);
 	draw_hl(70,355-table_y,400,table_border_color);
 	draw_hl(70,408-table_y,400,table_border_color);
-
+*/
 /////////////////////////////for drop down  ///////////////////////////////////////////////////////
 
 //	Down_Button(700, 200, 15, BLACK,RED);
@@ -670,10 +679,10 @@ void AllUser_Page(void)
 
 	Set_Font(&Font12x18);
 
-	print_string(95,163-table_y,"ID",WHITE);
-	print_string(300,163-table_y,"NAME",WHITE);
+	print_string(92,163-table_y,"ID",0x737373);
+	print_string(270,163-table_y,"NAME",0x737373);
 
-	print_string(80,216-table_y,"E001",0x9900ff);
+	print_string(80,216-table_y,"E999",0x737373);
 	//print_string(170,216-table_y,"NAVEEN PRAKASH MAURYA",0x9900ff);
 
 	//BackBtn();
@@ -689,14 +698,15 @@ void AllUser_Page(void)
 void NewUser_Desig1(void)
 {
 	Set_Font(&Font12x18);
-		fill_roundrect(494,720,199,259,0xcedcfd,PURPLE);  // DESIG
-		fill_roundrect(499,715,204,254,0xfffafa,0xcedcfd);
+		fill_roundrect(494,700,199,259,0xcedcfd,0xfffafa);  // DESIG
+		fill_roundrect(499,695,204,254,0xe7eefe,0xcedcfd);
 
-		symbol(690,200,'D',0x999999);
-		symbol(690,195,'D',0xfffafa);
+		symbol(670,200,'D',0x999999);
+		symbol(670,195,'D',0xe7eefe);
 
-		fill_area(499,615,204,254,0xfffafa);
-		print_string(510,214,desgn_ptr,0x737373);
+
+		fill_area(499,615,204,254,0xe7eefe);
+		print_string(510,220,desgn_ptr,0x737373);
 }
 
 //######################  NEW_USER(ROLE)  #############################
@@ -704,14 +714,15 @@ void NewUser_Role1(void)
 {
 		Set_Font(&Font12x18);
 		//int x=0,y=0;
-		fill_roundrect(494,720,289,349,0xcedcfd,PURPLE);  // ROLE
-		fill_roundrect(499,715,294,344,0xfffafa,0xcedcfd);
+		fill_roundrect(494,700,289,349,0xcedcfd,0xfffafa);  // ROLE
+		fill_roundrect(499,695,294,344,0xe7eefe,0xcedcfd);
 
-		symbol(690,293,'D',0x999999);
-		symbol(690,288,'D',0xfffafa);
+		symbol(670,293,'D',0x999999);
+		symbol(670,288,'D',0xe7eefe);
 
-		fill_area(499,615,294,344,0xfffafa);
-		print_string(510,307,role_ptr,0x737373);
+
+		fill_area(499,615,294,344,0xe7eefe);
+		print_string(510,309,role_ptr,0x737373);
 }
 
 //######################  NEW_USER(CARD)  #############################
@@ -719,29 +730,30 @@ void NewUser_Card1(void)
 {
 	Set_Font(&Font12x18);
 	//int x=0,y=0;
-		fill_roundrect(494,720,379,439,0xcedcfd,PURPLE);  // CARD
-		fill_roundrect(499,715,384,434,0xfffafa,0xcedcfd);
+		fill_roundrect(494,700,379,439,0xcedcfd,0xfffafa);  // CARD
+		fill_roundrect(499,695,384,434,0xe7eefe,0xcedcfd);
 
-		symbol(690,386,'D',0x999999);
-		symbol(690,381,'D',0xfffafa);
+		symbol(670,386,'D',0x999999);
+		symbol(670,381,'D',0xe7eefe);
 
-		fill_area(499,615,384,434,0xfffafa);
+
+		fill_area(499,615,384,434,0xe7eefe);
 		print_string(510,400,card_ptr,0x737373);
 }
 
 void SaveAndExit (void)
 {
-	fill_roundrect(630,720,121,169,0xcedcfd,PURPLE);	//   Save and Modify button
-	fill_roundrect(633,717,124,166,0xfffafa,0xcedcfd);
-	draw_roundrect(630,720,121,169,BLUE);
+	fill_roundrect(610,700,121,169,0xcedcfd,0xfffafa);	//   Save and Modify button
+	fill_roundrect(613,697,124,166,0xe7eefe,0xcedcfd);
+	//draw_roundrect(630,720,121,169,BLUE);
 
-	fill_roundrect(494,584,121,169,0xcedcfd,PURPLE);
-	fill_roundrect(497,581,124,166,0xfffafa,0xcedcfd);
-	draw_roundrect(494,584,121,169,BLUE);
+	fill_roundrect(494,584,121,169,0xcedcfd,0xfffafa);
+	fill_roundrect(497,581,124,166,0xe7eefe,0xcedcfd);
+	//draw_roundrect(494,584,121,169,BLUE);
 
 	Set_Font(&Font12x18);
-	print_string(515,140,"SAVE",0x737373);
-	print_string(655,140,"EDIT",0x737373);
+	print_string(515,138,"SAVE",0x737373);
+	print_string(637,138,"EDIT",0x737373);
 }
 
 	/*

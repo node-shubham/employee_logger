@@ -1,5 +1,5 @@
 r307/src/uart_drv.o: ../r307/src/uart_drv.c \
- C:/Users/shubh/OneDrive/Desktop/Workspace/FINGERPRINT/AMS\ v1.4.5/AMS/r307/inc/uart_drv.h \
+ E:/STM\ WORKSPACE/WORK/AMS/r307/inc/uart_drv.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
  ../Core/Inc/stm32f4xx_hal_conf.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
@@ -31,7 +31,7 @@ r307/src/uart_drv.o: ../r307/src/uart_drv.c \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
-C:/Users/shubh/OneDrive/Desktop/Workspace/FINGERPRINT/AMS\ v1.4.5/AMS/r307/inc/uart_drv.h:
+E:/STM\ WORKSPACE/WORK/AMS/r307/inc/uart_drv.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:
 ../Core/Inc/stm32f4xx_hal_conf.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h:

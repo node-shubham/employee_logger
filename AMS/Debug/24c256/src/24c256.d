@@ -1,6 +1,5 @@
 24c256/src/24c256.o: ../24c256/src/24c256.c \
- C:/Users/shubh/OneDrive/Desktop/Workspace/FINGERPRINT/AMS\ v1.4.5/AMS/24c256/inc/24c256.h \
- ../Core/Inc/main.h \
+ E:/STM\ WORKSPACE/WORK/AMS/24c256/inc/24c256.h ../Core/Inc/main.h \
  ../Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
  ../Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f401xc.h \
  ../Drivers/CMSIS/Include/core_cm4.h \
@@ -32,7 +31,7 @@
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
-C:/Users/shubh/OneDrive/Desktop/Workspace/FINGERPRINT/AMS\ v1.4.5/AMS/24c256/inc/24c256.h:
+E:/STM\ WORKSPACE/WORK/AMS/24c256/inc/24c256.h:
 ../Core/Inc/main.h:
 ../Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h:
 ../Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f401xc.h:

@@ -1,4 +1,0 @@
-xpt2046.c:10:10:getRaw	1
-xpt2046.c:27:10:getX	1
-xpt2046.c:35:10:getY	1
-xpt2046.c:43:6:XPT2046_Init	1

@@ -124,9 +124,10 @@
 	#define card_border_color 0xb7fff8	
 	#define slider_fill_color 0x083434
 	
-	#define table_color 0xb7e4c7
-	#define table_color_2 0xd8f3dc
-	#define table_border_color 0x52b788//0x40916c
+	#define table_color 0xf7f9fe//d9d9d9//0xbfbfbf
+	#define table_color_2 0xf0f4ff//e7eefe//fffafa//cee6fd//bfbfbf//0xd9d9d9
+	#define table_border_color  0x99b1ff//0xe6e6e6//0x52b788//0x40916c
+
 	
 	#endif
 	

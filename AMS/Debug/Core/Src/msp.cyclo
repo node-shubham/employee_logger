@@ -1,5 +1,0 @@
-msp.c:14:6:HAL_MspInit	1
-msp.c:22:6:HAL_UART_MspInit	2
-msp.c:47:6:HAL_SPI_MspInit	3
-msp.c:79:6:HAL_TIM_Base_MspInit	2
-msp.c:91:6:HAL_I2C_MspInit	1

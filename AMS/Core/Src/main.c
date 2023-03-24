@@ -312,8 +312,8 @@ int main()
   /* disable stdout buffering */
   setvbuf(stdout, NULL, _IONBF, 0);
 
-  r307_init();
-  fingerprint_match_loop();
+  //r307_init();
+  //fingerprint_match_loop();
 	HAL_GPIO_WritePin(GPIOB,GPIO_PIN_2,GPIO_PIN_SET);
 	HAL_Delay(50);
 	HAL_GPIO_WritePin(GPIOB,GPIO_PIN_2,GPIO_PIN_RESET);
@@ -335,8 +335,8 @@ HAL_I2C_Mem_Read(&hi2c1,dev_addr, 0,2,(uint8_t *)temp_str,sizeof(temp_str),100);
 
 while(1)
 {
-//	touchX = (getX() + 12);
-//	touchY = (470 - getY());
+	touchX = (getX() + 12);
+	touchY = (470 - getY());
 
 	HAL_Delay(200);
 	//read_touch();
@@ -371,16 +371,8 @@ while(1)
 			User_Management();
 			curr_page = 3;
 		}
-		if(isTouched(500, 600, 85, 205)){	// SEARCH ATTENDANCE
 
-		}
-
-		if(touchX >= 200 && touchX <= 300 && touchY >= 85 && touchY <= 205)
-		{
-			User_Management();
-			curr_page = 3;
-		}
-		if(touchX >= 500 && touchX <= 600 && touchY >= 85 && touchY <= 205)  // SEARCH ATTENDANCE
+		if(isTouched( 500, 600, 85, 205))  // SEARCH ATTENDANCE
 		{
 			attendence_search();
 			scanned_EMPLO_ID =1;
@@ -394,12 +386,12 @@ while(1)
 			}
 			curr_page = 7;
 		}
-		if(touchX >= 200 && touchX <= 300 && touchY >= 275 && touchY <= 395)  // USER ROLE
+		if(isTouched(200, 300, 275, 395))  // USER ROLE
 		{
 			Role_Page();
 			curr_page = 8;
 		}
-		if(touchX >= 500 && touchX <= 600 && touchY >= 275 && touchY <= 395)  // SETTING
+		if(isTouched( 500, 600, 275, 395))  // SETTING
 		{
 			//fill_screen(PURPLE);
 			//fill_roundrect(200, 350, 200, 250, YELLOW_2, PURPLE);
@@ -422,12 +414,12 @@ while(1)
 
 	if(curr_page == 3)
 	{
-		if(touchX >= 327 && touchX <= 580 && touchY >= 115 && touchY <= 195) // NEW USER
+		if(isTouched( 327, 580, 115, 195)) // NEW USER
 		{
 			NewEntry_page();
 			curr_page = 4;
 		}
-		if(touchX >= 327 && touchX <= 580 && touchY >= 280 && touchY <= 360) // ALL USER
+		if(isTouched( 327, 580, 280, 360)) // ALL USER
 		{
 			AllUser_Page();
 			scanned_EMPLO_ID = 1;
@@ -442,7 +434,7 @@ while(1)
 			//print_string(170,194,emp_name,0x9900ff);
 			curr_page = 5;
 		}
-		if(touchX >= 8 && touchX <= 72 && touchY >= 10 && touchY <= 70) // BACK
+		if(isTouched( 8, 72, 10, 70)) // BACK
 		{
 			Admin_screen();
 
@@ -453,7 +445,7 @@ while(1)
 /*****************************************  CURRENT PAGE 4 ****************************************************/
 	if(curr_page == 4)
 	{
-		if(touchX >= 197 && touchX <= 503 && touchY >= 69 && touchY <= 135) // NAME
+		if(isTouched( 197, 503, 69, 135)) // NAME
 		{
 			curr_page =6;
 			sub_page =7;
@@ -463,7 +455,7 @@ while(1)
 			Set_Font(&Font12x18);
 			print_string(220,90,emp_name,0x737373);
 		}
-		if(touchX >= 450 && touchX <= 500 && touchY >= 170 && touchY <= 220) // DESGI.draw_rect(450,500,170,220,BLUE);
+		if(isTouched( 450, 500, 170, 220)) // DESGI.draw_rect(450,500,170,220,BLUE);
 		{
 			sub_page =1;
 			drop_btn = !drop_btn;
@@ -484,7 +476,7 @@ while(1)
 		}
 
 
-		if(touchX >= 450 && touchX <= 500 && touchY >= 260 && touchY <= 310) // ROLE
+		if(isTouched( 450, 500, 260, 310)) // ROLE
 		{
 			sub_page =2;
 			drop_btn = !drop_btn;
@@ -503,7 +495,7 @@ while(1)
 			}
 
 		}
-		if(touchX >= 450 && touchX <= 500 && touchY >= 355 && touchY <= 405) // CARD/THUMB
+		if(isTouched( 450, 500, 355, 405)) // CARD/THUMB
 		{
 			sub_page =3;
 			drop_btn = !drop_btn;
@@ -522,13 +514,13 @@ while(1)
 			}
 		}
 
-		if(touchX >= 550 && touchX <= 650 && touchY >= 348 && touchY <= 408) 	// SCAN
+		if(isTouched( 550, 650, 348, 408)) 	// SCAN
 		{
 			read_card();
 
 		}
 
-		if(touchX >= 550 && touchX <= 650 && touchY >= 248 && touchY <= 308) 	// Save
+		if(isTouched( 550, 650, 248, 308)) 	// Save
 		{
 			HAL_Delay(500);
 			scanned_EMPLO_ID = ++emp_id_read;
@@ -550,7 +542,7 @@ while(1)
 			Set_Font(&Font12x18);
 			print_string(550,240,"saved",RED);
 		}
-		if(touchX >= 8 && touchX <= 72 && touchY >= 10 && touchY <= 70) //back
+		if(isTouched( 8, 72, 10, 70)) //back
 		{
 			User_Management();
 			curr_page = 3;
@@ -665,13 +657,13 @@ while(1)
 		//###################################   FOR ALL USER   ################################################
 	if(curr_page == 5)
 	{
-		if(touchX >= 630 && touchX <= 720 && touchY >= 121 && touchY <= 169)  //SAVE  630,720,121,169
+		if(isTouched( 630, 720, 121, 169))  //SAVE  630,720,121,169
 		{
 		}
-		if(touchX >= 494 && touchX <= 584 && touchY >= 121 && touchY <= 169)   //EDIT  494,584,121,169
+		if(isTouched( 494, 584, 121, 169))   //EDIT  494,584,121,169
 		{
 		}
-		if(touchX >= 670 && touchX <= 720 && touchY >= 199 && touchY <= 259)     //	494,720,199,259,0xcedcfd  //desig
+		if(isTouched( 661, 695, 210, 254))     //	494,720,199,259,0xcedcfd  //desig
 		{
 			sub_page =4;
 			drop_btn = !drop_btn;
@@ -684,13 +676,13 @@ while(1)
 			else
 			{
 				sub_page=0;
-				fill_area(494,720,266,320+120,PURPLE);
+				fill_area(494,720,266,320+120,0xfffafa);
 				//AllUser_Page();
 				NewUser_Role1();
 				NewUser_Card1();
 			}
 		}
-		if(touchX >= 670 && touchX <= 720 && touchY >= 289 && touchY <= 349)//	494,720,289,349,//role
+		if(isTouched( 670, 720, 300, 344))//	494,720,289,349,//role
 		{
 			sub_page =5;
 			drop_btn = !drop_btn;
@@ -703,14 +695,14 @@ while(1)
 			else
 			{
 				sub_page=0;
-				fill_area(494,720,154,200+80,PURPLE);
+				fill_area(494,720,154,200+80,0xfffafa);
 				//AllUser_Page();
 				//NewUser_Name();
 				NewUser_Desig1();
 				SaveAndExit();
 			}
 		}
-		if(touchX >= 670 && touchX <= 720 && touchY >= 379 && touchY <= 439)//	494,720,379,439 // card
+		if(isTouched( 661, 695, 390, 434))//	494,720,379,439 // card
 		{
 			sub_page =6;
 			drop_btn = !drop_btn;
@@ -724,13 +716,14 @@ while(1)
 			else
 			{
 				sub_page=0;
-				fill_area(494,720,284,330+40,PURPLE);
+				fill_area(494,720,284,330+40,0xfffafa);
 				//AllUser_Page();
 				NewUser_Role1();
 			}
 		}
-		if(touchX >= 8 && touchX <= 72 && touchY >=  10&& touchY <= 70) //back
+		if(isTouched( 8, 72, 10, 70)) //back
 		{
+			fill_area(45, 725, 96, 464,PURPLE);
 			User_Management();
 			curr_page = 3;
 		}
@@ -835,82 +828,82 @@ while(1)
 /*****************************************  CURRENT PAGE 6 ****************************************************/
 /***********************************  KEYPAD_TOUCH*************************************************/
 	if(curr_page == 6)
-	{
-		Set_Font(&Font12x18);
-		//Set_Font(&Font16x24);
-		//HAL_Delay(100);
-		static uint8_t pos =0;
-		int x=0,x1=0,y=31,y1=0,k=0;
-		if(touchX >= 555 && touchX <= 695 && touchY >= 385+y && touchY <= 435+y) // down  555,695,385+y,435+y
-		{
-				if(keypad_down)
-				{
-					//clear_area();
-					fill_area(0,800,200,480,PURPLE);
-					NewEntry_page();
-					curr_page = 4;
-				}
-				else
-				{
-					fill_area(0,800,200,480,PURPLE);
-					attendence_search();
-					curr_page = 7;
-				}
-
-			if(curr_page == 7)
 			{
-			}
-		}
-
-		if(touchX >= 105 && touchX <= 185 && touchY >= 325+y && touchY <= 375+y) //caps  105,185,325+y,375+y
-		{
-			UC_FLAG = !UC_FLAG;
-		}
-		if(touchX >= 225 && touchX <= 545 && touchY >= 385+y && touchY <= 435+y)		// space 255,545,385+y,435+y
-		{
-			HAL_Delay(100);
-
-			print_char(220+(pos*12),85,32,0xe7eefe);
-			*(emp_name+pos) =32;
-			pos++;
-		}
-		if(touchX >= 615 && touchX <= 695 && touchY >= 325+y && touchY <= 375+y)  //backspace  615,695,325+y,375+y
-		{
-			pos--;
-			fill_area(220+(pos*12),235+(pos*12),85,115,0xe7eefe);
-		}
-
-		for(int idx1=0; idx1<3; idx1++)
-		{
-			x1+=30*idx1;
-			for(int idx2=0; idx2<=9-(idx1*2-k); idx2++)
-			{
-				if(touchX >= x1+105+x && touchX <= x1+155+x && touchY >= y1+205+y && touchY <= y1+255+y)  //keys x1+105+x,x1+155+x,y1+205+y,y1+255+y
+				Set_Font(&Font12x18);
+				//Set_Font(&Font16x24);
+				//HAL_Delay(100);
+				static uint8_t pos =0;
+				int x=0,x1=0,y=31,y1=0,k=0;
+				if(touchX >= 525 && touchX <= 615 && touchY >= 340+y && touchY <= 380+y) // down  525,615,360+y,400+y
 				{
-							print_char(220+(pos*12),90,char_key[idx1][idx2],RED);
-							*(emp_name+pos) =char_key[idx1][idx2];
-						pos++;
+						if(keypad_down)
+						{
+							//clear_area();
+							fill_area(0,800,200,480,PURPLE);
+							NewEntry_page();
+							curr_page = 4;
+						}
+						else
+						{
+							fill_area(0,800,200,480,PURPLE);
+							attendence_search();
+							curr_page = 7;
+						}
+
+					if(curr_page == 7)
+					{
+					}
 				}
-				x+=60;
-			}
-			x=0;
-			k=1;
-			y1+=60;
-		}
-		*(emp_name+pos+1)= '\0';
+
+				if(touchX >= 150 && touchX <= 215 && touchY >= 290+y && touchY <= 330+y) //caps  150,215,310+y,350+y
+				{
+					UC_FLAG = !UC_FLAG;
+				}
+				if(touchX >= 275 && touchX <= 515 && touchY >= 340+y && touchY <= 380+y)		// space 275,515,360+y,400+y
+				{
+					HAL_Delay(100);
+
+					print_char(220+(pos*12),85,32,0xe7eefe);
+					*(emp_name+pos) =32;
+					pos++;
+				}
+				if(touchX >= 575 && touchX <= 640 && touchY >= 290+y && touchY <= 330+y) //backspace  575,640,310+y,350+y
+				{
+					pos--;
+					fill_area(220+(pos*12),235+(pos*12),85,115,0xe7eefe);
+				}
+
+				for(int idx1=0; idx1<3; idx1++)
+				{
+					x1+=25*idx1;
+					for(int idx2=0; idx2<=9-(idx1*2-k); idx2++)
+					{
+						if(touchX >= x1+150+x && touchX <= x1+190+x && touchY >= y1+190+y && touchY <= y1+230+y)  //keys x1+105+x,x1+155+x,y1+205+y,y1+255+y
+						{
+									print_char(220+(pos*12),90,char_key[idx1][idx2],RED);
+									*(emp_name+pos) =char_key[idx1][idx2];
+								pos++;
+						}
+						x+=50;
+					}
+					x=0;
+					k=1;
+					y1+=50;
+				}
+				*(emp_name+pos+1)= '\0';
 
 	}		/********************************************************************************************************/
 /*****************************************  CURRENT PAGE 7 ****************************************************/
 	if(curr_page == 7)
 	{
-		if(touchX >= 190 && touchX <= 590 && touchY >= 36 && touchY <= 84) //190,590,36,84
+		if(isTouched( 190, 590, 36, 84)) //190,590,36,84
 		{
 			PageKeyPad();
 			keypad_down = 0;
 			curr_page = 6;
 			print_string(200,50,emp_name,0x737373); //190,590,36,84,
 		}
-		if(touchX >= 8 && touchX <= 72 && touchY >= 10&& touchY <= 70) // back
+		if(isTouched( 8, 72, 10, 70)) // back
 		{
 			Admin_screen();
 			curr_page = 2;
@@ -919,7 +912,7 @@ while(1)
 /*****************************************  CURRENT PAGE 8 ****************************************************/
 	if(curr_page == 8)
 	{
-		if(touchX >= 8 && touchX <= 72 && touchY >= 10 && touchY <= 70) // back
+		if(isTouched( 8, 72, 10, 70)) // back
 		{
 			Admin_screen();
 			curr_page = 2;

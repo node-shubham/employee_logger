@@ -1,8 +1,7 @@
 ssd1963/src/ssd1963.o: ../ssd1963/src/ssd1963.c \
- C:/Users/shubh/OneDrive/Desktop/Workspace/FINGERPRINT/AMS\ v1.4.5/AMS/ssd1963/inc/ssd1963.h \
- C:/Users/shubh/OneDrive/Desktop/Workspace/FINGERPRINT/AMS\ v1.4.5/AMS/ssd1963/inc/ssd1963_config.h \
- ../Core/Inc/types.h \
- C:/Users/shubh/OneDrive/Desktop/Workspace/FINGERPRINT/AMS\ v1.4.5/AMS/ssd1963/inc/fonts.h \
+ E:/STM\ WORKSPACE/WORK/AMS/ssd1963/inc/ssd1963.h \
+ E:/STM\ WORKSPACE/WORK/AMS/ssd1963/inc/ssd1963_config.h \
+ ../Core/Inc/types.h E:/STM\ WORKSPACE/WORK/AMS/ssd1963/inc/fonts.h \
  ../Core/Inc/main.h \
  ../Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h \
  ../Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f401xc.h \
@@ -35,11 +34,11 @@ ssd1963/src/ssd1963.o: ../ssd1963/src/ssd1963.c \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- C:/Users/shubh/OneDrive/Desktop/Workspace/FINGERPRINT/AMS\ v1.4.5/AMS/ssd1963/inc/fonts.h
-C:/Users/shubh/OneDrive/Desktop/Workspace/FINGERPRINT/AMS\ v1.4.5/AMS/ssd1963/inc/ssd1963.h:
-C:/Users/shubh/OneDrive/Desktop/Workspace/FINGERPRINT/AMS\ v1.4.5/AMS/ssd1963/inc/ssd1963_config.h:
+ E:/STM\ WORKSPACE/WORK/AMS/ssd1963/inc/fonts.h
+E:/STM\ WORKSPACE/WORK/AMS/ssd1963/inc/ssd1963.h:
+E:/STM\ WORKSPACE/WORK/AMS/ssd1963/inc/ssd1963_config.h:
 ../Core/Inc/types.h:
-C:/Users/shubh/OneDrive/Desktop/Workspace/FINGERPRINT/AMS\ v1.4.5/AMS/ssd1963/inc/fonts.h:
+E:/STM\ WORKSPACE/WORK/AMS/ssd1963/inc/fonts.h:
 ../Core/Inc/main.h:
 ../Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h:
 ../Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f401xc.h:
@@ -72,4 +71,4 @@ C:/Users/shubh/OneDrive/Desktop/Workspace/FINGERPRINT/AMS\ v1.4.5/AMS/ssd1963/in
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h:
-C:/Users/shubh/OneDrive/Desktop/Workspace/FINGERPRINT/AMS\ v1.4.5/AMS/ssd1963/inc/fonts.h:
+E:/STM\ WORKSPACE/WORK/AMS/ssd1963/inc/fonts.h:
