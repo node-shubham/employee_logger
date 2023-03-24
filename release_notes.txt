@@ -1,0 +1,12 @@
+
+*v1.4.7  	
+	fingerprint sensor lib working
+	custom uart-debug for fingerprint fixed (syscalls replaced)
+	freeRTOS + segger disabled 
+	
+*active issues  	
+	Rfid sensor not working	
+	
+*v1.5.0	
+	Rfid sensor fixed
+	 
