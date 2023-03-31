@@ -62,6 +62,27 @@ I2C_HandleTypeDef i2c2;
 									I2C_HandleTypeDef hi2c1;
 TIM_HandleTypeDef tim5;
 
+uint8_t value = 0;
+char str1[40]={'\0'};
+char str2[40]={'\0'};
+char str3[40]={'\0'};
+char str4[40]={'\0'};
+char tmp_str[65]={'\0'};
+
+  u_char status, cardstr[MAX_LEN+1];
+  u_char card_data[17];
+  uint32_t delay_val = 1000; //ms
+  uint16_t result = 0;
+	u_char UID[5];
+
+
+
+  // a private key to scramble data writing/reading to/from RFID card:
+  u_char Mx1[7][5]={{0x12,0x45,0xF2,0xA8},{0xB2,0x6C,0x39,0x83},{0x55,0xE5,0xDA,0x18},
+		  	  	  	{0x1F,0x09,0xCA,0x75},{0x99,0xA2,0x50,0xEC},{0x2C,0x88,0x7F,0x3D}};
+  u_char SectorKey[7];
+
+
 uint8_t char_cnt=0;
 uint8_t curr_page = 1;
 uint8_t admin_page = 0;
@@ -266,7 +287,7 @@ uint8_t check_validcard(void){
 
 void read_card(void)
 {
-	if(rc522_checkCard(rfid_id))
+	//if(rc522_checkCard(rfid_id))
 		{
 			memset(data,0,sizeof(data));
 			memset(issue_uid,0,sizeof(issue_uid));
@@ -297,7 +318,9 @@ int main()
 	//i2c2_init();
 	//tim5_init();
 
-	rc522_init();
+	//rc522_init();
+	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, GPIO_PIN_SET);
+	MFRC522_Init();
 
 	/* Display & touch Init */
 #if (SSD1963_DISPLAY)
@@ -332,6 +355,11 @@ HAL_I2C_Mem_Read(&hi2c1, dev_addr1, 0x00, 2, (uint8_t *)&emp_id_read, 1, 100);
 
 HAL_I2C_Mem_Read(&hi2c1,dev_addr, 0,2,(uint8_t *)temp_str,sizeof(temp_str),100);
 
+status = Read_MFRC522(VersionReg);
+sprintf(str1,"Running RC522");
+sprintf(str2,"\nver:%x", status);
+HAL_UART_Transmit(&uart1,(uint8_t *)str1,strlen(str1),1000);
+HAL_UART_Transmit(&uart1,(uint8_t *)str2,strlen(str2),1000);
 
 while(1)
 {
@@ -1212,6 +1240,22 @@ static void read_touch(void)
 
 void rfid_read(void)
 {
+	status = 0;
+	status = MFRC522_Request(PICC_REQIDL, cardstr);
+	if(status == MI_OK)
+	{
+		sprintf(str1,"Card:%x,%x,%x", cardstr[0], cardstr[1], cardstr[2]);
+		HAL_Delay(2);
+
+		status = MFRC522_Anticoll(cardstr);
+		if(status == MI_OK) {
+			sprintf(str2,"UID:%x %x %x %x \r\n", cardstr[0], cardstr[1], cardstr[2], cardstr[3]);
+			HAL_UART_Transmit(&uart1,(uint8_t *)str2,strlen(str2),1000);
+		}
+		MFRC522_StopCrypto1();
+		MFRC522_Halt();
+	}
+	/*
 	if(rc522_checkCard(rfid_id))
 		{
 			memset(data,0,sizeof(data));
@@ -1230,6 +1274,7 @@ void rfid_read(void)
 #endif
 			}
 		}
+	*/
 
 }
 

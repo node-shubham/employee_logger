@@ -1,200 +1,148 @@
-/*
- * RFID.h
- *
- *  Created on: Jan 16, 2022
- *      Author: hussam
- */
+#ifndef MFRC522_H_
+#define MFRC522_H_
+
 #include "main.h"
+#include "stm32f4xx_hal.h"
+
+//typedef unsigned char u_char;
+//typedef unsigned int uint;
 
 
-#ifndef RFID_H_
-#define RFID_H_
-
-#include "stdio.h"
-#include "stdbool.h"
-#include "stdint.h"
+extern SPI_HandleTypeDef spi1;
 
 
-#define MFRC522_SPI 	spi1
+#define RC522_CS_GPIO_Port	GPIOB
+#define RC522_CS_Pin				GPIO_PIN_0
 
-//#define MFRC522_CS_LOW          MFRC522_CS_PORT->BSRRH = MFRC522_CS_PIN;
-//#define MFRC522_CS_HIGH         MFRC522_CS_PORT->BSRRL = MFRC522_CS_PIN;
+#define MFRC522_RST_LOW() 		GPIOB->BSRR= (1<<1)<<16;
+#define MFRC522_RST_HIGH() 		GPIOB->BSRR= (1<<1);
+
+//#define RC522_Rst_GPIO_Port	GPIOB
+//#define RC522_Rst_Pin				GPIO_PIN_1
+
+//Maximum length of the array
+#define MAX_LEN 16
+
+//MF522 Command word
+#define PCD_IDLE              0x00               //NO action; Cancel the current command
+#define PCD_AUTHENT           0x0E               //Authentication Key
+#define PCD_RECEIVE           0x08               //Receive Data
+#define PCD_TRANSMIT          0x04               //Transmit data
+#define PCD_TRANSCEIVE        0x0C               //Transmit and receive data,
+#define PCD_RESETPHASE        0x0F               //Reset
+#define PCD_CALCCRC           0x03               //CRC Calculate
+
+// Mifare_One card command word
+# define PICC_REQIDL          0x26               // find the antenna area does not enter hibernation
+# define PICC_REQALL          0x52               // find all the cards antenna area
+# define PICC_ANTICOLL        0x93               // anti-collision
+# define PICC_SElECTTAG       0x93               // election card
+# define PICC_AUTHENT1A       0x60               // authentication key A
+# define PICC_AUTHENT1B       0x61               // authentication key B
+# define PICC_READ            0x30               // Read Block
+# define PICC_WRITE           0xA0               // write block
+# define PICC_DECREMENT       0xC0               // debit
+# define PICC_INCREMENT       0xC1               // recharge
+# define PICC_RESTORE         0xC2               // transfer block data to the buffer
+# define PICC_TRANSFER        0xB0               // save the data in the buffer
+# define PICC_HALT            0x50               // Sleep
 
 
+//And MF522 The error code is returned when communication
+#define MI_OK                 0
+#define MI_NOTAGERR           1
+#define MI_ERR                2
 
-/* MFRC522 Commands */
-#define PCD_IDLE            0x00   //NO action; Cancel the current command
-#define PCD_AUTHENT           0x0E   //Authentication Key
-#define PCD_RECEIVE           0x08   //Receive Data
-#define PCD_TRANSMIT          0x04   //Transmit data
-#define PCD_TRANSCEIVE          0x0C   //Transmit and receive data,
-#define PCD_RESETPHASE          0x0F   //Reset
-#define PCD_CALCCRC           0x03   //CRC Calculate
 
-/* Mifare_One card command word */
-#define PICC_REQIDL           0x26   // find the antenna area does not enter hibernation
-#define PICC_REQALL           0x52   // find all the cards antenna area
-#define PICC_ANTICOLL         0x93   // anti-collision
-#define PICC_SElECTTAG          0x93   // election card
-#define PICC_AUTHENT1A          0x60   // authentication key A
-#define PICC_AUTHENT1B          0x61   // authentication key B
-#define PICC_READ           0x30   // Read Block
-#define PICC_WRITE            0xA0   // write block
-#define PICC_DECREMENT          0xC0   // debit
-#define PICC_INCREMENT          0xC1   // recharge
-#define PICC_RESTORE          0xC2   // transfer block data to the buffer
-#define PICC_TRANSFER         0xB0   // save the data in the buffer
-#define PICC_HALT           0x50   // Sleep
-
-/* MFRC522 Registers */
-//Page 0: Command and Status
-#define MFRC522_REG_RESERVED00      0x00
-#define MFRC522_REG_COMMAND       0x01
-#define MFRC522_REG_COMM_IE_N     0x02
-#define MFRC522_REG_DIV1_EN       0x03
-#define MFRC522_REG_COMM_IRQ      0x04
-#define MFRC522_REG_DIV_IRQ       0x05
-#define MFRC522_REG_ERROR       0x06
-#define MFRC522_REG_STATUS1       0x07
-#define MFRC522_REG_STATUS2       0x08
-#define MFRC522_REG_FIFO_DATA     0x09
-#define MFRC522_REG_FIFO_LEVEL      0x0A
-#define MFRC522_REG_WATER_LEVEL     0x0B
-#define MFRC522_REG_CONTROL       0x0C
-#define MFRC522_REG_BIT_FRAMING     0x0D
-#define MFRC522_REG_COLL        0x0E
-#define MFRC522_REG_RESERVED01      0x0F
-//Page 1: Command
-#define MFRC522_REG_RESERVED10      0x10
-#define MFRC522_REG_MODE        0x11
-#define MFRC522_REG_TX_MODE       0x12
-#define MFRC522_REG_RX_MODE       0x13
-#define MFRC522_REG_TX_CONTROL      0x14
-#define MFRC522_REG_TX_AUTO       0x15
-#define MFRC522_REG_TX_SELL       0x16
-#define MFRC522_REG_RX_SELL       0x17
-#define MFRC522_REG_RX_THRESHOLD    0x18
-#define MFRC522_REG_DEMOD       0x19
-#define MFRC522_REG_RESERVED11      0x1A
-#define MFRC522_REG_RESERVED12      0x1B
-#define MFRC522_REG_MIFARE        0x1C
-#define MFRC522_REG_RESERVED13      0x1D
-#define MFRC522_REG_RESERVED14      0x1E
-#define MFRC522_REG_SERIALSPEED     0x1F
-//Page 2: CFG
-#define MFRC522_REG_RESERVED20      0x20
-#define MFRC522_REG_CRC_RESULT_M    0x21
-#define MFRC522_REG_CRC_RESULT_L    0x22
-#define MFRC522_REG_RESERVED21      0x23
-#define MFRC522_REG_MOD_WIDTH     0x24
-#define MFRC522_REG_RESERVED22      0x25
-#define MFRC522_REG_RF_CFG        0x26
-#define MFRC522_REG_GS_N        0x27
-#define MFRC522_REG_CWGS_PREG     0x28
-#define MFRC522_REG__MODGS_PREG     0x29
-#define MFRC522_REG_T_MODE        0x2A
-#define MFRC522_REG_T_PRESCALER     0x2B
-#define MFRC522_REG_T_RELOAD_H      0x2C
-#define MFRC522_REG_T_RELOAD_L      0x2D
-#define MFRC522_REG_T_COUNTER_VALUE_H 0x2E
-#define MFRC522_REG_T_COUNTER_VALUE_L 0x2F
+//------------------MFRC522 Register---------------
+//Page 0:Command and Status
+#define     Reserved00            0x00
+#define     CommandReg            0x01
+#define     CommIEnReg            0x02
+#define     DivlEnReg             0x03
+#define     CommIrqReg            0x04
+#define     DivIrqReg             0x05
+#define     ErrorReg              0x06
+#define     Status1Reg            0x07
+#define     Status2Reg            0x08
+#define     FIFODataReg           0x09
+#define     FIFOLevelReg          0x0A
+#define     WaterLevelReg         0x0B
+#define     ControlReg            0x0C
+#define     BitFramingReg         0x0D
+#define     CollReg               0x0E
+#define     Reserved01            0x0F
+//Page 1:Command
+#define     Reserved10            0x10
+#define     ModeReg               0x11
+#define     TxModeReg             0x12
+#define     RxModeReg             0x13
+#define     TxControlReg          0x14
+#define     TxAutoReg             0x15
+#define     TxSelReg              0x16
+#define     RxSelReg              0x17
+#define     RxThresholdReg        0x18
+#define     DemodReg              0x19
+#define     Reserved11            0x1A
+#define     Reserved12            0x1B
+#define     MifareReg             0x1C
+#define     Reserved13            0x1D
+#define     Reserved14            0x1E
+#define     SerialSpeedReg        0x1F
+//Page 2:CFG
+#define     Reserved20            0x20
+#define     CRCResultRegM         0x21
+#define     CRCResultRegL         0x22
+#define     Reserved21            0x23
+#define     ModWidthReg           0x24
+#define     Reserved22            0x25
+#define     RFCfgReg              0x26
+#define     GsNReg                0x27
+#define     CWGsPReg              0x28
+#define     ModGsPReg             0x29
+#define     TModeReg              0x2A
+#define     TPrescalerReg         0x2B
+#define     TReloadRegH           0x2C
+#define     TReloadRegL           0x2D
+#define     TCounterValueRegH     0x2E
+#define     TCounterValueRegL     0x2F
 //Page 3:TestRegister
-#define MFRC522_REG_RESERVED30      0x30
-#define MFRC522_REG_TEST_SEL1     0x31
-#define MFRC522_REG_TEST_SEL2     0x32
-#define MFRC522_REG_TEST_PIN_EN     0x33
-#define MFRC522_REG_TEST_PIN_VALUE    0x34
-#define MFRC522_REG_TEST_BUS      0x35
-#define MFRC522_REG_AUTO_TEST     0x36
-#define MFRC522_REG_VERSION       0x37
-#define MFRC522_REG_ANALOG_TEST     0x38
-#define MFRC522_REG_TEST_ADC1     0x39
-#define MFRC522_REG_TEST_ADC2     0x3A
-#define MFRC522_REG_TEST_ADC0     0x3B
-#define MFRC522_REG_RESERVED31      0x3C
-#define MFRC522_REG_RESERVED32      0x3D
-#define MFRC522_REG_RESERVED33      0x3E
-#define MFRC522_REG_RESERVED34      0x3F
-//Dummy byte
-#define MFRC522_DUMMY         0x00
-
-#define MFRC522_MAX_LEN         16
-
-
-/**
- * @brief initialize function
- */
-void rc522_init(void);
-
-/**
- * @brief read register
- */
-uint8_t rc522_regRead8(uint8_t reg);
-
-/**
- * @brief write register
- */
-void rc522_regWrite8(uint8_t reg, uint8_t data8);
-
-/**
- * @brief set bit
- */
-void rc522_setBit(uint8_t reg, uint8_t mask);
-
-/**
- * @brief clear bit
- */
-void rc522_clearBit(uint8_t reg, uint8_t mask);
-
-/**
- * @brief reset function
- */
-void rc522_reset(void);
-
-/**
- * @brief Antenna ON
- */
-void rc522_antennaON(void);
-
-/**
- * @brief Check card
- */
-bool rc522_checkCard(uint8_t *id);
-
-/**
- * @brief Request function
- */
-bool rc522_request(uint8_t reqMode, uint8_t *tagType);
-
-/**
- * @brief to Card
- */
-bool rc522_toCard(
-    uint8_t command,
-    uint8_t* sendData,
-    uint8_t sendLen,
-    uint8_t* backData,
-    uint16_t* backLen);
-
-/**
- * @brief Anti-Collis
- */
-bool rc522_antiColl(uint8_t* serNum);
-
-/**
- * @brief Halt
- */
-void rc522_halt(void);
-
-/**
- * @brief calculate CRC
- */
-void rc522_calculateCRC(uint8_t*  pIndata, uint8_t len, uint8_t* pOutData);
-
-/**
- * @brief compare IDs
- */
-bool rc522_compareIds(uint8_t *idCurrent, uint8_t *idReference);
+#define     Reserved30            0x30
+#define     TestSel1Reg           0x31
+#define     TestSel2Reg           0x32
+#define     TestPinEnReg          0x33
+#define     TestPinValueReg       0x34
+#define     TestBusReg            0x35
+#define     AutoTestReg           0x36
+#define     VersionReg            0x37
+#define     AnalogTestReg         0x38
+#define     TestDAC1Reg           0x39
+#define     TestDAC2Reg           0x3A
+#define     TestADCReg            0x3B
+#define     Reserved31            0x3C
+#define     Reserved32            0x3D
+#define     Reserved33            0x3E
+#define     Reserved34            0x3F
+//-----------------------------------------------
+// function definitions
+void Write_MFRC522(u_char, u_char);
+u_char Read_MFRC522(u_char);
+void SetBitMask(u_char, u_char);
+void ClearBitMask(u_char, u_char);
+void AntennaOn();
+void AntennaOff();
+void MFRC522_Reset();
+void MFRC522_Init();
+u_char MFRC522_Request(u_char, u_char*);
+u_char MFRC522_ToCard(u_char, u_char*, u_char, u_char*, uint*);
+u_char MFRC522_Anticoll(u_char*);
+void CalulateCRC(u_char*, u_char, u_char*);
+u_char MFRC522_SelectTag(u_char*);
+u_char MFRC522_Auth(u_char, u_char, u_char*, u_char*);
+u_char MFRC522_Read(u_char, u_char*);
+u_char MFRC522_Write(u_char, u_char*);
+void MFRC522_Halt();
+void MFRC522_StopCrypto1(void);
 
 
-#endif /* RFID_H_ */
+#endif /* MFRC522_H_ */
