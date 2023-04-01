@@ -64,7 +64,8 @@ void add_Employee (void)
      }
   else
      {
-	    if(chek_employee())    ///   availble_employee = 1;
+	    HAL_I2C_Mem_Read(&hi2c1, dev_addr1, calculate_addr, 2, (uint8_t *) &(read_details), sizeof(read_details), 100);  ///  READ Employee_details
+	  	if((next_emp_id == read_details.rd_EMPLO_id) && (write_details.wr_EMPLO_name == read_details.rd_EMPLO_name))   ///   availble_employee
 		  {
 			print_string(10,90,"this employee is available",WHITE);
 		  }

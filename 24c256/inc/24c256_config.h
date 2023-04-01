@@ -27,7 +27,6 @@ struct WRITE_DETAILS
 	uint8_t wr_exit_HH;
 	uint8_t wr_exit_MM;
 	char wr_EMPLO_name[19];
-
 };
 
 struct READ_DETAILS
@@ -42,7 +41,6 @@ struct READ_DETAILS
 	uint8_t rd_exit_HH;
 	uint8_t rd_exit_MM;
 	char rd_EMPLO_name[19];
-
 };
 
 #endif
@@ -66,6 +64,8 @@ void var_init(void);
 
 extern uint8_t dev_addr;
 extern uint8_t dev_addr1;
+extern uint16_t next_emp_id;
+extern uint16_t last_emp_id;
 extern uint16_t scanned_EMPLO_ID;
 extern uint16_t calculate_addr;
 extern uint32_t scanned_UID;
