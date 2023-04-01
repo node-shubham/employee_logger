@@ -8,6 +8,8 @@
 #include "user_global.h"
 
 
+
+
 uint16_t g_pos_x = 0;
 uint16_t g_pos_y = 0;
 

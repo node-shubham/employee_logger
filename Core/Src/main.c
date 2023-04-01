@@ -24,27 +24,31 @@
 #include "main.h"
 #include "user_global.h"
 
-#include "ssd1963.h"
-#include "xpt2046.h"
-#include "mfrc522.h"
+#if (USE_SSD1963_DISPLAY)
+	#include "ssd1963.h"
+	#include "xpt2046.h"
+#endif
 
-#include "fpm.h"
-#include "uart_drv.h"
-//#include "r307_config.h"
+#if (USE_RFID)
+	#include "mfrc522.h"
+#endif
+
+#if (USE_FINGERPRINT)
+	#include "fpm.h"
+	#include "uart_drv.h"
+	//#include "r307_config.h"
+#endif
 
 #if (USE_FREERTOS)
-#include "FreeRTOS.h"
-#include "task.h"
+	#include "FreeRTOS.h"
+	#include "task.h"
 #endif
 
 
 //#define SYSCLK_HSE_25MHZ
 #define SYSCLK_PLL_84MHZ
 
-#define  SSD1963_DISPLAY	1
-#define  DEBUG_LED			0
-#define	 DEBUG_UART			1
-#define	 USE_FREERTOS		0
+
 
 #if (USE_FREERTOS)
 #define DWT_CTRL 	(*(volatile int *)0xE0001000)
@@ -59,7 +63,7 @@ UART_HandleTypeDef uart1;
 SPI_HandleTypeDef spi1;
 SPI_HandleTypeDef spi2;
 I2C_HandleTypeDef i2c2;
-									I2C_HandleTypeDef hi2c1;
+I2C_HandleTypeDef hi2c1;
 TIM_HandleTypeDef tim5;
 
 uint8_t value = 0;
@@ -182,7 +186,7 @@ uint8_t read_buf[4]={0};
 
  /*******temp************/
 
- uint8_t uid_read[4] ={0};
+ u_char uid_read[4] ={0};
 
  int ia=128;
  uint8_t temp_str[100]={0};
@@ -227,7 +231,7 @@ char card_auth[4]= {0x43,0xeb,0x79,0x03};
 char msg[]="Approach your Proximate card\r\n";
 char data[20]={0};
 
-
+void assign_card(void);
 
 #if (USE_FREERTOS)
 BaseType_t status;
@@ -264,12 +268,22 @@ static void display_handler(void * param)
 
 
 uint8_t check_validcard(void){
-	int i=4;
-
 	memset(uid_read,0,sizeof(uid_read));
+	//HAL_I2C_Mem_Read(&hi2c1, dev_addr1, 156+j*32, 2, (uint8_t *)&uid_read, 4, 100);
+	if((uid_read[3]==cardstr[0])&&(uid_read[2]==cardstr[1])&&(uid_read[1]==cardstr[2])&&(uid_read[0]==cardstr[3]))
+	{
+		char msg[] = "Access Granted\r\n";
+		HAL_UART_Transmit(&uart1,(uint8_t *)msg,sizeof(msg),1000);
+		return 1;
+	}
+	char msg[] = "Access Denied\r\n";
+	HAL_UART_Transmit(&uart1,(uint8_t *)msg,sizeof(msg),1000);
+	return 0;
+
+	/*
 	for(int j=0;j<emp_id_read;j++)
 	{
-		HAL_I2C_Mem_Read(&hi2c1, dev_addr1, 156+j*32, 2, (uint8_t *)&uid_read, 4, 100);
+		//HAL_I2C_Mem_Read(&hi2c1, dev_addr1, 156+j*32, 2, (uint8_t *)&uid_read, 4, 100);
 		if((uid_read[3]==rfid_id[0])&&(uid_read[2]==rfid_id[1])&&(uid_read[1]==rfid_id[2])&&(uid_read[0]==rfid_id[3]))
 		{
 			char msg[] = "Access Granted\r\n";
@@ -278,9 +292,7 @@ uint8_t check_validcard(void){
 			return 1;
 		}
 	}
-	char msg[] = "Access Denied\r\n";
-												//HAL_UART_Transmit(&huart1,(uint8_t *)msg,sizeof(msg),1000);
-	return 0;
+	*/
 }
 
 
@@ -582,38 +594,37 @@ while(1)
 			{
 				 if(touchY >= 234 && touchY <= 280)
 				 {
-						active_role =0;
-						desgn_ptr =	dropdown_desgn[0];
-					 	fill_area(210,400,180,210,0xe7eefe);
-						print_string(220,190,desgn_ptr,0x737373);
-						dropdown(&dropdown_desgn[0],4,0,0,0);
-						desgn_id =0;
+					active_role =0;
+					desgn_ptr =	dropdown_desgn[0];
+					fill_area(210,400,180,210,0xe7eefe);
+					print_string(220,190,desgn_ptr,0x737373);
+					dropdown(&dropdown_desgn[0],4,0,0,0);
+					desgn_id =0;
 				 }
 				 if(touchY >= 234+40 && touchY <= 280+40)
 				 {
-						active_role =1;
-					 desgn_ptr =	dropdown_desgn[1];
-					 	fill_area(210,400,180,210,0xe7eefe);
-						print_string(220,190,desgn_ptr,0x737373);
-					 dropdown(&dropdown_desgn[0],4,0,0,0);
-					 desgn_id =1;
+					active_role =1;
+					desgn_ptr =	dropdown_desgn[1];
+					fill_area(210,400,180,210,0xe7eefe);
+					print_string(220,190,desgn_ptr,0x737373);
+					dropdown(&dropdown_desgn[0],4,0,0,0);
+					desgn_id =1;
 				 }
 				 if(touchY >= 234+80 && touchY <= 280+80)
 				 {
-						active_role =2;
+					 active_role =2;
 					 desgn_ptr =	dropdown_desgn[2];
-					 	fill_area(210,400,180,210,0xe7eefe);
-						print_string(220,190,desgn_ptr,0x737373);
+					 fill_area(210,400,180,210,0xe7eefe);
+					 print_string(220,190,desgn_ptr,0x737373);
 					 dropdown(&dropdown_desgn[0],4,0,0,0);
 					 desgn_id =2;
 				 }
 				 if(touchY >= 234+120 && touchY <= 280+120)
 				 {
-						active_role =3;
-					 desgn_ptr =	dropdown_desgn[3];
-
-					 	fill_area(210,400,180,210,0xe7eefe);
-						print_string(220,190,desgn_ptr,0x737373);
+					 active_role =3;
+					 desgn_ptr = dropdown_desgn[3];
+					 fill_area(210,400,180,210,0xe7eefe);
+					 print_string(220,190,desgn_ptr,0x737373);
 					 dropdown(&dropdown_desgn[0],4,0,0,0);
 					 desgn_id =3;
 				 }
@@ -627,30 +638,30 @@ while(1)
 			{
 				 if(touchY >= 124 && touchY <= 170)
 				 {
-						active_role =0;
+					 active_role =0;
 					 role_ptr =	dropdown_role[0];
-						fill_area(210,400,270,310,0xe7eefe);
-						print_string(220,280,role_ptr,0x737373);
+					 fill_area(210,400,270,310,0xe7eefe);
+					 print_string(220,280,role_ptr,0x737373);
 					 dropdown(&dropdown_role[0],3,0,0,-120);
 					 role_id =0;
 				 }
 				 if(touchY >= 124+40 && touchY <= 170+40)
 				 {
-						active_role =1;
-						role_ptr =	dropdown_role[1];
-						fill_area(210,400,270,310,0xe7eefe);
-						print_string(220,280,role_ptr,0x737373);
-					 dropdown(&dropdown_role[0],3,0,0,-120);
-					 role_id =1;
+					active_role =1;
+					role_ptr =	dropdown_role[1];
+					fill_area(210,400,270,310,0xe7eefe);
+					print_string(220,280,role_ptr,0x737373);
+					dropdown(&dropdown_role[0],3,0,0,-120);
+					role_id =1;
 				 }
 				 if(touchY >= 124+80 && touchY <= 170+80)
 				 {
-						active_role =2;
-						role_ptr =	dropdown_role[2];
-						fill_area(210,400,270,310,0xe7eefe);
-						print_string(220,280,role_ptr,0x737373);
+					active_role =2;
+					role_ptr =	dropdown_role[2];
+					fill_area(210,400,270,310,0xe7eefe);
+					print_string(220,280,role_ptr,0x737373);
 					 dropdown(&dropdown_role[0],3,0,0,-120);
-						role_id =2;
+					role_id =2;
 				 }
 			}
 		}
@@ -662,19 +673,19 @@ while(1)
 			{
 				 if(touchY >= 254 && touchY <= 300)
 				 {
-						active_role =0;
-						card_ptr = dropdown_CardThumb[0];
-						fill_area(210,400,370,400,0xe7eefe);
-						print_string(220,375,card_ptr,0x737373);
-						dropdown(&dropdown_CardThumb[0],2,0,0,10);
+					active_role =0;
+					card_ptr = dropdown_CardThumb[0];
+					fill_area(210,400,370,400,0xe7eefe);
+					print_string(220,375,card_ptr,0x737373);
+					dropdown(&dropdown_CardThumb[0],2,0,0,10);
 				 }
 				 if(touchY >= 254+40 && touchY <= 300+40)
 				 {
-						active_role =1;
-						card_ptr = dropdown_CardThumb[1];
-						fill_area(210,400,370,400,0xe7eefe);
-						print_string(220,375,card_ptr,0x737373);
-						dropdown(&dropdown_CardThumb[0],2,0,0,10);
+					active_role =1;
+					card_ptr = dropdown_CardThumb[1];
+					fill_area(210,400,370,400,0xe7eefe);
+					print_string(220,375,card_ptr,0x737373);
+					dropdown(&dropdown_CardThumb[0],2,0,0,10);
 				 }
 			}
 		}
@@ -760,39 +771,39 @@ while(1)
 		{
 			if(touchX >= 494 && touchX <= 720)
 			{
-				 if(touchY >= 266 && touchY <= 312)
-				 {
-						active_role =0;
-						desgn_ptr =	dropdown_desgn[0];
-					 	fill_area(499,655,204,254,0xe7eefe);
-						print_string(510,214,desgn_ptr,0x737373);
-						dropdown(&dropdown_desgn[0],4,297,217,32);
-				 }
-				 if(touchY >= 266+40 && touchY <= 312+40)
-				 {
-						active_role =1;
-						desgn_ptr =	dropdown_desgn[1];
-					 	fill_area(499,655,204,254,0xe7eefe);
-						print_string(510,214,desgn_ptr,0x737373);
-						dropdown(&dropdown_desgn[0],4,297,217,32);
-				 }
-				 if(touchY >= 266+80 && touchY <= 312+80)
-				 {
-						active_role =2;
-						desgn_ptr =	dropdown_desgn[2];
-					 	fill_area(499,655,204,254,0xe7eefe);
-						print_string(510,214,desgn_ptr,0x737373);
-						dropdown(&dropdown_desgn[0],4,297,217,32);
-				 }
-				 if(touchY >= 266+120 && touchY <= 312+120)
-				 {
-						active_role =3;
-						desgn_ptr =	dropdown_desgn[3];
+			 if(touchY >= 266 && touchY <= 312)
+			 {
+				active_role =0;
+				desgn_ptr =	dropdown_desgn[0];
+				fill_area(499,655,204,254,0xe7eefe);
+				print_string(510,214,desgn_ptr,0x737373);
+				dropdown(&dropdown_desgn[0],4,297,217,32);
+			 }
+			 if(touchY >= 266+40 && touchY <= 312+40)
+			 {
+				active_role =1;
+				desgn_ptr =	dropdown_desgn[1];
+				fill_area(499,655,204,254,0xe7eefe);
+				print_string(510,214,desgn_ptr,0x737373);
+				dropdown(&dropdown_desgn[0],4,297,217,32);
+			 }
+			 if(touchY >= 266+80 && touchY <= 312+80)
+			 {
+				active_role =2;
+				desgn_ptr =	dropdown_desgn[2];
+				fill_area(499,655,204,254,0xe7eefe);
+				print_string(510,214,desgn_ptr,0x737373);
+				dropdown(&dropdown_desgn[0],4,297,217,32);
+			 }
+			 if(touchY >= 266+120 && touchY <= 312+120)
+			 {
+				active_role =3;
+				desgn_ptr =	dropdown_desgn[3];
 
-					 	fill_area(499,655,204,254,0xe7eefe);
-						print_string(510,214,desgn_ptr,0x737373);
-						dropdown(&dropdown_desgn[0],4,297,217,32);
-				 }
+				fill_area(499,655,204,254,0xe7eefe);
+				print_string(510,214,desgn_ptr,0x737373);
+				dropdown(&dropdown_desgn[0],4,297,217,32);
+			 }
 			}
 		}
 
@@ -803,27 +814,27 @@ while(1)
 			{
 				 if(touchY >= 154 && touchY <= 200)
 				 {
-						active_role =0;
-						role_ptr =	dropdown_role[0];
-						fill_area(499,655,294,344,0xe7eefe);
-						print_string(510,307,role_ptr,0x737373);
-						dropdown(&dropdown_role[0],3,297,217,-80);
+					active_role =0;
+					role_ptr =	dropdown_role[0];
+					fill_area(499,655,294,344,0xe7eefe);
+					print_string(510,307,role_ptr,0x737373);
+					dropdown(&dropdown_role[0],3,297,217,-80);
 				 }
 				 if(touchY >= 154+40 && touchY <= 200+40)
 				 {
-						active_role =1;
-						role_ptr =	dropdown_role[1];
-						fill_area(499,655,294,344,0xe7eefe);
-						print_string(510,307,role_ptr,0x737373);
-						dropdown(&dropdown_role[0],3,297,217,-80);
+					active_role =1;
+					role_ptr =	dropdown_role[1];
+					fill_area(499,655,294,344,0xe7eefe);
+					print_string(510,307,role_ptr,0x737373);
+					dropdown(&dropdown_role[0],3,297,217,-80);
 				 }
 				 if(touchY >= 154+80 && touchY <= 200+80)
 				 {
-						active_role =2;
-						role_ptr =	dropdown_role[2];
-						fill_area(499,655,294,344,0xe7eefe);
-						print_string(510,307,role_ptr,0x737373);
-						dropdown(&dropdown_role[0],3,297,217,-80);
+					active_role =2;
+					role_ptr =	dropdown_role[2];
+					fill_area(499,655,294,344,0xe7eefe);
+					print_string(510,307,role_ptr,0x737373);
+					dropdown(&dropdown_role[0],3,297,217,-80);
 				 }
 			}
 		}
@@ -835,19 +846,19 @@ while(1)
 			{
 				 if(touchY >= 284 && touchY <= 330)
 				 {
-						active_role =0;
-					 card_ptr = dropdown_CardThumb[0];
-						fill_area(499,655,384,434,0xe7eefe);
-						print_string(510,400,card_ptr,0x737373);
-					 dropdown(&dropdown_CardThumb[0],2,297,217,50);
+					active_role =0;
+					card_ptr = dropdown_CardThumb[0];
+					fill_area(499,655,384,434,0xe7eefe);
+					print_string(510,400,card_ptr,0x737373);
+					dropdown(&dropdown_CardThumb[0],2,297,217,50);
 				 }
 				 if(touchY >= 284+40 && touchY <= 330+40)
 				 {
-						active_role =1;
-						card_ptr = dropdown_CardThumb[1];
-						fill_area(499,655,384,434,0xe7eefe);
-						print_string(510,400,card_ptr,0x737373);
-					 dropdown(&dropdown_CardThumb[0],2,297,217,50);
+					active_role =1;
+					card_ptr = dropdown_CardThumb[1];
+					fill_area(499,655,384,434,0xe7eefe);
+					print_string(510,400,card_ptr,0x737373);
+					dropdown(&dropdown_CardThumb[0],2,297,217,50);
 				 }
 			}
 		}
@@ -856,72 +867,72 @@ while(1)
 /*****************************************  CURRENT PAGE 6 ****************************************************/
 /***********************************  KEYPAD_TOUCH*************************************************/
 	if(curr_page == 6)
+	{
+		Set_Font(&Font12x18);
+		//Set_Font(&Font16x24);
+		//HAL_Delay(100);
+		static uint8_t pos =0;
+		int x=0,x1=0,y=31,y1=0,k=0;
+		if(touchX >= 525 && touchX <= 615 && touchY >= 340+y && touchY <= 380+y) // down  525,615,360+y,400+y
+		{
+				if(keypad_down)
+				{
+					//clear_area();
+					fill_area(0,800,200,480,PURPLE);
+					NewEntry_page();
+					curr_page = 4;
+				}
+				else
+				{
+					fill_area(0,800,200,480,PURPLE);
+					attendence_search();
+					curr_page = 7;
+				}
+
+			if(curr_page == 7)
 			{
-				Set_Font(&Font12x18);
-				//Set_Font(&Font16x24);
-				//HAL_Delay(100);
-				static uint8_t pos =0;
-				int x=0,x1=0,y=31,y1=0,k=0;
-				if(touchX >= 525 && touchX <= 615 && touchY >= 340+y && touchY <= 380+y) // down  525,615,360+y,400+y
-				{
-						if(keypad_down)
-						{
-							//clear_area();
-							fill_area(0,800,200,480,PURPLE);
-							NewEntry_page();
-							curr_page = 4;
-						}
-						else
-						{
-							fill_area(0,800,200,480,PURPLE);
-							attendence_search();
-							curr_page = 7;
-						}
+			}
+		}
 
-					if(curr_page == 7)
-					{
-					}
-				}
+		if(touchX >= 150 && touchX <= 215 && touchY >= 290+y && touchY <= 330+y) //caps  150,215,310+y,350+y
+		{
+			UC_FLAG = !UC_FLAG;
+		}
+		if(touchX >= 275 && touchX <= 515 && touchY >= 340+y && touchY <= 380+y)		// space 275,515,360+y,400+y
+		{
+			HAL_Delay(100);
 
-				if(touchX >= 150 && touchX <= 215 && touchY >= 290+y && touchY <= 330+y) //caps  150,215,310+y,350+y
-				{
-					UC_FLAG = !UC_FLAG;
-				}
-				if(touchX >= 275 && touchX <= 515 && touchY >= 340+y && touchY <= 380+y)		// space 275,515,360+y,400+y
-				{
-					HAL_Delay(100);
+			print_char(220+(pos*12),85,32,0xe7eefe);
+			*(emp_name+pos) =32;
+			pos++;
+		}
+		if(touchX >= 575 && touchX <= 640 && touchY >= 290+y && touchY <= 330+y) //backspace  575,640,310+y,350+y
+		{
+			pos--;
+			fill_area(220+(pos*12),235+(pos*12),85,115,0xe7eefe);
+		}
 
-					print_char(220+(pos*12),85,32,0xe7eefe);
-					*(emp_name+pos) =32;
+		for(int idx1=0; idx1<3; idx1++)
+		{
+			x1+=25*idx1;
+			for(int idx2=0; idx2<=9-(idx1*2-k); idx2++)
+			{
+				if(touchX >= x1+150+x && touchX <= x1+190+x && touchY >= y1+190+y && touchY <= y1+230+y)  //keys x1+105+x,x1+155+x,y1+205+y,y1+255+y
+				{
+					print_char(220+(pos*12),90,char_key[idx1][idx2],RED);
+					*(emp_name+pos) =char_key[idx1][idx2];
 					pos++;
 				}
-				if(touchX >= 575 && touchX <= 640 && touchY >= 290+y && touchY <= 330+y) //backspace  575,640,310+y,350+y
-				{
-					pos--;
-					fill_area(220+(pos*12),235+(pos*12),85,115,0xe7eefe);
-				}
+				x+=50;
+			}
+			x=0;
+			k=1;
+			y1+=50;
+		}
+		*(emp_name+pos+1)= '\0';
 
-				for(int idx1=0; idx1<3; idx1++)
-				{
-					x1+=25*idx1;
-					for(int idx2=0; idx2<=9-(idx1*2-k); idx2++)
-					{
-						if(touchX >= x1+150+x && touchX <= x1+190+x && touchY >= y1+190+y && touchY <= y1+230+y)  //keys x1+105+x,x1+155+x,y1+205+y,y1+255+y
-						{
-									print_char(220+(pos*12),90,char_key[idx1][idx2],RED);
-									*(emp_name+pos) =char_key[idx1][idx2];
-								pos++;
-						}
-						x+=50;
-					}
-					x=0;
-					k=1;
-					y1+=50;
-				}
-				*(emp_name+pos+1)= '\0';
-
-	}		/********************************************************************************************************/
-/*****************************************  CURRENT PAGE 7 ****************************************************/
+	}
+/*****************************  CURRENT PAGE 7 ************************/
 	if(curr_page == 7)
 	{
 		if(isTouched( 190, 590, 36, 84)) //190,590,36,84
@@ -980,8 +991,6 @@ while(1)
 	return 0;
 }
 
-
-
 void sysclock_config(void)
 {
 	RCC_OscInitTypeDef osc;
@@ -1031,7 +1040,6 @@ void sysclock_config(void)
 	clock.APB1CLKDivider = RCC_HCLK_DIV2;
 	clock.APB2CLKDivider = RCC_HCLK_DIV1;
 
-
 	if(HAL_RCC_ClockConfig(&clock, FLASH_LATENCY_2)!=HAL_OK)
 	{
 		printf("clock config failed\n\r");
@@ -1045,14 +1053,13 @@ void sysclock_config(void)
 	printf("Sysclock frequency : %lu \r\n",freq);
 }
 
-
 void gpio_init(void)
 {
 	__HAL_RCC_GPIOA_CLK_ENABLE();
 	__HAL_RCC_GPIOB_CLK_ENABLE();
 	__HAL_RCC_GPIOC_CLK_ENABLE();
 
-#if (SSD1963_DISPLAY)
+#if (USE_SSD1963_DISPLAY)
 
 
 	GPIO_InitTypeDef SSD_DATA_PINS ={0};
@@ -1081,7 +1088,7 @@ void gpio_init(void)
 #endif
 
 
-#if 1
+#if (USE_RFID)
 	GPIO_InitTypeDef RFID_SPI ={0};
 	RFID_SPI.Pin = (GPIO_PIN_0|GPIO_PIN_1|GPIO_PIN_2) ;
 	RFID_SPI.Mode = GPIO_MODE_OUTPUT_PP;
@@ -1114,8 +1121,6 @@ void gpio_init(void)
 
 }
 
-
-
 void uart1_init(void)
 {
 	uart1.Instance = USART1;
@@ -1133,7 +1138,6 @@ void uart1_init(void)
 	}
 }
 
-
 void tim5_init(void)
 {
 	tim5.Instance = TIM5;
@@ -1147,7 +1151,6 @@ void tim5_init(void)
 		printf("Timer 5 base Init Failed\r\n");
 	}
 }
-
 
 void spi1_init(void)
 {
@@ -1189,7 +1192,7 @@ void spi2_init(void) 		/* SPI2 : XPT2048 Touch Sensor */
 	}
 }
 
-void i2c2_init()  //incomplete !!  please verify once before using it
+void i2c2_init()  		//incomplete !!  please verify once before using it
 {
 	i2c2.Instance = I2C2;
 	i2c2.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
@@ -1246,14 +1249,45 @@ void rfid_read(void)
 	{
 		sprintf(str1,"Card:%x,%x,%x", cardstr[0], cardstr[1], cardstr[2]);
 		HAL_Delay(2);
-
 		status = MFRC522_Anticoll(cardstr);
 		if(status == MI_OK) {
 			sprintf(str2,"UID:%x %x %x %x \r\n", cardstr[0], cardstr[1], cardstr[2], cardstr[3]);
 			HAL_UART_Transmit(&uart1,(uint8_t *)str2,strlen(str2),1000);
+			UID[0] = cardstr[0];
+			UID[1] = cardstr[1];
+			UID[2] = cardstr[2];
+			UID[3] = cardstr[3];
+			UID[4] = cardstr[4];
+			HAL_Delay(10);
+			status = MFRC522_SelectTag(cardstr);
+			if (status > 0){
+			  SectorKey[0] = ((Mx1[0][0])^(UID[0])) + ((Mx1[0][1])^(UID[1])) + ((Mx1[0][2])^(UID[2])) + ((Mx1[0][3])^(UID[3]));// 0x11; //KeyA[0]
+			  SectorKey[1] = ((Mx1[1][0])^(UID[0])) + ((Mx1[1][1])^(UID[1])) + ((Mx1[1][2])^(UID[2])) + ((Mx1[1][3])^(UID[3]));// 0x11; //KeyA[0]
+			  SectorKey[2] = ((Mx1[2][0])^(UID[0])) + ((Mx1[2][1])^(UID[1])) + ((Mx1[2][2])^(UID[2])) + ((Mx1[2][3])^(UID[3]));// 0x11; //KeyA[0]
+			  SectorKey[3] = ((Mx1[3][0])^(UID[0])) + ((Mx1[3][1])^(UID[1])) + ((Mx1[3][2])^(UID[2])) + ((Mx1[3][3])^(UID[3]));// 0x11; //KeyA[0]
+			  SectorKey[4] = ((Mx1[4][0])^(UID[0])) + ((Mx1[4][1])^(UID[1])) + ((Mx1[4][2])^(UID[2])) + ((Mx1[4][3])^(UID[3]));// 0x11; //KeyA[0]
+			  SectorKey[5] = ((Mx1[5][0])^(UID[0])) + ((Mx1[5][1])^(UID[1])) + ((Mx1[5][2])^(UID[2])) + ((Mx1[5][3])^(UID[3]));// 0x11; //KeyA[0]
+			  HAL_Delay(10);
+			  status = MFRC522_Auth(0x60, 3, SectorKey, cardstr);
+				unsigned char bxe[16]={0};
+				status =MFRC522_Read(3, bxe);
+				if(status == MI_OK) {
+					sprintf(str2,"\r\n*DATA:%x %x %x %x \r\n", bxe[9], bxe[10], bxe[11], bxe[12]);
+					HAL_UART_Transmit(&uart1,(uint8_t *)str2,strlen(str2),1000);
+				}
+			}
+			if(1==check_validcard())
+			{
+				HAL_GPIO_WritePin(GPIOB,GPIO_PIN_2,GPIO_PIN_SET);
+				HAL_Delay(100);
+				HAL_GPIO_WritePin(GPIOB,GPIO_PIN_2,GPIO_PIN_RESET);
+#if (DEBUG_UART)
+				HAL_UART_Transmit(&uart1,(uint8_t *)"Authorised Access\r\n",strlen("Authorised Access\r\n"),1000);
+#endif
+			}
+			MFRC522_StopCrypto1();
+			MFRC522_Halt();
 		}
-		MFRC522_StopCrypto1();
-		MFRC522_Halt();
 	}
 	/*
 	if(rc522_checkCard(rfid_id))
@@ -1278,6 +1312,73 @@ void rfid_read(void)
 
 }
 
+void assign_card(void)
+{
+	status = 0;
+	status = MFRC522_Request(PICC_REQIDL, cardstr);
+	if(status == MI_OK)
+	{
+		sprintf(str1,"Card:%x,%x,%x", cardstr[0], cardstr[1], cardstr[2]);
+		HAL_Delay(2);
+
+		status = MFRC522_Anticoll(cardstr);
+		if(status == MI_OK) {
+			sprintf(str2,"UID:%x %x %x %x \r\n", cardstr[0], cardstr[1], cardstr[2], cardstr[3]);
+			HAL_UART_Transmit(&uart1,(uint8_t *)str2,strlen(str2),1000);
+			UID[0] = cardstr[0];
+			UID[1] = cardstr[1];
+			UID[2] = cardstr[2];
+			UID[3] = cardstr[3];
+			UID[4] = cardstr[4];
+			HAL_Delay(10);
+			status = MFRC522_SelectTag(cardstr);
+			if (status > 0){
+			  SectorKey[0] = ((Mx1[0][0])^(UID[0])) + ((Mx1[0][1])^(UID[1])) + ((Mx1[0][2])^(UID[2])) + ((Mx1[0][3])^(UID[3]));// 0x11; //KeyA[0]
+			  SectorKey[1] = ((Mx1[1][0])^(UID[0])) + ((Mx1[1][1])^(UID[1])) + ((Mx1[1][2])^(UID[2])) + ((Mx1[1][3])^(UID[3]));// 0x11; //KeyA[0]
+			  SectorKey[2] = ((Mx1[2][0])^(UID[0])) + ((Mx1[2][1])^(UID[1])) + ((Mx1[2][2])^(UID[2])) + ((Mx1[2][3])^(UID[3]));// 0x11; //KeyA[0]
+			  SectorKey[3] = ((Mx1[3][0])^(UID[0])) + ((Mx1[3][1])^(UID[1])) + ((Mx1[3][2])^(UID[2])) + ((Mx1[3][3])^(UID[3]));// 0x11; //KeyA[0]
+			  SectorKey[4] = ((Mx1[4][0])^(UID[0])) + ((Mx1[4][1])^(UID[1])) + ((Mx1[4][2])^(UID[2])) + ((Mx1[4][3])^(UID[3]));// 0x11; //KeyA[0]
+			  SectorKey[5] = ((Mx1[5][0])^(UID[0])) + ((Mx1[5][1])^(UID[1])) + ((Mx1[5][2])^(UID[2])) + ((Mx1[5][3])^(UID[3]));// 0x11; //KeyA[0]
+			  HAL_Delay(10);
+			  status = MFRC522_Auth(0x60, 3, SectorKey, cardstr);
+				unsigned char bxe[16]={0};
+				status =MFRC522_Read(3, bxe);
+				if(status == MI_OK) {
+					sprintf(str2,"\r\n*DATA:%x %x %x %x \r\n", bxe[9], bxe[10], bxe[11], bxe[12]);
+					HAL_UART_Transmit(&uart1,(uint8_t *)str2,strlen(str2),1000);
+				}
+				else{
+					for (int i = 0; i < 16; i++) {cardstr[i] = 0;}
+				  status = 0;
+				  // Find cards
+				  HAL_Delay(10);
+				  status = MFRC522_Request(PICC_REQIDL, cardstr);
+				  HAL_Delay(10);
+				  status = MFRC522_Anticoll(cardstr);
+				  HAL_Delay(10);
+				  status = MFRC522_SelectTag(cardstr);
+					SectorKey[0] = 0xFF;
+				  SectorKey[1] = 0xFF;
+				  SectorKey[2] = 0xFF;
+				  SectorKey[3] = 0xFF;
+				  SectorKey[4] = 0xFF;
+				  SectorKey[5] = 0xFF;
+				  HAL_Delay(10);
+				  status = MFRC522_Auth(0x60, 3, SectorKey, cardstr);
+					unsigned char bxe[16]={0};
+					status =MFRC522_Read(3, bxe);
+					if(status == MI_OK) {
+						sprintf(str2,"\r\n**DATA:%x %x %x %x \r\n", bxe[9], bxe[10], bxe[11], bxe[12]);
+						HAL_UART_Transmit(&uart1,(uint8_t *)str2,strlen(str2),1000);
+					}
+				}
+			}
+		}
+	}
+	HAL_Delay(10);
+	MFRC522_StopCrypto1();
+	MFRC522_Halt();
+}
 
 
 
@@ -1317,7 +1418,7 @@ void add_Employee (void)
 void display_Employee (void)
 {
  if(32736 < calculate_addr)
-	 {
+{
 		//	  This employee_id is out of memory range.
    }
  else
@@ -1341,9 +1442,9 @@ void erase_EEPROM (void)
 	//while(erase_addr<32768)
 	{
 	  HAL_I2C_Mem_Write(&hi2c1, dev_addr, erase_addr, 2, (uint8_t *) &(erase_data), sizeof(erase_data), 100);  ///  write employee_id
-		HAL_Delay(5);
-		erase_addr += 8;
-		erase_addr_cnt++;
+	  HAL_Delay(5);
+	  erase_addr += 8;
+	  erase_addr_cnt++;
 	}
 }
 

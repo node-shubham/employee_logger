@@ -13,7 +13,7 @@
 		{
 			Current_Font = fonts;
 		}
-    float Time = 1.0;
+		float Time = 1.0;
 		void write_cmd(unsigned int commandToWrite)
 		{
 			SSD1963_DATAPORT->ODR  = commandToWrite;
