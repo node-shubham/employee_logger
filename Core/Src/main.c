@@ -24,10 +24,17 @@
 #include "main.h"
 #include "user_global.h"
 
+<<<<<<< HEAD
 #if (USE_SSD1963_DISPLAY)
 	#include "ssd1963.h"
 	#include "xpt2046.h"
 #endif
+=======
+#include "ssd1963.h"
+#include "xpt2046.h"
+#include "mfrc522.h"
+#include "24c256_config.h"
+>>>>>>> f2189523c3505b589eeb005673b409d003c642b9
 
 #if (USE_RFID)
 	#include "mfrc522.h"
@@ -107,7 +114,7 @@ char *dropdown_desgn[4] = {"EMBEDDED","SOFTWARE","DESIGN","LEGAL"};
 char *dropdown_role[3] = {"EMPLOYEE","ADMIN","SUPER USER",};
 char *dropdown_CardThumb[2] = {"CARD","THUMB"};
 
-char emp_name[24] = {0};
+//char emp_name[19] = {0};
 char *desgn_ptr =	"EMBEDDED";
 char *role_ptr = "EMPLOYEE";
 char *card_ptr = "CARD";
@@ -137,52 +144,6 @@ uint8_t emp_id_read=0;
 
 uint8_t desgn_id =0;
 uint8_t role_id =0;
-
-struct WRITE_DETAILS
-{
-	char wr_EMPLO_name[23];
-	uint8_t wr_employee_code;
-	uint16_t wr_EMPLO_id;
-	uint8_t wr_EMPLO_desig;
-	uint8_t wr_EMPLO_role;
-	uint32_t wr_EMPLO_RFID;
-
-}write_details;
-
-struct READ_DETAILS
-{
-	char rd_EMPLO_name[23];
-	uint8_t rd_employee_code;
-	uint16_t rd_EMPLO_id;
-	uint8_t rd_EMPLO_desig;
-	uint8_t rd_EMPLO_role;
-	uint32_t rd_EMPLO_RFID;
-
-}read_details;
-
-
-bool availble_employee = false, chek_wr = 0;
-
-uint8_t dev_addr = 0xA0;
-uint8_t dev_addr1 = 0xA1;
-uint8_t byte[4] ={0x11,0x22,0x33,0x44};
-
-uint8_t read_buf[4]={0};
-
- uint8_t wr_str[4] = "E001";
- //uint8_t rd_str[4]={0};
- uint8_t wr_str1[4] = "E002";
- uint8_t rd_str1[24]={0};
- uint16_t id_wr, id_rd;
-
- uint16_t scanned_EMPLO_ID;
- uint16_t erase_addr_cnt = 0;
- uint16_t size_strct = 0;
- uint16_t read_addr = 0;
- uint32_t scanned_UID = 0;
- uint32_t scanned_UID2 = 0;
- uint16_t calculate_addr;
-
 
  /*******temp************/
 
@@ -215,10 +176,10 @@ static void rfid_handler(void * param);
 static void display_handler(void * param);
 #endif
 
-//static bool chek_employee (void);
+/*//static bool chek_employee (void);
 void display_Employee (void);
 void add_Employee (void);
-void erase_EEPROM (void);
+void erase_EEPROM (void);*/
 
 extern uint16_t g_pos_x;
 extern uint16_t g_pos_y;
@@ -1384,6 +1345,7 @@ void assign_card(void)
 
 
 /***************************************************************************************************************************/
+#if 0
 static bool chek_employee (void)
 {
   //uint32_t searchUID = 0;
@@ -1447,7 +1409,7 @@ void erase_EEPROM (void)
 	  erase_addr_cnt++;
 	}
 }
-
+#endif
 
 void error_handler(void)
 {
