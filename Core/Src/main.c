@@ -24,17 +24,11 @@
 #include "main.h"
 #include "user_global.h"
 
-<<<<<<< HEAD
+
 #if (USE_SSD1963_DISPLAY)
 	#include "ssd1963.h"
 	#include "xpt2046.h"
 #endif
-=======
-#include "ssd1963.h"
-#include "xpt2046.h"
-#include "mfrc522.h"
-#include "24c256_config.h"
->>>>>>> f2189523c3505b589eeb005673b409d003c642b9
 
 #if (USE_RFID)
 	#include "mfrc522.h"
