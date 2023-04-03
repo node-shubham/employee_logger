@@ -225,7 +225,6 @@ void User_Management(void)
 	fill_circle(250,320,60,RED);
 	print_string(400,310,"ALL USER",WHITE);
 	print_image(215,300,70,35,all_user);
-
 	BackBtn();
 
 }

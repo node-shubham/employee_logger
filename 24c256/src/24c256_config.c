@@ -8,19 +8,8 @@ calculate_addr = 10368+(32*(scanned_EMPLO_ID-1));  // employee details store fro
 ***********/
 
 
-
 struct WRITE_DETAILS write_details;
 struct READ_DETAILS read_details;
-
-uint8_t dev_addr = 0xA0;
-uint8_t dev_addr1 = 0xA1;
-uint16_t next_emp_id = 0;
-uint16_t last_emp_id = 0;
-uint16_t scanned_EMPLO_ID = 0;
-uint16_t calculate_addr = 0;
-uint32_t scanned_UID = 0;
-
-char emp_name[19] = {0};
 
 
 void var_init(void)

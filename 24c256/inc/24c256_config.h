@@ -47,7 +47,6 @@ struct READ_DETAILS
 
 #endif
 
-
 //////*********************************** Function Prototype ****************////////////
 
 
@@ -72,6 +71,8 @@ extern uint32_t scanned_UID;
 extern char emp_name[19];
 
 
+extern uint16_t next_emp_id;
+extern uint16_t last_emp_id;
 
 
 #endif   ///  last endif
