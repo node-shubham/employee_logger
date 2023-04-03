@@ -23,6 +23,7 @@
 
 #include "main.h"
 #include "user_global.h"
+#include "24c256_config.h"
 
 
 #if (USE_SSD1963_DISPLAY)
@@ -1339,71 +1340,6 @@ void assign_card(void)
 
 
 /***************************************************************************************************************************/
-#if 0
-static bool chek_employee (void)
-{
-  //uint32_t searchUID = 0;
-	uint16_t search_addr = calculate_addr;
-	HAL_I2C_Mem_Read(&hi2c1, dev_addr1, search_addr, 2, (uint8_t *) &(read_details), sizeof(read_details), 100);  ///  READ Employee_details
-	if((scanned_EMPLO_ID == read_details.rd_EMPLO_id))// && (scanned_UID == read_details.rd_EMPLO_RFID))
-			return 1;    // employee availble
-	else
-			return 0;   //  employee not availble
-}
-
-
-void add_Employee (void)
-{
-  if(32736 < calculate_addr)
-	 {
-		//	  This employee_id is out of memory range.
-   }
-	 else
-	 {
-	   if(chek_employee())
-			 availble_employee = 1;   //  employee is availble
-		else      //  when employee is not availble
-		 {
-			 HAL_I2C_Mem_Write(&hi2c1, dev_addr, calculate_addr, 2, (uint8_t *) &(write_details), sizeof(write_details), 100);  ///  write employee_id
-			 HAL_Delay(10);
-			 chek_wr = 1;
-		 }
-	 }
-}
-
-void display_Employee (void)
-{
- if(32736 < calculate_addr)
-{
-		//	  This employee_id is out of memory range.
-   }
- else
-	 {
-		 if(chek_employee())
-		  {
-			  availble_employee = 1;   //  employee availble
-//	    data have readed successfully and stored in read_details structure please copy that.
-		  }
-		 else
-			  availble_employee = 0;   //  employee not availble
-	 }
-}
-
-void erase_EEPROM (void)
-{
-	uint16_t erase_addr = 0;
-	uint64_t erase_data = 0xffffffffffffffff;
-
-	while(erase_addr<1024)
-	//while(erase_addr<32768)
-	{
-	  HAL_I2C_Mem_Write(&hi2c1, dev_addr, erase_addr, 2, (uint8_t *) &(erase_data), sizeof(erase_data), 100);  ///  write employee_id
-	  HAL_Delay(5);
-	  erase_addr += 8;
-	  erase_addr_cnt++;
-	}
-}
-#endif
 
 void error_handler(void)
 {

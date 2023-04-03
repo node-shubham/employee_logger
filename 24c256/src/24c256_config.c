@@ -64,7 +64,8 @@ void add_Employee (void)
      }
   else
      {
-	    if(chek_employee())    ///   availble_employee = 1;
+	    HAL_I2C_Mem_Read(&hi2c1, dev_addr1, calculate_addr, 2, (uint8_t *) &(read_details), sizeof(read_details), 100);  ///  READ Employee_details
+	  	if((next_emp_id == read_details.rd_EMPLO_id) && (write_details.wr_EMPLO_name == read_details.rd_EMPLO_name))   ///   availble_employee
 		  {
 			print_string(10,90,"this employee is available",WHITE);
 		  }
@@ -98,9 +99,10 @@ void add_Employee (void)
 
 void display_Employee (void)
 {
+ calculate_addr = 10368+(32*(scanned_EMPLO_ID-1));  // employee details store from page no. 162 to 511 (last page)
  if(LAST_EMP_ADDR < calculate_addr)
-	 {
-			 print_string(10,90,"This employee_id is out of memory range",0x9900ff);
+   {
+	 print_string(10,90,"This employee_id is out of memory range",0x9900ff);
    }
  else
 	 {
@@ -158,7 +160,8 @@ void search_Employee (void)
 			  cnt_indx++;
 			}
 	   if(5<k)
-	   k=5;
+	     k=5;
+
 	   char display_arr[21] = {0};
 	   for(int i = 0; i < k; i++)
 		  {
@@ -176,8 +179,13 @@ void search_Employee (void)
 
 void delete_Employee (void)
 {
+	bool del=1;
 	search_Employee();
-//	hj
+	if(isTouched(200, 300, 85, 205))
+	 {
+
+	 }
+
 }
 
 

@@ -47,7 +47,6 @@ struct READ_DETAILS
 
 #endif
 
-
 //////*********************************** Function Prototype ****************////////////
 
 
@@ -62,7 +61,6 @@ void var_init(void);
 
 
 //////*********************************** Global variable ***************////////////
-
 
 extern uint8_t dev_addr;
 extern uint8_t dev_addr1;
