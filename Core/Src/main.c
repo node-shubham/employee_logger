@@ -25,7 +25,6 @@
 #include "user_global.h"
 #include "24c256_config.h"
 
-
 #if (USE_SSD1963_DISPLAY)
 	#include "ssd1963.h"
 	#include "xpt2046.h"
@@ -46,11 +45,13 @@
 	#include "task.h"
 #endif
 
+#if (USE_EEPROM)
+	#include "24c256_config.h"
+#endif
+
 
 //#define SYSCLK_HSE_25MHZ
 #define SYSCLK_PLL_84MHZ
-
-
 
 #if (USE_FREERTOS)
 #define DWT_CTRL 	(*(volatile int *)0xE0001000)
@@ -75,19 +76,17 @@ char str3[40]={'\0'};
 char str4[40]={'\0'};
 char tmp_str[65]={'\0'};
 
-  u_char status, cardstr[MAX_LEN+1];
-  u_char card_data[17];
-  uint32_t delay_val = 1000; //ms
-  uint16_t result = 0;
-	u_char UID[5];
+u_char status, cardstr[MAX_LEN+1];
+u_char card_data[17];
+uint32_t delay_val = 1000; //ms
+uint16_t result = 0;
+u_char UID[5];
 
 
-
-  // a private key to scramble data writing/reading to/from RFID card:
-  u_char Mx1[7][5]={{0x12,0x45,0xF2,0xA8},{0xB2,0x6C,0x39,0x83},{0x55,0xE5,0xDA,0x18},
-		  	  	  	{0x1F,0x09,0xCA,0x75},{0x99,0xA2,0x50,0xEC},{0x2C,0x88,0x7F,0x3D}};
-  u_char SectorKey[7];
-
+// a private key to scramble data writing/reading to/from RFID card:
+u_char Mx1[7][5]={{0x12,0x45,0xF2,0xA8},{0xB2,0x6C,0x39,0x83},{0x55,0xE5,0xDA,0x18},
+				{0x1F,0x09,0xCA,0x75},{0x99,0xA2,0x50,0xEC},{0x2C,0x88,0x7F,0x3D}};
+u_char SectorKey[7];
 
 uint8_t char_cnt=0;
 uint8_t curr_page = 1;
@@ -100,8 +99,6 @@ char str[50]={0};
 
 extern uint16_t touchX;
 extern uint16_t touchY;
-
-
 
 unsigned char char_key[3][10] = {{'Q','W','E','R','T','Y','U','I','O','P'},{'A','S','D','F','G','H','J','K','L'},{'Z','X','C','V','B','N','M'}};
 unsigned char symbol_key[3][10] = {{'1','2','3','4','5','6','7','8','9','0'},{'!','#','_','&','-','+','(',')','/'},{'*','"',':',';','!','[',']'}};
@@ -119,8 +116,6 @@ uint8_t sub_page = 0;
 
 unsigned char string[100];
 
-
-
 //#define ALL_ZERO 		1
 #define	DEBUG_UART	1
 bool UC_FLAG = 0;
@@ -130,9 +125,7 @@ bool keypad_down;
 
 //uint32_t ADMIN[4] = {95,385,55,225};
 
-
 int onetime =1;
-
 
 /*************************************************************/
 uint8_t emp_id_read=0;
@@ -148,8 +141,6 @@ uint8_t role_id =0;
  uint8_t temp_str[100]={0};
 void tst(void);
 /**************************************************************/
-
-
 
 void sysclock_config(void);
 void error_handler(void);
@@ -179,6 +170,8 @@ void erase_EEPROM (void);*/
 extern uint16_t g_pos_x;
 extern uint16_t g_pos_y;
 
+uint8_t pos =0;
+
 uint32_t freq=0;
 uint8_t rfid_id[4];
 uint8_t issue_uid[4];
@@ -186,6 +179,15 @@ uint8_t issue_uid[4];
 char card_auth[4]= {0x43,0xeb,0x79,0x03};
 char msg[]="Approach your Proximate card\r\n";
 char data[20]={0};
+
+uint8_t dev_addr = 0xA0;
+uint8_t dev_addr1 = 0xA1;
+uint16_t next_emp_id = 0;
+uint16_t last_emp_id = 0;
+uint16_t scanned_EMPLO_ID = 0;
+uint16_t calculate_addr = 0;
+uint32_t scanned_UID = 0;
+char emp_name[19] = {0};
 
 void assign_card(void);
 
@@ -291,7 +293,7 @@ int main()
 	MFRC522_Init();
 
 	/* Display & touch Init */
-#if (SSD1963_DISPLAY)
+#if (USE_SSD1963_DISPLAY)
 	ssd1963_setup();
 	XPT2046_Init();
 #endif
@@ -303,13 +305,12 @@ int main()
   /* disable stdout buffering */
   setvbuf(stdout, NULL, _IONBF, 0);
 
-  //r307_init();
-  //fingerprint_match_loop();
+  	r307_init();
+  	fingerprint_match_loop();
 	HAL_GPIO_WritePin(GPIOB,GPIO_PIN_2,GPIO_PIN_SET);
 	HAL_Delay(50);
 	HAL_GPIO_WritePin(GPIOB,GPIO_PIN_2,GPIO_PIN_RESET);
 	HAL_Delay(50);
-
 
   //searchdb_mainloop();
 #endif
@@ -320,7 +321,6 @@ int main()
 //HAL_I2C_Mem_Write(&hi2c1,dev_addr,0x00,2,(uint8_t *)&emp_id_read,1,100);
 
 HAL_I2C_Mem_Read(&hi2c1, dev_addr1, 0x00, 2, (uint8_t *)&emp_id_read, 1, 100);
-
 HAL_I2C_Mem_Read(&hi2c1,dev_addr, 0,2,(uint8_t *)temp_str,sizeof(temp_str),100);
 
 status = Read_MFRC522(VersionReg);
@@ -329,13 +329,19 @@ sprintf(str2,"\nver:%x", status);
 HAL_UART_Transmit(&uart1,(uint8_t *)str1,strlen(str1),1000);
 HAL_UART_Transmit(&uart1,(uint8_t *)str2,strlen(str2),1000);
 
+//while(1)
+//{
+//	HAL_Delay(200);
+//	rfid_read();
+//}
+
 while(1)
 {
 	touchX = (getX() + 12);
 	touchY = (470 - getY());
 
 	HAL_Delay(200);
-	//read_touch();
+	read_touch();
 	rfid_read();
 	/*****************************************  CURRENT PAGE 1 ****************************************************/
 
@@ -359,10 +365,7 @@ while(1)
 	}
 
 /*****************************************  CURRENT PAGE 2 ****************************************************/
-
-
-	if(curr_page == 2)
-	{
+	if(curr_page == 2){
 		if(isTouched(200, 300, 85, 205)){	// USER MANAGEMENT
 			User_Management();
 			curr_page = 3;
@@ -468,10 +471,7 @@ while(1)
 				NewUser_Role();
 				NewUser_Card();
 			}
-
 		}
-
-
 		if(isTouched( 450, 500, 260, 310)) // ROLE
 		{
 			sub_page =2;
@@ -540,6 +540,8 @@ while(1)
 		}
 		if(isTouched( 8, 72, 10, 70)) //back
 		{
+			pos=0;
+			memset(emp_name,'\0',17);
 			User_Management();
 			curr_page = 3;
 		}
@@ -657,6 +659,7 @@ while(1)
 		}
 		if(isTouched( 494, 584, 121, 169))   //EDIT  494,584,121,169
 		{
+
 		}
 		if(isTouched( 661, 695, 210, 254))     //	494,720,199,259,0xcedcfd  //desig
 		{
@@ -827,7 +830,7 @@ while(1)
 		Set_Font(&Font12x18);
 		//Set_Font(&Font16x24);
 		//HAL_Delay(100);
-		static uint8_t pos =0;
+		//static uint8_t pos =0;
 		int x=0,x1=0,y=31,y1=0,k=0;
 		if(touchX >= 525 && touchX <= 615 && touchY >= 340+y && touchY <= 380+y) // down  525,615,360+y,400+y
 		{
@@ -900,6 +903,8 @@ while(1)
 		}
 		if(isTouched( 8, 72, 10, 70)) // back
 		{
+			pos=0;
+			memset(emp_name,'\0',17);
 			Admin_screen();
 			curr_page = 2;
 		}
