@@ -180,15 +180,6 @@ char card_auth[4]= {0x43,0xeb,0x79,0x03};
 char msg[]="Approach your Proximate card\r\n";
 char data[20]={0};
 
-uint8_t dev_addr = 0xA0;
-uint8_t dev_addr1 = 0xA1;
-uint16_t next_emp_id = 0;
-uint16_t last_emp_id = 0;
-uint16_t scanned_EMPLO_ID = 0;
-uint16_t calculate_addr = 0;
-uint32_t scanned_UID = 0;
-char emp_name[19] = {0};
-
 void assign_card(void);
 
 #if (USE_FREERTOS)
