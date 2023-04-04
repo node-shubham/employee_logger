@@ -112,7 +112,7 @@ void display_Employee (void)
 		 else     ///    availble_employee = 0;
 		    {
 			 		   print_string(10,90,"this employee is not available",WHITE);
-				}
+			}
 	 }
 }
 
@@ -186,13 +186,12 @@ void delete_Employee (void)
   search_Employee();
   while(del)
 	  {
-	    if(isTouched(200, 300, (194+(53*1)), 205))
+	    if(isTouched(100, 678, 179+(52*1), 225+(52*1)))
 	      {
 
+	    	del = 0;
 	      }
 
-
-	del = 0;
 	}
 }
 
