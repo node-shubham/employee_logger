@@ -11,6 +11,16 @@ calculate_addr = 10368+(32*(scanned_EMPLO_ID-1));  // employee details store fro
 struct WRITE_DETAILS write_details;
 struct READ_DETAILS read_details;
 
+bool del = 0;
+uint8_t dev_addr = 0xA0;
+uint8_t dev_addr1 = 0xA1;
+uint16_t next_emp_id = 0;
+uint16_t last_emp_id = 0;
+uint16_t scanned_EMPLO_ID = 0;
+uint16_t calculate_addr = 0;
+uint16_t del_addr[5] = {0};
+uint32_t scanned_UID = 0;
+char emp_name[19] = {0};
 
 void var_init(void)
 {
@@ -53,7 +63,8 @@ void add_Employee (void)
      }
   else
      {
-	    if(chek_employee())    ///   availble_employee = 1;
+	    HAL_I2C_Mem_Read(&hi2c1, dev_addr1, calculate_addr, 2, (uint8_t *) &(read_details), sizeof(read_details), 100);  ///  READ Employee_details
+	  	if((next_emp_id == read_details.rd_EMPLO_id) && (write_details.wr_EMPLO_name == read_details.rd_EMPLO_name))   ///   availble_employee
 		  {
 			print_string(10,90,"this employee is available",WHITE);
 		  }
@@ -87,9 +98,10 @@ void add_Employee (void)
 
 void display_Employee (void)
 {
+ calculate_addr = 10368+(32*(scanned_EMPLO_ID-1));  // employee details store from page no. 162 to 511 (last page)
  if(LAST_EMP_ADDR < calculate_addr)
-	 {
-			 print_string(10,90,"This employee_id is out of memory range",0x9900ff);
+   {
+	 print_string(10,90,"This employee_id is out of memory range",0x9900ff);
    }
  else
 	 {
@@ -147,7 +159,8 @@ void search_Employee (void)
 			  cnt_indx++;
 			}
 	   if(5<k)
-	   k=5;
+	     k=5;
+
 	   char display_arr[21] = {0};
 	   for(int i = 0; i < k; i++)
 		  {
@@ -157,6 +170,10 @@ void search_Employee (void)
 			print_string(170, (194+(53*i)), read_details.rd_EMPLO_name, 0x9900ff);
 			sprintf(display_arr, "%d:%d       %d:%d", read_details.rd_entry_HH, read_details.rd_entry_MM, read_details.rd_exit_HH, read_details.rd_exit_MM);
 			print_string(505, (194+(53*i)), display_arr, 0x9900ff);
+			if(1 == del)
+			  {
+				del_addr[i] = all_addr[i];
+			  }
 		  }
 	 }
 	}
@@ -165,8 +182,18 @@ void search_Employee (void)
 
 void delete_Employee (void)
 {
-	search_Employee();
-//	hj
+  del = 1;
+  search_Employee();
+  while(del)
+	  {
+	    if(isTouched(200, 300, (194+(53*1)), 205))
+	      {
+
+	      }
+
+
+	del = 0;
+	}
 }
 
 
