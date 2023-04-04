@@ -123,7 +123,7 @@ bool UC_FLAG = 0;
 bool NUM_FLAG = 0;
 bool SAVE_EDIT_FLAG =0;
 bool drop_btn;
-bool keypad_down;
+bool keypad_down = 1;
 
 //uint32_t ADMIN[4] = {95,385,55,225};
 
@@ -287,7 +287,7 @@ int main()
 	HAL_I2C_Mem_Read(&i2c1, dev_addr1, 0x00, 2, (uint8_t *)&test_id, 2, 100);
 	*/
 	//HAL_I2C_Mem_Read(&i2c1,dev_addr, 0,2,(uint8_t *)temp_str,sizeof(temp_str),100);
-	while(1);
+	//while(1);
 
 
 	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, GPIO_PIN_SET);
@@ -445,7 +445,7 @@ while(1)
 			curr_page =6;
 			sub_page =7;
 			PageKeyPad();
-			keypad_down = 1;
+			//keypad_down = 0;
 			fill_area(210,400,80,120,0xe7eefe);
 			Set_Font(&Font12x18);
 			print_string(220,90,emp_name,0x737373);
@@ -559,6 +559,7 @@ while(1)
 					active_role =0;
 					desgn_ptr =	dropdown_desgn[0];
 					fill_area(210,400,180,210,0xe7eefe);
+					fill_area(212,398,182,208,0xe7eefe);
 					print_string(220,190,desgn_ptr,0x737373);
 					dropdown(&dropdown_desgn[0],4,0,0,0);
 					desgn_id =0;
@@ -748,7 +749,7 @@ while(1)
 		}
 		if(isTouched( 8, 72, 10, 70)) //back
 		{
-			fill_area(45, 725, 96, 464,PURPLE);
+			fill_area(25, 725, 96, 464,PURPLE);
 			User_Management();
 			curr_page = 3;
 		}
@@ -761,7 +762,7 @@ while(1)
 			 {
 				active_role =0;
 				desgn_ptr =	dropdown_desgn[0];
-				fill_area(499,610,204,254,0xe7eefe);
+				fill_area(499,630,204,254,0xe7eefe);//0xe7eefe
 				print_string(510,214,desgn_ptr,0x737373);
 				dropdown(&dropdown_desgn[0],4,297,167,32);
 			 }
@@ -769,7 +770,7 @@ while(1)
 			 {
 				active_role =1;
 				desgn_ptr =	dropdown_desgn[1];
-				fill_area(499,610,204,254,0xe7eefe);
+				fill_area(499,630,204,254,0xe7eefe);
 				print_string(510,214,desgn_ptr,0x737373);
 				dropdown(&dropdown_desgn[0],4,297,167,32);
 			 }
@@ -777,7 +778,7 @@ while(1)
 			 {
 				active_role =2;
 				desgn_ptr =	dropdown_desgn[2];
-				fill_area(499,610,204,254,0xe7eefe);
+				fill_area(499,630,204,254,0xe7eefe);
 				print_string(510,214,desgn_ptr,0x737373);
 				dropdown(&dropdown_desgn[0],4,297,167,32);
 			 }
@@ -786,7 +787,7 @@ while(1)
 				active_role =3;
 				desgn_ptr =	dropdown_desgn[3];
 
-				fill_area(499,610,204,254,0xe7eefe);
+				fill_area(499,630,204,254,0xe7eefe);
 				print_string(510,214,desgn_ptr,0x737373);
 				dropdown(&dropdown_desgn[0],4,297,167,32);
 			 }
@@ -802,7 +803,7 @@ while(1)
 				 {
 					active_role =0;
 					role_ptr =	dropdown_role[0];
-					fill_area(499,610,294,344,0xe7eefe);
+					fill_area(499,630,294,344,0xe7eefe);
 					print_string(510,307,role_ptr,0x737373);
 					dropdown(&dropdown_role[0],3,297,167,-80);
 				 }
@@ -810,7 +811,7 @@ while(1)
 				 {
 					active_role =1;
 					role_ptr =	dropdown_role[1];
-					fill_area(499,610,294,344,0xe7eefe);
+					fill_area(499,630,294,344,0xe7eefe);
 					print_string(510,307,role_ptr,0x737373);
 					dropdown(&dropdown_role[0],3,297,167,-80);
 				 }
@@ -818,7 +819,7 @@ while(1)
 				 {
 					active_role =2;
 					role_ptr =	dropdown_role[2];
-					fill_area(499,610,294,344,0xe7eefe);
+					fill_area(499,630,294,344,0xe7eefe);
 					print_string(510,307,role_ptr,0x737373);
 					dropdown(&dropdown_role[0],3,297,167,-80);
 				 }
@@ -833,7 +834,7 @@ while(1)
 				 {
 					active_role =0;
 					card_ptr = dropdown_CardThumb[0];
-					fill_area(499,610,384,434,0xe7eefe);
+					fill_area(499,630,384,434,0xe7eefe);
 					print_string(510,400,card_ptr,0x737373);
 					dropdown(&dropdown_CardThumb[0],2,297,167,50);
 				 }
@@ -841,7 +842,7 @@ while(1)
 				 {
 					active_role =1;
 					card_ptr = dropdown_CardThumb[1];
-					fill_area(499, 610, 384,434,0xe7eefe);
+					fill_area(499, 630, 384,434,0xe7eefe);
 					print_string(510,400,card_ptr,0x737373);
 					dropdown(&dropdown_CardThumb[0],2,297,167,50);
 				 }
@@ -855,24 +856,26 @@ while(1)
 				{
 					Set_Font(&Font12x18);
 					//Set_Font(&Font16x24);
-					//HAL_Delay(100);
+					//HAL_Delay(500);
 					static uint8_t pos =0;
 					int x=0,x1=0,y=31,y1=0,k=0;
-					if(touchX >= 525 && touchX <= 615 && touchY >= 340+y && touchY <= 380+y) // down  525,615,360+y,400+y
+					static int cnt=0;
+					if(isTouched(197, 503, 69, 135)) // hide keypad  197, 503, 69, 135
 					{
-							if(keypad_down)
-							{
-								//clear_area();
+						keypad_down=!keypad_down;
+						if(keypad_down)
+						 {
+             				//clear_area();
 								fill_area(0,800,200,480,PURPLE);
 								NewEntry_page();
 								curr_page = 4;
 							}
-							else
-							{
-								fill_area(0,800,200,480,PURPLE);
-								attendence_search();
-								curr_page = 7;
-							}
+//							else
+//							{
+//								fill_area(0,800,200,480,PURPLE);
+//								attendence_search();
+//								curr_page = 7;
+//							}
 
 						if(curr_page == 7)
 						{
