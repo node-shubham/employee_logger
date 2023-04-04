@@ -1,15 +1,11 @@
 
 
-#include <24c256_config.h>
+#include "24c256_config.h"
 
 
 /*********
 calculate_addr = 10368+(32*(scanned_EMPLO_ID-1));  // employee details store from page no. 162 to 511 (last page)
 ***********/
-
-
-struct WRITE_DETAILS write_details;
-struct READ_DETAILS read_details;
 
 bool del = 0;
 uint8_t dev_addr = 0xA0;
@@ -23,13 +19,18 @@ uint16_t del_addr[5] = {0};
 uint32_t scanned_UID = 0;
 char emp_name[19] = {0};
 
+struct WRITE_DETAILS write_details;
+struct READ_DETAILS read_details;
+
 
 void collect_id (void)
 {
 	HAL_I2C_Mem_Read(&i2c1, dev_addr1, 0, 2, (uint8_t *) &(next_emp_id), sizeof(next_emp_id), 100);  ///  collect next_emp_id on page 1, address = 0
+    HAL_Delay(100);
+
 	if(0xffff == next_emp_id)
-	  next_emp_id = 1;
-	print_int(next_emp_id, 780, 10, 1, 1, 0x9900ff);
+	   next_emp_id = 1;
+
 	HAL_I2C_Mem_Read(&i2c1, dev_addr1, 2, 2, (uint8_t *) &(last_emp_id), sizeof(last_emp_id), 100);  ///  collect last_emp_id on page 1, address = 2
 	if(0xffff == last_emp_id)
 	  last_emp_id = 1;

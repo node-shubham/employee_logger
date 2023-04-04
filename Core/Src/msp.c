@@ -8,8 +8,6 @@
 #include "main.h"
 #include "stm32f4xx_hal.h"
 
-extern SPI_HandleTypeDef spi2;
-extern TIM_HandleTypeDef tim5;
 
 void HAL_MspInit(void)
 {
@@ -56,6 +54,7 @@ void HAL_SPI_MspInit(SPI_HandleTypeDef *hspi)
 		spi_pins.Pin = (GPIO_PIN_3 | GPIO_PIN_4 |GPIO_PIN_5);
 		spi_pins.Mode = GPIO_MODE_AF_PP;
 		spi_pins.Pull = GPIO_NOPULL;
+		spi_pins.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
 		spi_pins.Alternate = GPIO_AF5_SPI1;
 
 		HAL_GPIO_Init(GPIOB, &spi_pins);
@@ -69,6 +68,7 @@ void HAL_SPI_MspInit(SPI_HandleTypeDef *hspi)
 		spi_pins.Pin = ( GPIO_PIN_13 |GPIO_PIN_14 |GPIO_PIN_15) ; // for SPI NSS select - NSS_HARD options
 		spi_pins.Mode = GPIO_MODE_AF_PP;
 		spi_pins.Pull = GPIO_NOPULL;
+		spi_pins.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
 		spi_pins.Alternate = GPIO_AF5_SPI2;
 
 		HAL_GPIO_Init(GPIOB, &spi_pins);
@@ -90,15 +90,29 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef *htim)
 
 void HAL_I2C_MspInit(I2C_HandleTypeDef *hi2c)
 {
-	__HAL_RCC_I2C2_CLK_ENABLE();
-	__HAL_RCC_GPIOB_CLK_ENABLE();
 
-	GPIO_InitTypeDef i2c2_pins;
+	GPIO_InitTypeDef i2c_pins ={0};
+	if(hi2c->Instance == I2C1)
+	{
+		__HAL_RCC_I2C1_CLK_ENABLE();
+		__HAL_RCC_GPIOB_CLK_ENABLE();
+		i2c_pins.Pin = (GPIO_PIN_6 | GPIO_PIN_7);
+		i2c_pins.Mode = GPIO_MODE_AF_OD;
+		i2c_pins.Pull = GPIO_NOPULL;
+		i2c_pins.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+		i2c_pins.Alternate = GPIO_AF4_I2C1;
+		HAL_GPIO_Init(GPIOB, &i2c_pins);
+	}
+	if(hi2c->Instance == I2C2)
+	{
+		__HAL_RCC_I2C2_CLK_ENABLE();
+		__HAL_RCC_GPIOB_CLK_ENABLE();
+		i2c_pins.Pin = (GPIO_PIN_10 | GPIO_PIN_11);
+		i2c_pins.Mode = GPIO_MODE_AF_OD;
+		i2c_pins.Pull = GPIO_NOPULL;
+		i2c_pins.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+		i2c_pins.Alternate = GPIO_AF4_I2C2;
+		HAL_GPIO_Init(GPIOB, &i2c_pins);
+	}
 
-	i2c2_pins.Pin = (GPIO_PIN_10 | GPIO_PIN_11);
-	i2c2_pins.Mode = GPIO_MODE_AF_OD;
-	i2c2_pins.Pull = GPIO_PULLUP;
-	i2c2_pins.Alternate = GPIO_AF4_I2C2;
-
-	HAL_GPIO_Init(GPIOB, &i2c2_pins);
 }
