@@ -847,7 +847,7 @@ while(1)
 				 {
 					active_role =1;
 					card_ptr = dropdown_CardThumb[1];
-					fill_area(499,610,384,434,0xe7eefe);
+					fill_area(499, 610, 384,434,0xe7eefe);
 					print_string(510,400,card_ptr,0x737373);
 					dropdown(&dropdown_CardThumb[0],2,297,167,50);
 				 }
