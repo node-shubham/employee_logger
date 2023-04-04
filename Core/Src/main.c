@@ -130,7 +130,8 @@ bool keypad_down;
 int onetime =1;
 
 /*************************************************************/
-uint8_t emp_id_read=0;
+uint8_t emp_id_read=7;
+uint8_t test_id=0;
 
 uint8_t desgn_id =0;
 uint8_t role_id =0;
@@ -280,6 +281,15 @@ int main()
 	i2c2_init();
 	//tim5_init();
 
+	/*
+	HAL_I2C_Mem_Write(&i2c1,dev_addr,0x00,2,(uint8_t *)&emp_id_read,2,100);
+	HAL_Delay(100);
+	HAL_I2C_Mem_Read(&i2c1, dev_addr1, 0x00, 2, (uint8_t *)&test_id, 2, 100);
+	*/
+	//HAL_I2C_Mem_Read(&i2c1,dev_addr, 0,2,(uint8_t *)temp_str,sizeof(temp_str),100);
+	while(1);
+
+
 	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, GPIO_PIN_SET);
 	MFRC522_Init();
 
@@ -307,10 +317,7 @@ int main()
 	curr_page = 1 ;
 
 //erase_EEPROM();
-//HAL_I2C_Mem_Write(&i2c1,dev_addr,0x00,2,(uint8_t *)&emp_id_read,1,100);
 
-HAL_I2C_Mem_Read(&i2c1, dev_addr1, 0x00, 2, (uint8_t *)&emp_id_read, 1, 100);
-HAL_I2C_Mem_Read(&i2c1,dev_addr, 0,2,(uint8_t *)temp_str,sizeof(temp_str),100);
 
 status = Read_MFRC522(VersionReg);
 sprintf(str1,"Running RC522");
@@ -1174,12 +1181,24 @@ void spi2_init(void) 		/* SPI2 : XPT2048 Touch Sensor */
 
 void i2c1_init(void)  		//incomplete !!  please verify once before using it
 {
+
 	i2c1.Instance = I2C1;
 	i2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
 	i2c1.Init.ClockSpeed = 1000000;
 	i2c1.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
 	i2c1.Init.DutyCycle = I2C_DUTYCYCLE_2;
 
+	/*
+	  i2c1.Instance = I2C1;
+	  i2c1.Init.ClockSpeed = 100000;
+	  i2c1.Init.DutyCycle = I2C_DUTYCYCLE_2;
+	  i2c1.Init.OwnAddress1 = 0;
+	  i2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
+	  i2c1.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
+	  i2c1.Init.OwnAddress2 = 0;
+	  i2c1.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
+	  i2c1.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
+*/
 	if(HAL_I2C_Init(&i2c1) != HAL_OK)
 	{
 		printf("I2C1 Init Failed\r\n");
