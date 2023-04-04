@@ -10,7 +10,6 @@ void front_Page(void)
 	fill_screen(WHITE);
 	print_image(310, 170, 150, 100, logo);
 	print_string(180, 290, "Attendance Management System", 0x1d6791);
-
 }
 
 void print_grid(void)

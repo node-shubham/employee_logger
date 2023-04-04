@@ -324,7 +324,7 @@ HAL_I2C_Mem_Read(&hi2c1,dev_addr, 0,2,(uint8_t *)temp_str,sizeof(temp_str),100);
 
 status = Read_MFRC522(VersionReg);
 sprintf(str1,"Running RC522");
-sprintf(str2,"\nver:%x", status);
+sprintf(str2,"\tver:%x\r\n", status);
 HAL_UART_Transmit(&uart1,(uint8_t *)str1,strlen(str1),1000);
 HAL_UART_Transmit(&uart1,(uint8_t *)str2,strlen(str2),1000);
 
@@ -822,7 +822,7 @@ while(1)
 		}
 	}
 
-/*****************************************  CURRENT PAGE 6 ****************************************************/
+/********************************  CURRENT PAGE 6 ****************************************/
 /***********************************  KEYPAD_TOUCH*************************************************/
 	if(curr_page == 6)
 	{
