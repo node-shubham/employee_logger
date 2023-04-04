@@ -55,7 +55,6 @@ void add_Employee (void);
 void erase_EEPROM (void);
 void search_Employee (void);
 void delete_Employee (void);
-void var_init(void);
 
 
 //////*********************************** Global variable ***************////////////

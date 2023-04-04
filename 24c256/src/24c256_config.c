@@ -14,6 +14,7 @@ struct READ_DETAILS read_details;
 bool del = 0;
 uint8_t dev_addr = 0xA0;
 uint8_t dev_addr1 = 0xA1;
+uint8_t serch_emp_no = 0;
 uint16_t next_emp_id = 0;
 uint16_t last_emp_id = 0;
 uint16_t scanned_EMPLO_ID = 0;
@@ -21,16 +22,6 @@ uint16_t calculate_addr = 0;
 uint16_t del_addr[5] = {0};
 uint32_t scanned_UID = 0;
 char emp_name[19] = {0};
-
-void var_init(void)
-{
-/*//	 bool availble_employee = 0;
-	 uint8_t dev_addr = 0xA0;
-	 uint8_t dev_addr1 = 0xA1;
-	 uint16_t scanned_EMPLO_ID = 0;
-	 uint16_t calculate_addr = 0;
-	 uint32_t scanned_UID = 0;*/
-}
 
 
 void collect_id (void)
@@ -131,7 +122,7 @@ void search_Employee (void)
 	 }
 	else
 	 {
-	   uint8_t j=0,k = 0, cnt_indx=0, total_emp=0;
+	   uint8_t j=0, cnt_indx=0, total_emp=0;
 	   uint16_t start_addr = 3712+(256*(frist_char - 65));
 	   total_emp = (end_addr - start_addr)+1;
 	   uint16_t all_addr[total_emp];
@@ -149,20 +140,20 @@ void search_Employee (void)
 				  HAL_I2C_Mem_Read(&i2c1, dev_addr1, all_addr[i], 2, (uint8_t *) &(read_details), sizeof(read_details), 100);
 				  if(read_details.rd_EMPLO_name[cnt_indx] == emp_name[cnt_indx])
 					{
-					  k = 0;
+					  serch_emp_no = 0;
 					  all_addr[j] = all_addr[i];
 					  j++;
-					  k = j;
+					  serch_emp_no = j;
 					}
 				}
 			  total_emp = j;
 			  cnt_indx++;
 			}
-	   if(5<k)
-	     k=5;
+	   if(5<serch_emp_no)
+		   serch_emp_no=5;
 
 	   char display_arr[21] = {0};
-	   for(int i = 0; i < k; i++)
+	   for(int i = 0; i < serch_emp_no; i++)
 		  {
 			HAL_I2C_Mem_Read(&i2c1, dev_addr1, all_addr[i], 2, (uint8_t *) &(read_details), sizeof(read_details), 100);
 			print_string(90, (194+(53*i)), "E",0x9900ff);
@@ -182,15 +173,21 @@ void search_Employee (void)
 
 void delete_Employee (void)
 {
+  uint8_t y = 0;
   del = 1;
   search_Employee();
   while(del)
 	  {
-	    if(isTouched(100, 678, 179+(52*1), 225+(52*1)))
+	    if(isTouched(100, 678, 179+(52*y), 225+(52*y)))
 	      {
+            draw_rect(100, 678, (179+(52*y)), (225+(52*y)), RED_2);
+            HAL_I2C_Mem_Read(&i2c1, dev_addr1, del_addr[y], 2, (uint8_t *) &(read_details), sizeof(read_details), 100);
 
 	    	del = 0;
 	      }
+	    y++;
+	    if(serch_emp_no == y)
+	       y = 0;
 	  }
 }
 
@@ -198,7 +195,7 @@ void delete_Employee (void)
 void erase_EEPROM (void)
 {
 	uint16_t strt_erse_addr = 0;
-	uint64_t erase_data = 0xffffffffffffffff;
+	uint64_t erase_data = 0xfffffffffffffff;
 	while(strt_erse_addr<EEPROM_LAST_ADDR)  // EEPROM_LAST_ADDR means witch address is last for erase.
 	{
 	  HAL_I2C_Mem_Write(&i2c1, dev_addr, strt_erse_addr, 2, (uint8_t *) &(erase_data), sizeof(erase_data), 100);  ///  write employee_id
