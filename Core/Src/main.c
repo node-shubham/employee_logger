@@ -66,7 +66,7 @@ UART_HandleTypeDef uart1;
 SPI_HandleTypeDef spi1;
 SPI_HandleTypeDef spi2;
 I2C_HandleTypeDef i2c2;
-I2C_HandleTypeDef hi2c1;
+I2C_HandleTypeDef i2c1;
 TIM_HandleTypeDef tim5;
 
 uint8_t value = 0;
@@ -112,6 +112,7 @@ char *role_ptr = "EMPLOYEE";
 char *card_ptr = "CARD";
 
 uint8_t active_role=0;
+uint8_t active_page =0;
 uint8_t sub_page = 0;
 
 unsigned char string[100];
@@ -120,6 +121,7 @@ unsigned char string[100];
 #define	DEBUG_UART	1
 bool UC_FLAG = 0;
 bool NUM_FLAG = 0;
+bool SAVE_EDIT_FLAG =0;
 bool drop_btn;
 bool keypad_down;
 
@@ -149,6 +151,7 @@ void gpio_init(void);
 void uart1_init(void);
 void spi1_init(void);
 void spi2_init(void);
+void i2c1_init(void);
 void i2c2_init(void);
 void tim5_init(void);
 
@@ -215,10 +218,9 @@ static void display_handler(void * param)
 #endif
 
 
-
 uint8_t check_validcard(void){
 	memset(uid_read,0,sizeof(uid_read));
-	//HAL_I2C_Mem_Read(&hi2c1, dev_addr1, 156+j*32, 2, (uint8_t *)&uid_read, 4, 100);
+	//HAL_I2C_Mem_Read(&i2c1, dev_addr1, 156+j*32, 2, (uint8_t *)&uid_read, 4, 100);
 	if((uid_read[3]==cardstr[0])&&(uid_read[2]==cardstr[1])&&(uid_read[1]==cardstr[2])&&(uid_read[0]==cardstr[3]))
 	{
 		char msg[] = "Access Granted\r\n";
@@ -232,18 +234,16 @@ uint8_t check_validcard(void){
 	/*
 	for(int j=0;j<emp_id_read;j++)
 	{
-		//HAL_I2C_Mem_Read(&hi2c1, dev_addr1, 156+j*32, 2, (uint8_t *)&uid_read, 4, 100);
+		//HAL_I2C_Mem_Read(&i2c1, dev_addr1, 156+j*32, 2, (uint8_t *)&uid_read, 4, 100);
 		if((uid_read[3]==rfid_id[0])&&(uid_read[2]==rfid_id[1])&&(uid_read[1]==rfid_id[2])&&(uid_read[0]==rfid_id[3]))
 		{
 			char msg[] = "Access Granted\r\n";
-
-												//HAL_UART_Transmit(&huart1,(uint8_t *)msg,sizeof(msg),1000);
+			HAL_UART_Transmit(&huart1,(uint8_t *)msg,sizeof(msg),1000);
 			return 1;
 		}
 	}
 	*/
 }
-
 
 
 void read_card(void)
@@ -276,10 +276,10 @@ int main()
 	uart1_init();
 	spi1_init();
 	spi2_init();
-	//i2c2_init();
+	i2c1_init();
+	i2c2_init();
 	//tim5_init();
 
-	//rc522_init();
 	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, GPIO_PIN_SET);
 	MFRC522_Init();
 
@@ -296,27 +296,25 @@ int main()
   /* disable stdout buffering */
   setvbuf(stdout, NULL, _IONBF, 0);
 
-  	r307_init();
-  	fingerprint_match_loop();
+  	//r307_init();
+  	//fingerprint_match_loop();
 	HAL_GPIO_WritePin(GPIOB,GPIO_PIN_2,GPIO_PIN_SET);
 	HAL_Delay(50);
 	HAL_GPIO_WritePin(GPIOB,GPIO_PIN_2,GPIO_PIN_RESET);
 	HAL_Delay(50);
-
-  //searchdb_mainloop();
 #endif
 	HAL_UART_Transmit(&uart1,(uint8_t *)msg,sizeof(msg),1000);
 	curr_page = 1 ;
 
 //erase_EEPROM();
-//HAL_I2C_Mem_Write(&hi2c1,dev_addr,0x00,2,(uint8_t *)&emp_id_read,1,100);
+//HAL_I2C_Mem_Write(&i2c1,dev_addr,0x00,2,(uint8_t *)&emp_id_read,1,100);
 
-HAL_I2C_Mem_Read(&hi2c1, dev_addr1, 0x00, 2, (uint8_t *)&emp_id_read, 1, 100);
-HAL_I2C_Mem_Read(&hi2c1,dev_addr, 0,2,(uint8_t *)temp_str,sizeof(temp_str),100);
+HAL_I2C_Mem_Read(&i2c1, dev_addr1, 0x00, 2, (uint8_t *)&emp_id_read, 1, 100);
+HAL_I2C_Mem_Read(&i2c1,dev_addr, 0,2,(uint8_t *)temp_str,sizeof(temp_str),100);
 
 status = Read_MFRC522(VersionReg);
 sprintf(str1,"Running RC522");
-sprintf(str2,"\nver:%x", status);
+sprintf(str2,"\tver:%x\r\n", status);
 HAL_UART_Transmit(&uart1,(uint8_t *)str1,strlen(str1),1000);
 HAL_UART_Transmit(&uart1,(uint8_t *)str2,strlen(str2),1000);
 
@@ -393,9 +391,9 @@ while(1)
 				HAL_GPIO_WritePin(GPIOB,GPIO_PIN_2,GPIO_PIN_SET);
 				HAL_Delay(200);
 				HAL_GPIO_WritePin(GPIOB,GPIO_PIN_2,GPIO_PIN_RESET);
-			  //HAL_I2C_Mem_Write(&hi2c1,dev_addr,0x00,2,0,1,100);
+			  //HAL_I2C_Mem_Write(&i2c1,dev_addr,0x00,2,0,1,100);
 				int val=0;
-				HAL_I2C_Mem_Write(&hi2c1,dev_addr,0x00,2,(uint8_t *)&val,1,100);
+				HAL_I2C_Mem_Write(&i2c1,dev_addr,0x00,2,(uint8_t *)&val,1,100);
 		   }
 		}
 	}
@@ -503,7 +501,15 @@ while(1)
 
 		if(isTouched( 550, 650, 348, 408)) 	// SCAN
 		{
-			read_card();
+			sub_page=3;
+			if(active_role == 0)
+			{
+				read_card();
+			}
+			if(active_role == 1)
+			{
+				Front_screen();
+			}
 
 		}
 
@@ -525,7 +531,7 @@ while(1)
 
 			add_Employee();
 
-			HAL_I2C_Mem_Write(&hi2c1,dev_addr,0x00,2,(uint8_t *)&scanned_EMPLO_ID,1,100);
+			HAL_I2C_Mem_Write(&i2c1,dev_addr,0x00,2,(uint8_t *)&scanned_EMPLO_ID,1,100);
 			Set_Font(&Font12x18);
 			print_string(550,240,"saved",RED);
 		}
@@ -648,66 +654,89 @@ while(1)
 		if(isTouched( 630, 720, 121, 169))  //SAVE  630,720,121,169
 		{
 		}
-		if(isTouched( 494, 584, 121, 169))   //EDIT  494,584,121,169
+		if(isTouched( 590, 670, 121, 169))   //EDIT  494,584,121,169
 		{
+			SAVE_EDIT_FLAG = !SAVE_EDIT_FLAG;
+			if(SAVE_EDIT_FLAG)
+			{
+				active_page = 1;
+				fill_roundrect(593,667,124,166,0xe7eefe,0xcedcfd);
+				print_string(610,138,"SAVE",0x737373);
+				NewUser_Desig1(0xe7eefe);
+				NewUser_Role1(0xe7eefe);
+				NewUser_Card1(0xe7eefe);
 
-		}
-		if(isTouched( 661, 695, 210, 254))     //	494,720,199,259,0xcedcfd  //desig
-		{
-			sub_page =4;
-			drop_btn = !drop_btn;
-			if(drop_btn)
-			{
-			//	NewUser_Name();
-				NewUser_Desig1();
-				dropdown(&dropdown_desgn[0],4,297,217,32);
 			}
 			else
 			{
-				sub_page=0;
-				fill_area(494,720,266,320+120,0xfffafa);
-				//AllUser_Page();
-				NewUser_Role1();
-				NewUser_Card1();
+				active_page = 0;
+				fill_roundrect(593,667,124,166,0xe7eefe,0xcedcfd);
+				print_string(610,138,"EDIT",0x737373);
+				NewUser_Desig1(0xcedcfd);
+				NewUser_Role1(0xcedcfd);
+				NewUser_Card1(0xcedcfd);
 			}
 		}
-		if(isTouched( 670, 720, 300, 344))//	494,720,289,349,//role
-		{
-			sub_page =5;
-			drop_btn = !drop_btn;
-			if(drop_btn)
+
+		if(active_page == 1)
 			{
-				NewUser_Role1();
-				NewUser_Card1();
-				dropdown(&dropdown_role[0],3,297,217,-80);
-			}
-			else
-			{
-				sub_page=0;
-				fill_area(494,720,154,200+80,0xfffafa);
-				//AllUser_Page();
-				//NewUser_Name();
-				NewUser_Desig1();
-				SaveAndExit();
-			}
-		}
-		if(isTouched( 661, 695, 390, 434))//	494,720,379,439 // card
-		{
-			sub_page =6;
-			drop_btn = !drop_btn;
-			if(drop_btn)
-			{
-				//NewUser_Name();
-				NewUser_Desig1();
-				NewUser_Card1();
-				dropdown(&dropdown_CardThumb[0],2,297,217,50);
-			}
-			else
-			{
-				sub_page=0;
-				fill_area(494,720,284,330+40,0xfffafa);
-				//AllUser_Page();
-				NewUser_Role1();
+			 if(isTouched( 620,670,199,259))     //	494,720,199,259,0xcedcfd  //desig
+				{
+					sub_page =4;
+					drop_btn = !drop_btn;
+					if(drop_btn)
+					{
+					//	NewUser_Name();
+						NewUser_Desig1(0xe7eefe);
+						dropdown(&dropdown_desgn[0],4,297,167,32);
+					}
+					else
+					{
+				    	sub_page=0;
+						fill_area(494,670,266,320+120,0xfffafa);
+							//AllUser_Page();
+						NewUser_Role1(0xe7eefe);
+						NewUser_Card1(0xe7eefe);
+					}
+				}
+				if(isTouched( 620,670,289,349))//	494,720,289,349,//role
+				{
+					   sub_page =5;
+					   drop_btn = !drop_btn;
+					   if(drop_btn)
+						{
+							NewUser_Role1(0xe7eefe);
+							NewUser_Card1(0xe7eefe);
+							dropdown(&dropdown_role[0],3,297,167,-80);
+						}
+						else
+						{
+							sub_page=0;
+							fill_area(494,670,154,200+80,0xfffafa);
+							//AllUser_Page();
+							//NewUser_Name();
+							NewUser_Desig1(0xe7eefe);
+							SaveAndEdit();
+						}
+					}
+		if(isTouched( 620,670,379,439))//	494,720,379,439 // card
+				{
+				sub_page =6;
+				drop_btn = !drop_btn;
+				if(drop_btn)
+				{
+					//NewUser_Name();
+					NewUser_Desig1(0xe7eefe);
+					NewUser_Card1(0xe7eefe);
+					dropdown(&dropdown_CardThumb[0],2,297,167,50);
+				}
+				else
+				{
+					sub_page=0;
+					fill_area(494,670,284,330+40,0xfffafa);
+					//AllUser_Page();
+					NewUser_Role1(0xe7eefe);
+				}
 			}
 		}
 		if(isTouched( 8, 72, 10, 70)) //back
@@ -725,34 +754,34 @@ while(1)
 			 {
 				active_role =0;
 				desgn_ptr =	dropdown_desgn[0];
-				fill_area(499,655,204,254,0xe7eefe);
+				fill_area(499,610,204,254,0xe7eefe);
 				print_string(510,214,desgn_ptr,0x737373);
-				dropdown(&dropdown_desgn[0],4,297,217,32);
+				dropdown(&dropdown_desgn[0],4,297,167,32);
 			 }
 			 if(touchY >= 266+40 && touchY <= 312+40)
 			 {
 				active_role =1;
 				desgn_ptr =	dropdown_desgn[1];
-				fill_area(499,655,204,254,0xe7eefe);
+				fill_area(499,610,204,254,0xe7eefe);
 				print_string(510,214,desgn_ptr,0x737373);
-				dropdown(&dropdown_desgn[0],4,297,217,32);
+				dropdown(&dropdown_desgn[0],4,297,167,32);
 			 }
 			 if(touchY >= 266+80 && touchY <= 312+80)
 			 {
 				active_role =2;
 				desgn_ptr =	dropdown_desgn[2];
-				fill_area(499,655,204,254,0xe7eefe);
+				fill_area(499,610,204,254,0xe7eefe);
 				print_string(510,214,desgn_ptr,0x737373);
-				dropdown(&dropdown_desgn[0],4,297,217,32);
+				dropdown(&dropdown_desgn[0],4,297,167,32);
 			 }
 			 if(touchY >= 266+120 && touchY <= 312+120)
 			 {
 				active_role =3;
 				desgn_ptr =	dropdown_desgn[3];
 
-				fill_area(499,655,204,254,0xe7eefe);
+				fill_area(499,610,204,254,0xe7eefe);
 				print_string(510,214,desgn_ptr,0x737373);
-				dropdown(&dropdown_desgn[0],4,297,217,32);
+				dropdown(&dropdown_desgn[0],4,297,167,32);
 			 }
 			}
 		}
@@ -766,29 +795,28 @@ while(1)
 				 {
 					active_role =0;
 					role_ptr =	dropdown_role[0];
-					fill_area(499,655,294,344,0xe7eefe);
+					fill_area(499,610,294,344,0xe7eefe);
 					print_string(510,307,role_ptr,0x737373);
-					dropdown(&dropdown_role[0],3,297,217,-80);
+					dropdown(&dropdown_role[0],3,297,167,-80);
 				 }
 				 if(touchY >= 154+40 && touchY <= 200+40)
 				 {
 					active_role =1;
 					role_ptr =	dropdown_role[1];
-					fill_area(499,655,294,344,0xe7eefe);
+					fill_area(499,610,294,344,0xe7eefe);
 					print_string(510,307,role_ptr,0x737373);
-					dropdown(&dropdown_role[0],3,297,217,-80);
+					dropdown(&dropdown_role[0],3,297,167,-80);
 				 }
 				 if(touchY >= 154+80 && touchY <= 200+80)
 				 {
 					active_role =2;
 					role_ptr =	dropdown_role[2];
-					fill_area(499,655,294,344,0xe7eefe);
+					fill_area(499,610,294,344,0xe7eefe);
 					print_string(510,307,role_ptr,0x737373);
-					dropdown(&dropdown_role[0],3,297,217,-80);
+					dropdown(&dropdown_role[0],3,297,167,-80);
 				 }
 			}
 		}
-
 		if(sub_page ==6)
 		{
 			//active_role=0;
@@ -798,90 +826,90 @@ while(1)
 				 {
 					active_role =0;
 					card_ptr = dropdown_CardThumb[0];
-					fill_area(499,655,384,434,0xe7eefe);
+					fill_area(499,610,384,434,0xe7eefe);
 					print_string(510,400,card_ptr,0x737373);
-					dropdown(&dropdown_CardThumb[0],2,297,217,50);
+					dropdown(&dropdown_CardThumb[0],2,297,167,50);
 				 }
 				 if(touchY >= 284+40 && touchY <= 330+40)
 				 {
 					active_role =1;
 					card_ptr = dropdown_CardThumb[1];
-					fill_area(499,655,384,434,0xe7eefe);
+					fill_area(499, 610, 384,434,0xe7eefe);
 					print_string(510,400,card_ptr,0x737373);
-					dropdown(&dropdown_CardThumb[0],2,297,217,50);
+					dropdown(&dropdown_CardThumb[0],2,297,167,50);
 				 }
 			}
 		}
 	}
 
-/*****************************************  CURRENT PAGE 6 ****************************************************/
+/********************************  CURRENT PAGE 6 ****************************************/
 /***********************************  KEYPAD_TOUCH*************************************************/
 	if(curr_page == 6)
-	{
-		Set_Font(&Font12x18);
-		//Set_Font(&Font16x24);
-		//HAL_Delay(100);
-		//static uint8_t pos =0;
-		int x=0,x1=0,y=31,y1=0,k=0;
-		if(touchX >= 525 && touchX <= 615 && touchY >= 340+y && touchY <= 380+y) // down  525,615,360+y,400+y
-		{
-				if(keypad_down)
 				{
-					//clear_area();
-					fill_area(0,800,200,480,PURPLE);
-					NewEntry_page();
-					curr_page = 4;
-				}
-				else
-				{
-					fill_area(0,800,200,480,PURPLE);
-					attendence_search();
-					curr_page = 7;
-				}
+					Set_Font(&Font12x18);
+					//Set_Font(&Font16x24);
+					//HAL_Delay(100);
+					static uint8_t pos =0;
+					int x=0,x1=0,y=31,y1=0,k=0;
+					if(touchX >= 525 && touchX <= 615 && touchY >= 340+y && touchY <= 380+y) // down  525,615,360+y,400+y
+					{
+							if(keypad_down)
+							{
+								//clear_area();
+								fill_area(0,800,200,480,PURPLE);
+								NewEntry_page();
+								curr_page = 4;
+							}
+							else
+							{
+								fill_area(0,800,200,480,PURPLE);
+								attendence_search();
+								curr_page = 7;
+							}
 
-			if(curr_page == 7)
-			{
-			}
-		}
+						if(curr_page == 7)
+						{
+						}
+					}
 
-		if(touchX >= 150 && touchX <= 215 && touchY >= 290+y && touchY <= 330+y) //caps  150,215,310+y,350+y
-		{
-			UC_FLAG = !UC_FLAG;
-		}
-		if(touchX >= 275 && touchX <= 515 && touchY >= 340+y && touchY <= 380+y)		// space 275,515,360+y,400+y
-		{
-			HAL_Delay(100);
+					if(touchX >= 150 && touchX <= 215 && touchY >= 290+y && touchY <= 330+y) //caps  150,215,310+y,350+y
+					{
+						UC_FLAG = !UC_FLAG;
+					}
+					if(touchX >= 275 && touchX <= 515 && touchY >= 340+y && touchY <= 380+y)		// space 275,515,360+y,400+y
+					{
+						HAL_Delay(100);
 
-			print_char(220+(pos*12),85,32,0xe7eefe);
-			*(emp_name+pos) =32;
-			pos++;
-		}
-		if(touchX >= 575 && touchX <= 640 && touchY >= 290+y && touchY <= 330+y) //backspace  575,640,310+y,350+y
-		{
-			pos--;
-			fill_area(220+(pos*12),235+(pos*12),85,115,0xe7eefe);
-		}
+						print_char(220+(pos*12),85,32,0xe7eefe);
+						*(emp_name+pos) =32;
+						pos++;
+					}
+					if(touchX >= 575 && touchX <= 640 && touchY >= 290+y && touchY <= 330+y) //backspace  575,640,310+y,350+y
+					{
+						pos--;
+						fill_area(220+(pos*12),235+(pos*12),85,115,0xe7eefe);
+					}
 
-		for(int idx1=0; idx1<3; idx1++)
-		{
-			x1+=25*idx1;
-			for(int idx2=0; idx2<=9-(idx1*2-k); idx2++)
-			{
-				if(touchX >= x1+150+x && touchX <= x1+190+x && touchY >= y1+190+y && touchY <= y1+230+y)  //keys x1+105+x,x1+155+x,y1+205+y,y1+255+y
-				{
-					print_char(220+(pos*12),90,char_key[idx1][idx2],RED);
-					*(emp_name+pos) =char_key[idx1][idx2];
-					pos++;
-				}
-				x+=50;
-			}
-			x=0;
-			k=1;
-			y1+=50;
-		}
-		*(emp_name+pos+1)= '\0';
+					for(int idx1=0; idx1<3; idx1++)
+					{
+						x1+=25*idx1;
+						for(int idx2=0; idx2<=9-(idx1*2-k); idx2++)
+						{
+							if(touchX >= x1+150+x && touchX <= x1+190+x && touchY >= y1+190+y && touchY <= y1+230+y)  //keys x1+105+x,x1+155+x,y1+205+y,y1+255+y
+							{
+										print_char(220+(pos*12),90,char_key[idx1][idx2],RED);
+										*(emp_name+pos) =char_key[idx1][idx2];
+									pos++;
+							}
+							x+=50;
+						}
+						x=0;
+						k=1;
+						y1+=50;
+					}
+					*(emp_name+pos+1)= '\0';
 
-	}
+		}
 /*****************************  CURRENT PAGE 7 ************************/
 	if(curr_page == 7)
 	{
@@ -1144,7 +1172,21 @@ void spi2_init(void) 		/* SPI2 : XPT2048 Touch Sensor */
 	}
 }
 
-void i2c2_init()  		//incomplete !!  please verify once before using it
+void i2c1_init(void)  		//incomplete !!  please verify once before using it
+{
+	i2c1.Instance = I2C1;
+	i2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
+	i2c1.Init.ClockSpeed = 1000000;
+	i2c1.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
+	i2c1.Init.DutyCycle = I2C_DUTYCYCLE_2;
+
+	if(HAL_I2C_Init(&i2c1) != HAL_OK)
+	{
+		printf("I2C1 Init Failed\r\n");
+	}
+}
+
+void i2c2_init(void)  		//incomplete !!  please verify once before using it
 {
 	i2c2.Instance = I2C2;
 	i2c2.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
