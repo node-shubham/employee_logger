@@ -211,7 +211,7 @@ void Admin_screen(void)
 void User_Management(void)
 {
 	Set_Font(&Font12x18);
-	fill_area(100,800,0,480,PURPLE);
+	fill_area(80,800,0,480,PURPLE);
 	fill_area(70,720,121,439,PURPLE);
 
 	fill_roundrect(250,580,115,195,0xff1a1a,PURPLE);
@@ -265,6 +265,7 @@ void NewEntry_page(void)
 	NewUser_Role();
 	NewUser_Card();
 	//BackBtn();
+
 }
 
 //######################  NEW_USER(NAME)  #############################
@@ -334,10 +335,16 @@ void NewUser_Card(void)
 void BackBtn(void)
 {
 	//draw_roundrect(8, 72, 10, 70, GREEN);
-	//fil_circle(40, 40, 30, WHITE);
-	//fill_circle(40, 40, 25, RED);
-	print_image(10,10,60,60,back);
-	Set_Font(&Font12x18);
+	fill_circle(40, 40, 30, WHITE);
+	fill_circle(40, 40, 26, RED);
+	for(int i=0; i<=4; i++)
+	{
+		draw_line(25, 39+i, 55, 39+i, WHITE);
+	}
+
+	print_image(10,100,60,60,back);
+	//Set_Font(&Font12x18);
+	draw_vl(30, 36, 8, GREEN);
 }
 
 
@@ -435,7 +442,8 @@ void dropdown(char *dpdown [], u32 NumOfBox,s16 x1, s16 x2, s16 y1)
 		}
 		else
 		{
-			fill_roundrect(197+x1,503+x2,y1+234+y,y1+280+y,0xe6e6e6,0xe6e6e6);
+			fill_roundrect(197+x1,503+x2,y1+234+y,y1+280+y,0x999999,0x999999);
+			fill_roundrect(198+x1,502+x2,y1+235+y,y1+279+y,0xe6e6e6,0xe6e6e6);
 			print_string(265-50+x1 ,y1+246+y,(*(dpdown+idx)),0x999999);
 		}
 
