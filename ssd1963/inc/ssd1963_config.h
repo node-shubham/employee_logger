@@ -90,10 +90,10 @@
 	void NewUser_Role(void);
 	void NewUser_Card(void);
 
-	void NewUser_Desig1(void);
-	void NewUser_Role1(void);
-	void NewUser_Card1(void);
-	void SaveAndExit (void);
+	void NewUser_Desig1(u32 Fill_colour);
+	void NewUser_Role1(u32 Fill_colour);
+	void NewUser_Card1(u32 Fill_colour);
+	void SaveAndEdit (void);
 
 
 	void table_page(void);

@@ -111,6 +111,7 @@ char *role_ptr = "EMPLOYEE";
 char *card_ptr = "CARD";
 
 uint8_t active_role=0;
+uint8_t active_page =0;
 uint8_t sub_page = 0;
 
 unsigned char string[100];
@@ -119,6 +120,7 @@ unsigned char string[100];
 #define	DEBUG_UART	1
 bool UC_FLAG = 0;
 bool NUM_FLAG = 0;
+bool SAVE_EDIT_FLAG =0;
 bool drop_btn;
 bool keypad_down;
 
@@ -304,8 +306,8 @@ int main()
   /* disable stdout buffering */
   setvbuf(stdout, NULL, _IONBF, 0);
 
-  	r307_init();
-  	fingerprint_match_loop();
+  	//r307_init();
+  	//fingerprint_match_loop();
 	HAL_GPIO_WritePin(GPIOB,GPIO_PIN_2,GPIO_PIN_SET);
 	HAL_Delay(50);
 	HAL_GPIO_WritePin(GPIOB,GPIO_PIN_2,GPIO_PIN_RESET);
@@ -511,7 +513,15 @@ while(1)
 
 		if(isTouched( 550, 650, 348, 408)) 	// SCAN
 		{
-			read_card();
+			sub_page=3;
+			if(active_role == 0)
+			{
+				read_card();
+			}
+			if(active_role == 1)
+			{
+				Front_screen();
+			}
 
 		}
 
@@ -656,66 +666,89 @@ while(1)
 		if(isTouched( 630, 720, 121, 169))  //SAVE  630,720,121,169
 		{
 		}
-		if(isTouched( 494, 584, 121, 169))   //EDIT  494,584,121,169
+		if(isTouched( 590, 670, 121, 169))   //EDIT  494,584,121,169
 		{
+			SAVE_EDIT_FLAG = !SAVE_EDIT_FLAG;
+			if(SAVE_EDIT_FLAG)
+			{
+				active_page = 1;
+				fill_roundrect(593,667,124,166,0xe7eefe,0xcedcfd);
+				print_string(610,138,"SAVE",0x737373);
+				NewUser_Desig1(0xe7eefe);
+				NewUser_Role1(0xe7eefe);
+				NewUser_Card1(0xe7eefe);
 
-		}
-		if(isTouched( 661, 695, 210, 254))     //	494,720,199,259,0xcedcfd  //desig
-		{
-			sub_page =4;
-			drop_btn = !drop_btn;
-			if(drop_btn)
-			{
-			//	NewUser_Name();
-				NewUser_Desig1();
-				dropdown(&dropdown_desgn[0],4,297,217,32);
 			}
 			else
 			{
-				sub_page=0;
-				fill_area(494,720,266,320+120,0xfffafa);
-				//AllUser_Page();
-				NewUser_Role1();
-				NewUser_Card1();
+				active_page = 0;
+				fill_roundrect(593,667,124,166,0xe7eefe,0xcedcfd);
+				print_string(610,138,"EDIT",0x737373);
+				NewUser_Desig1(0xcedcfd);
+				NewUser_Role1(0xcedcfd);
+				NewUser_Card1(0xcedcfd);
 			}
 		}
-		if(isTouched( 670, 720, 300, 344))//	494,720,289,349,//role
-		{
-			sub_page =5;
-			drop_btn = !drop_btn;
-			if(drop_btn)
+
+		if(active_page == 1)
 			{
-				NewUser_Role1();
-				NewUser_Card1();
-				dropdown(&dropdown_role[0],3,297,217,-80);
-			}
-			else
-			{
-				sub_page=0;
-				fill_area(494,720,154,200+80,0xfffafa);
-				//AllUser_Page();
-				//NewUser_Name();
-				NewUser_Desig1();
-				SaveAndExit();
-			}
-		}
-		if(isTouched( 661, 695, 390, 434))//	494,720,379,439 // card
-		{
-			sub_page =6;
-			drop_btn = !drop_btn;
-			if(drop_btn)
-			{
-				//NewUser_Name();
-				NewUser_Desig1();
-				NewUser_Card1();
-				dropdown(&dropdown_CardThumb[0],2,297,217,50);
-			}
-			else
-			{
-				sub_page=0;
-				fill_area(494,720,284,330+40,0xfffafa);
-				//AllUser_Page();
-				NewUser_Role1();
+			 if(isTouched( 620,670,199,259))     //	494,720,199,259,0xcedcfd  //desig
+				{
+					sub_page =4;
+					drop_btn = !drop_btn;
+					if(drop_btn)
+					{
+					//	NewUser_Name();
+						NewUser_Desig1(0xe7eefe);
+						dropdown(&dropdown_desgn[0],4,297,167,32);
+					}
+					else
+					{
+				    	sub_page=0;
+						fill_area(494,670,266,320+120,0xfffafa);
+							//AllUser_Page();
+						NewUser_Role1(0xe7eefe);
+						NewUser_Card1(0xe7eefe);
+					}
+				}
+				if(isTouched( 620,670,289,349))//	494,720,289,349,//role
+				{
+					   sub_page =5;
+					   drop_btn = !drop_btn;
+					   if(drop_btn)
+						{
+							NewUser_Role1(0xe7eefe);
+							NewUser_Card1(0xe7eefe);
+							dropdown(&dropdown_role[0],3,297,167,-80);
+						}
+						else
+						{
+							sub_page=0;
+							fill_area(494,670,154,200+80,0xfffafa);
+							//AllUser_Page();
+							//NewUser_Name();
+							NewUser_Desig1(0xe7eefe);
+							SaveAndEdit();
+						}
+					}
+		if(isTouched( 620,670,379,439))//	494,720,379,439 // card
+				{
+				sub_page =6;
+				drop_btn = !drop_btn;
+				if(drop_btn)
+				{
+					//NewUser_Name();
+					NewUser_Desig1(0xe7eefe);
+					NewUser_Card1(0xe7eefe);
+					dropdown(&dropdown_CardThumb[0],2,297,167,50);
+				}
+				else
+				{
+					sub_page=0;
+					fill_area(494,670,284,330+40,0xfffafa);
+					//AllUser_Page();
+					NewUser_Role1(0xe7eefe);
+				}
 			}
 		}
 		if(isTouched( 8, 72, 10, 70)) //back
@@ -733,34 +766,34 @@ while(1)
 			 {
 				active_role =0;
 				desgn_ptr =	dropdown_desgn[0];
-				fill_area(499,655,204,254,0xe7eefe);
+				fill_area(499,610,204,254,0xe7eefe);
 				print_string(510,214,desgn_ptr,0x737373);
-				dropdown(&dropdown_desgn[0],4,297,217,32);
+				dropdown(&dropdown_desgn[0],4,297,167,32);
 			 }
 			 if(touchY >= 266+40 && touchY <= 312+40)
 			 {
 				active_role =1;
 				desgn_ptr =	dropdown_desgn[1];
-				fill_area(499,655,204,254,0xe7eefe);
+				fill_area(499,610,204,254,0xe7eefe);
 				print_string(510,214,desgn_ptr,0x737373);
-				dropdown(&dropdown_desgn[0],4,297,217,32);
+				dropdown(&dropdown_desgn[0],4,297,167,32);
 			 }
 			 if(touchY >= 266+80 && touchY <= 312+80)
 			 {
 				active_role =2;
 				desgn_ptr =	dropdown_desgn[2];
-				fill_area(499,655,204,254,0xe7eefe);
+				fill_area(499,610,204,254,0xe7eefe);
 				print_string(510,214,desgn_ptr,0x737373);
-				dropdown(&dropdown_desgn[0],4,297,217,32);
+				dropdown(&dropdown_desgn[0],4,297,167,32);
 			 }
 			 if(touchY >= 266+120 && touchY <= 312+120)
 			 {
 				active_role =3;
 				desgn_ptr =	dropdown_desgn[3];
 
-				fill_area(499,655,204,254,0xe7eefe);
+				fill_area(499,610,204,254,0xe7eefe);
 				print_string(510,214,desgn_ptr,0x737373);
-				dropdown(&dropdown_desgn[0],4,297,217,32);
+				dropdown(&dropdown_desgn[0],4,297,167,32);
 			 }
 			}
 		}
@@ -774,25 +807,25 @@ while(1)
 				 {
 					active_role =0;
 					role_ptr =	dropdown_role[0];
-					fill_area(499,655,294,344,0xe7eefe);
+					fill_area(499,610,294,344,0xe7eefe);
 					print_string(510,307,role_ptr,0x737373);
-					dropdown(&dropdown_role[0],3,297,217,-80);
+					dropdown(&dropdown_role[0],3,297,167,-80);
 				 }
 				 if(touchY >= 154+40 && touchY <= 200+40)
 				 {
 					active_role =1;
 					role_ptr =	dropdown_role[1];
-					fill_area(499,655,294,344,0xe7eefe);
+					fill_area(499,610,294,344,0xe7eefe);
 					print_string(510,307,role_ptr,0x737373);
-					dropdown(&dropdown_role[0],3,297,217,-80);
+					dropdown(&dropdown_role[0],3,297,167,-80);
 				 }
 				 if(touchY >= 154+80 && touchY <= 200+80)
 				 {
 					active_role =2;
 					role_ptr =	dropdown_role[2];
-					fill_area(499,655,294,344,0xe7eefe);
+					fill_area(499,610,294,344,0xe7eefe);
 					print_string(510,307,role_ptr,0x737373);
-					dropdown(&dropdown_role[0],3,297,217,-80);
+					dropdown(&dropdown_role[0],3,297,167,-80);
 				 }
 			}
 		}
@@ -806,17 +839,17 @@ while(1)
 				 {
 					active_role =0;
 					card_ptr = dropdown_CardThumb[0];
-					fill_area(499,655,384,434,0xe7eefe);
+					fill_area(499,610,384,434,0xe7eefe);
 					print_string(510,400,card_ptr,0x737373);
-					dropdown(&dropdown_CardThumb[0],2,297,217,50);
+					dropdown(&dropdown_CardThumb[0],2,297,167,50);
 				 }
 				 if(touchY >= 284+40 && touchY <= 330+40)
 				 {
 					active_role =1;
 					card_ptr = dropdown_CardThumb[1];
-					fill_area(499,655,384,434,0xe7eefe);
+					fill_area(499,610,384,434,0xe7eefe);
 					print_string(510,400,card_ptr,0x737373);
-					dropdown(&dropdown_CardThumb[0],2,297,217,50);
+					dropdown(&dropdown_CardThumb[0],2,297,167,50);
 				 }
 			}
 		}
@@ -825,71 +858,71 @@ while(1)
 /*****************************************  CURRENT PAGE 6 ****************************************************/
 /***********************************  KEYPAD_TOUCH*************************************************/
 	if(curr_page == 6)
-	{
-		Set_Font(&Font12x18);
-		//Set_Font(&Font16x24);
-		//HAL_Delay(100);
-		//static uint8_t pos =0;
-		int x=0,x1=0,y=31,y1=0,k=0;
-		if(touchX >= 525 && touchX <= 615 && touchY >= 340+y && touchY <= 380+y) // down  525,615,360+y,400+y
-		{
-				if(keypad_down)
 				{
-					//clear_area();
-					fill_area(0,800,200,480,PURPLE);
-					NewEntry_page();
-					curr_page = 4;
-				}
-				else
-				{
-					fill_area(0,800,200,480,PURPLE);
-					attendence_search();
-					curr_page = 7;
-				}
+					Set_Font(&Font12x18);
+					//Set_Font(&Font16x24);
+					//HAL_Delay(100);
+					static uint8_t pos =0;
+					int x=0,x1=0,y=31,y1=0,k=0;
+					if(touchX >= 525 && touchX <= 615 && touchY >= 340+y && touchY <= 380+y) // down  525,615,360+y,400+y
+					{
+							if(keypad_down)
+							{
+								//clear_area();
+								fill_area(0,800,200,480,PURPLE);
+								NewEntry_page();
+								curr_page = 4;
+							}
+							else
+							{
+								fill_area(0,800,200,480,PURPLE);
+								attendence_search();
+								curr_page = 7;
+							}
 
-			if(curr_page == 7)
-			{
-			}
-		}
+						if(curr_page == 7)
+						{
+						}
+					}
 
-		if(touchX >= 150 && touchX <= 215 && touchY >= 290+y && touchY <= 330+y) //caps  150,215,310+y,350+y
-		{
-			UC_FLAG = !UC_FLAG;
-		}
-		if(touchX >= 275 && touchX <= 515 && touchY >= 340+y && touchY <= 380+y)		// space 275,515,360+y,400+y
-		{
-			HAL_Delay(100);
+					if(touchX >= 150 && touchX <= 215 && touchY >= 290+y && touchY <= 330+y) //caps  150,215,310+y,350+y
+					{
+						UC_FLAG = !UC_FLAG;
+					}
+					if(touchX >= 275 && touchX <= 515 && touchY >= 340+y && touchY <= 380+y)		// space 275,515,360+y,400+y
+					{
+						HAL_Delay(100);
 
-			print_char(220+(pos*12),85,32,0xe7eefe);
-			*(emp_name+pos) =32;
-			pos++;
-		}
-		if(touchX >= 575 && touchX <= 640 && touchY >= 290+y && touchY <= 330+y) //backspace  575,640,310+y,350+y
-		{
-			pos--;
-			fill_area(220+(pos*12),235+(pos*12),85,115,0xe7eefe);
-		}
+						print_char(220+(pos*12),85,32,0xe7eefe);
+						*(emp_name+pos) =32;
+						pos++;
+					}
+					if(touchX >= 575 && touchX <= 640 && touchY >= 290+y && touchY <= 330+y) //backspace  575,640,310+y,350+y
+					{
+						pos--;
+						fill_area(220+(pos*12),235+(pos*12),85,115,0xe7eefe);
+					}
 
-		for(int idx1=0; idx1<3; idx1++)
-		{
-			x1+=25*idx1;
-			for(int idx2=0; idx2<=9-(idx1*2-k); idx2++)
-			{
-				if(touchX >= x1+150+x && touchX <= x1+190+x && touchY >= y1+190+y && touchY <= y1+230+y)  //keys x1+105+x,x1+155+x,y1+205+y,y1+255+y
-				{
-					print_char(220+(pos*12),90,char_key[idx1][idx2],RED);
-					*(emp_name+pos) =char_key[idx1][idx2];
-					pos++;
-				}
-				x+=50;
-			}
-			x=0;
-			k=1;
-			y1+=50;
-		}
-		*(emp_name+pos+1)= '\0';
+					for(int idx1=0; idx1<3; idx1++)
+					{
+						x1+=25*idx1;
+						for(int idx2=0; idx2<=9-(idx1*2-k); idx2++)
+						{
+							if(touchX >= x1+150+x && touchX <= x1+190+x && touchY >= y1+190+y && touchY <= y1+230+y)  //keys x1+105+x,x1+155+x,y1+205+y,y1+255+y
+							{
+										print_char(220+(pos*12),90,char_key[idx1][idx2],RED);
+										*(emp_name+pos) =char_key[idx1][idx2];
+									pos++;
+							}
+							x+=50;
+						}
+						x=0;
+						k=1;
+						y1+=50;
+					}
+					*(emp_name+pos+1)= '\0';
 
-	}
+		}
 /*****************************  CURRENT PAGE 7 ************************/
 	if(curr_page == 7)
 	{
