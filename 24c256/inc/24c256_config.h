@@ -60,18 +60,7 @@ void var_init(void);
 
 //////*********************************** Global variable ***************////////////
 
-extern uint8_t dev_addr;
-extern uint8_t dev_addr1;
-extern uint16_t next_emp_id;
-extern uint16_t last_emp_id;
-extern uint16_t scanned_EMPLO_ID;
-extern uint16_t calculate_addr;
-extern uint32_t scanned_UID;
-extern char emp_name[19];
 
-
-extern uint16_t next_emp_id;
-extern uint16_t last_emp_id;
 
 
 #endif   ///  last endif

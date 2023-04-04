@@ -8,8 +8,6 @@
 #include "main.h"
 #include "stm32f4xx_hal.h"
 
-extern SPI_HandleTypeDef spi2;
-extern TIM_HandleTypeDef tim5;
 
 void HAL_MspInit(void)
 {
@@ -92,6 +90,7 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef *htim)
 
 void HAL_I2C_MspInit(I2C_HandleTypeDef *hi2c)
 {
+
 	GPIO_InitTypeDef i2c_pins ={0};
 	if(hi2c->Instance == I2C1)
 	{
@@ -115,6 +114,5 @@ void HAL_I2C_MspInit(I2C_HandleTypeDef *hi2c)
 		i2c_pins.Alternate = GPIO_AF4_I2C2;
 		HAL_GPIO_Init(GPIOB, &i2c_pins);
 	}
-
 
 }

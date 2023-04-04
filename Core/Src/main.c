@@ -23,7 +23,6 @@
 
 #include "main.h"
 #include "user_global.h"
-#include "24c256_config.h"
 
 #if (USE_SSD1963_DISPLAY)
 	#include "ssd1963.h"
@@ -57,10 +56,12 @@
 #define DWT_CTRL 	(*(volatile int *)0xE0001000)
 #endif
 
+#if (USE_FINGERPRINT)
 int __io_putchar(int ch)
 {
     return uart_write(USART1, (uint8_t *)&ch, 1);
 }
+#endif
 
 UART_HandleTypeDef uart1;
 SPI_HandleTypeDef spi1;
@@ -68,6 +69,17 @@ SPI_HandleTypeDef spi2;
 I2C_HandleTypeDef i2c2;
 I2C_HandleTypeDef i2c1;
 TIM_HandleTypeDef tim5;
+
+extern uint8_t dev_addr;
+extern uint8_t dev_addr1;
+extern uint16_t next_emp_id;
+extern uint16_t last_emp_id;
+extern uint16_t scanned_EMPLO_ID;
+extern uint16_t calculate_addr;
+extern uint32_t scanned_UID;
+extern char emp_name[19];
+extern uint16_t next_emp_id;
+extern uint16_t last_emp_id;
 
 uint8_t value = 0;
 char str1[40]={'\0'};
@@ -78,7 +90,7 @@ char tmp_str[65]={'\0'};
 
 u_char status, cardstr[MAX_LEN+1];
 u_char card_data[17];
-uint32_t delay_val = 1000; //ms
+uint32_t delay_val = 1000;
 uint16_t result = 0;
 u_char UID[5];
 
@@ -130,7 +142,7 @@ bool keypad_down;
 int onetime =1;
 
 /*************************************************************/
-uint8_t emp_id_read=7;
+uint8_t emp_id_read=25;
 uint8_t test_id=0;
 
 uint8_t desgn_id =0;
@@ -173,6 +185,9 @@ void erase_EEPROM (void);*/
 
 extern uint16_t g_pos_x;
 extern uint16_t g_pos_y;
+
+
+
 
 uint8_t pos =0;
 
@@ -278,16 +293,15 @@ int main()
 	spi1_init();
 	spi2_init();
 	i2c1_init();
-	i2c2_init();
+	//i2c2_init();
 	//tim5_init();
 
-	/*
+
 	HAL_I2C_Mem_Write(&i2c1,dev_addr,0x00,2,(uint8_t *)&emp_id_read,2,100);
 	HAL_Delay(100);
 	HAL_I2C_Mem_Read(&i2c1, dev_addr1, 0x00, 2, (uint8_t *)&test_id, 2, 100);
-	*/
+
 	//HAL_I2C_Mem_Read(&i2c1,dev_addr, 0,2,(uint8_t *)temp_str,sizeof(temp_str),100);
-	while(1);
 
 
 	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, GPIO_PIN_SET);
@@ -299,20 +313,24 @@ int main()
 	XPT2046_Init();
 #endif
 	Front_screen();
-#if 1
+
+
+#if (USE_FINGERPRINT)
   uart_init(USART1,9600);
   uart_init(USART6,57600);
 
   /* disable stdout buffering */
   setvbuf(stdout, NULL, _IONBF, 0);
 
-  	//r307_init();
+ // 	r307_init();
   	//fingerprint_match_loop();
+
 	HAL_GPIO_WritePin(GPIOB,GPIO_PIN_2,GPIO_PIN_SET);
 	HAL_Delay(50);
 	HAL_GPIO_WritePin(GPIOB,GPIO_PIN_2,GPIO_PIN_RESET);
 	HAL_Delay(50);
 #endif
+
 	HAL_UART_Transmit(&uart1,(uint8_t *)msg,sizeof(msg),1000);
 	curr_page = 1 ;
 
@@ -330,7 +348,7 @@ HAL_UART_Transmit(&uart1,(uint8_t *)str2,strlen(str2),1000);
 //	HAL_Delay(200);
 //	rfid_read();
 //}
-
+//collect_id();
 while(1)
 {
 	touchX = (getX() + 12);
@@ -435,11 +453,15 @@ while(1)
 
 			curr_page = 2;
 		}
+		//print_int(next_emp_id, 620, 150, 0, 0, BLACK);
+
+
 	}
 
 /*****************************************  CURRENT PAGE 4 ****************************************************/
 	if(curr_page == 4)
 	{
+		print_int(test_id, 590, 100, 0, 0, GREY);
 		if(isTouched( 197, 503, 69, 135)) // NAME
 		{
 			curr_page =6;
@@ -450,7 +472,7 @@ while(1)
 			Set_Font(&Font12x18);
 			print_string(220,90,emp_name,0x737373);
 		}
-		if(isTouched( 450, 500, 170, 220)) // DESGI.draw_rect(450,500,170,220,BLUE);
+		if(isTouched( 450, 500, 170, 220)) // DESGI.
 		{
 			sub_page =1;
 			drop_btn = !drop_btn;
@@ -511,13 +533,13 @@ while(1)
 			sub_page=3;
 			if(active_role == 0)
 			{
-				read_card();
+				//read_card();
+				assign_card();
 			}
 			if(active_role == 1)
 			{
 				Front_screen();
 			}
-
 		}
 
 		if(isTouched( 550, 650, 248, 308)) 	// Save
@@ -527,7 +549,7 @@ while(1)
 			scanned_UID = (((0xffffffff & issue_uid[0])<<24)|((0xffffffff & issue_uid[1])<<16)|((0xffffffff & issue_uid[2])<<8)|issue_uid[3]);
 			calculate_addr = 128+(32*(scanned_EMPLO_ID-1));
 
-			/////////////////  data access section in structure by user  /////////////////////////////////////
+			/////////////////  data access section in structure by user  //////////////////////
 
 			strcpy(write_details.wr_EMPLO_name, emp_name);
 			write_details.wr_employee_code = 'E';
@@ -552,6 +574,7 @@ while(1)
 
 		if((sub_page ==1))
 		{
+
 			if(touchX >= 197 && touchX <= 503)
 			{
 				 if(touchY >= 234 && touchY <= 280)
@@ -651,6 +674,7 @@ while(1)
 				 }
 			}
 		}
+
 	}
 
 
@@ -727,7 +751,7 @@ while(1)
 						}
 					}
 		if(isTouched( 620,670,379,439))//	494,720,379,439 // card
-				{
+			{
 				sub_page =6;
 				drop_btn = !drop_btn;
 				if(drop_btn)
@@ -852,71 +876,69 @@ while(1)
 /********************************  CURRENT PAGE 6 ****************************************/
 /***********************************  KEYPAD_TOUCH*************************************************/
 	if(curr_page == 6)
+	{
+		Set_Font(&Font12x18);
+		//Set_Font(&Font16x24);
+		//HAL_Delay(100);
+		static uint8_t pos =0;
+		int x=0,x1=0,y=31,y1=0,k=0;
+		if(touchX >= 525 && touchX <= 615 && touchY >= 340+y && touchY <= 380+y) // down  525,615,360+y,400+y
+		{
+				if(keypad_down)
 				{
-					Set_Font(&Font12x18);
-					//Set_Font(&Font16x24);
-					//HAL_Delay(100);
-					static uint8_t pos =0;
-					int x=0,x1=0,y=31,y1=0,k=0;
-					if(touchX >= 525 && touchX <= 615 && touchY >= 340+y && touchY <= 380+y) // down  525,615,360+y,400+y
-					{
-							if(keypad_down)
-							{
-								//clear_area();
-								fill_area(0,800,200,480,PURPLE);
-								NewEntry_page();
-								curr_page = 4;
-							}
-							else
-							{
-								fill_area(0,800,200,480,PURPLE);
-								attendence_search();
-								curr_page = 7;
-							}
+					//clear_area();
+					fill_area(0,800,200,480,PURPLE);
+					NewEntry_page();
+					curr_page = 4;
+				}
+				else
+				{
+					fill_area(0,800,200,480,PURPLE);
+					attendence_search();
+					curr_page = 7;
+				}
 
-						if(curr_page == 7)
-						{
-						}
-					}
-
-					if(touchX >= 150 && touchX <= 215 && touchY >= 290+y && touchY <= 330+y) //caps  150,215,310+y,350+y
-					{
-						UC_FLAG = !UC_FLAG;
-					}
-					if(touchX >= 275 && touchX <= 515 && touchY >= 340+y && touchY <= 380+y)		// space 275,515,360+y,400+y
-					{
-						HAL_Delay(100);
-
-						print_char(220+(pos*12),85,32,0xe7eefe);
-						*(emp_name+pos) =32;
-						pos++;
-					}
-					if(touchX >= 575 && touchX <= 640 && touchY >= 290+y && touchY <= 330+y) //backspace  575,640,310+y,350+y
-					{
-						pos--;
-						fill_area(220+(pos*12),235+(pos*12),85,115,0xe7eefe);
-					}
-
-					for(int idx1=0; idx1<3; idx1++)
-					{
-						x1+=25*idx1;
-						for(int idx2=0; idx2<=9-(idx1*2-k); idx2++)
-						{
-							if(touchX >= x1+150+x && touchX <= x1+190+x && touchY >= y1+190+y && touchY <= y1+230+y)  //keys x1+105+x,x1+155+x,y1+205+y,y1+255+y
-							{
-										print_char(220+(pos*12),90,char_key[idx1][idx2],RED);
-										*(emp_name+pos) =char_key[idx1][idx2];
-									pos++;
-							}
-							x+=50;
-						}
-						x=0;
-						k=1;
-						y1+=50;
-					}
-					*(emp_name+pos+1)= '\0';
-
+			if(curr_page == 7)
+			{
+			}
 		}
+
+		if(touchX >= 150 && touchX <= 215 && touchY >= 290+y && touchY <= 330+y) //caps  150,215,310+y,350+y
+		{
+			UC_FLAG = !UC_FLAG;
+		}
+		if(touchX >= 275 && touchX <= 515 && touchY >= 340+y && touchY <= 380+y)		// space 275,515,360+y,400+y
+		{
+			HAL_Delay(100);
+			print_char(220+(pos*12),85,32,0xe7eefe);
+			*(emp_name+pos) =32;
+			pos++;
+		}
+		if(touchX >= 575 && touchX <= 640 && touchY >= 290+y && touchY <= 330+y) //backspace  575,640,310+y,350+y
+		{
+			pos--;
+			fill_area(220+(pos*12),235+(pos*12),85,115,0xe7eefe);
+		}
+
+		for(int idx1=0; idx1<3; idx1++)
+		{
+			x1+=25*idx1;
+			for(int idx2=0; idx2<=9-(idx1*2-k); idx2++)
+			{
+				if(touchX >= x1+150+x && touchX <= x1+190+x && touchY >= y1+190+y && touchY <= y1+230+y)  //keys x1+105+x,x1+155+x,y1+205+y,y1+255+y
+				{
+					print_char(220+(pos*12),90,char_key[idx1][idx2],RED);
+					*(emp_name+pos) =char_key[idx1][idx2];
+					pos++;
+				}
+				x+=50;
+			}
+			x=0;
+			k=1;
+			y1+=50;
+		}
+		*(emp_name+pos+1)= '\0';
+	}
 /*****************************  CURRENT PAGE 7 ************************/
 	if(curr_page == 7)
 	{
@@ -944,7 +966,6 @@ while(1)
 			curr_page = 2;
 		}
 	}
-
 }
 
 
@@ -1179,7 +1200,7 @@ void spi2_init(void) 		/* SPI2 : XPT2048 Touch Sensor */
 	}
 }
 
-void i2c1_init(void)  		//incomplete !!  please verify once before using it
+void i2c1_init(void)  		// 	using in eeprom
 {
 
 	i2c1.Instance = I2C1;
@@ -1188,24 +1209,13 @@ void i2c1_init(void)  		//incomplete !!  please verify once before using it
 	i2c1.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
 	i2c1.Init.DutyCycle = I2C_DUTYCYCLE_2;
 
-	/*
-	  i2c1.Instance = I2C1;
-	  i2c1.Init.ClockSpeed = 100000;
-	  i2c1.Init.DutyCycle = I2C_DUTYCYCLE_2;
-	  i2c1.Init.OwnAddress1 = 0;
-	  i2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
-	  i2c1.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
-	  i2c1.Init.OwnAddress2 = 0;
-	  i2c1.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
-	  i2c1.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
-*/
 	if(HAL_I2C_Init(&i2c1) != HAL_OK)
 	{
 		printf("I2C1 Init Failed\r\n");
 	}
 }
 
-void i2c2_init(void)  		//incomplete !!  please verify once before using it
+void i2c2_init(void)  		// please verify config once before using it
 {
 	i2c2.Instance = I2C2;
 	i2c2.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
