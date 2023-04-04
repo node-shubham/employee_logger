@@ -66,7 +66,7 @@ UART_HandleTypeDef uart1;
 SPI_HandleTypeDef spi1;
 SPI_HandleTypeDef spi2;
 I2C_HandleTypeDef i2c2;
-I2C_HandleTypeDef hi2c1;
+I2C_HandleTypeDef i2c1;
 TIM_HandleTypeDef tim5;
 
 uint8_t value = 0;
@@ -149,6 +149,7 @@ void gpio_init(void);
 void uart1_init(void);
 void spi1_init(void);
 void spi2_init(void);
+void i2c1_init(void);
 void i2c2_init(void);
 void tim5_init(void);
 
@@ -215,10 +216,9 @@ static void display_handler(void * param)
 #endif
 
 
-
 uint8_t check_validcard(void){
 	memset(uid_read,0,sizeof(uid_read));
-	//HAL_I2C_Mem_Read(&hi2c1, dev_addr1, 156+j*32, 2, (uint8_t *)&uid_read, 4, 100);
+	//HAL_I2C_Mem_Read(&i2c1, dev_addr1, 156+j*32, 2, (uint8_t *)&uid_read, 4, 100);
 	if((uid_read[3]==cardstr[0])&&(uid_read[2]==cardstr[1])&&(uid_read[1]==cardstr[2])&&(uid_read[0]==cardstr[3]))
 	{
 		char msg[] = "Access Granted\r\n";
@@ -232,18 +232,16 @@ uint8_t check_validcard(void){
 	/*
 	for(int j=0;j<emp_id_read;j++)
 	{
-		//HAL_I2C_Mem_Read(&hi2c1, dev_addr1, 156+j*32, 2, (uint8_t *)&uid_read, 4, 100);
+		//HAL_I2C_Mem_Read(&i2c1, dev_addr1, 156+j*32, 2, (uint8_t *)&uid_read, 4, 100);
 		if((uid_read[3]==rfid_id[0])&&(uid_read[2]==rfid_id[1])&&(uid_read[1]==rfid_id[2])&&(uid_read[0]==rfid_id[3]))
 		{
 			char msg[] = "Access Granted\r\n";
-
-												//HAL_UART_Transmit(&huart1,(uint8_t *)msg,sizeof(msg),1000);
+			HAL_UART_Transmit(&huart1,(uint8_t *)msg,sizeof(msg),1000);
 			return 1;
 		}
 	}
 	*/
 }
-
 
 
 void read_card(void)
@@ -276,10 +274,10 @@ int main()
 	uart1_init();
 	spi1_init();
 	spi2_init();
-	//i2c2_init();
+	i2c1_init();
+	i2c2_init();
 	//tim5_init();
 
-	//rc522_init();
 	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, GPIO_PIN_SET);
 	MFRC522_Init();
 
@@ -302,17 +300,15 @@ int main()
 	HAL_Delay(50);
 	HAL_GPIO_WritePin(GPIOB,GPIO_PIN_2,GPIO_PIN_RESET);
 	HAL_Delay(50);
-
-  //searchdb_mainloop();
 #endif
 	HAL_UART_Transmit(&uart1,(uint8_t *)msg,sizeof(msg),1000);
 	curr_page = 1 ;
 
 //erase_EEPROM();
-//HAL_I2C_Mem_Write(&hi2c1,dev_addr,0x00,2,(uint8_t *)&emp_id_read,1,100);
+//HAL_I2C_Mem_Write(&i2c1,dev_addr,0x00,2,(uint8_t *)&emp_id_read,1,100);
 
-HAL_I2C_Mem_Read(&hi2c1, dev_addr1, 0x00, 2, (uint8_t *)&emp_id_read, 1, 100);
-HAL_I2C_Mem_Read(&hi2c1,dev_addr, 0,2,(uint8_t *)temp_str,sizeof(temp_str),100);
+HAL_I2C_Mem_Read(&i2c1, dev_addr1, 0x00, 2, (uint8_t *)&emp_id_read, 1, 100);
+HAL_I2C_Mem_Read(&i2c1,dev_addr, 0,2,(uint8_t *)temp_str,sizeof(temp_str),100);
 
 status = Read_MFRC522(VersionReg);
 sprintf(str1,"Running RC522");
@@ -393,9 +389,9 @@ while(1)
 				HAL_GPIO_WritePin(GPIOB,GPIO_PIN_2,GPIO_PIN_SET);
 				HAL_Delay(200);
 				HAL_GPIO_WritePin(GPIOB,GPIO_PIN_2,GPIO_PIN_RESET);
-			  //HAL_I2C_Mem_Write(&hi2c1,dev_addr,0x00,2,0,1,100);
+			  //HAL_I2C_Mem_Write(&i2c1,dev_addr,0x00,2,0,1,100);
 				int val=0;
-				HAL_I2C_Mem_Write(&hi2c1,dev_addr,0x00,2,(uint8_t *)&val,1,100);
+				HAL_I2C_Mem_Write(&i2c1,dev_addr,0x00,2,(uint8_t *)&val,1,100);
 		   }
 		}
 	}
@@ -525,7 +521,7 @@ while(1)
 
 			add_Employee();
 
-			HAL_I2C_Mem_Write(&hi2c1,dev_addr,0x00,2,(uint8_t *)&scanned_EMPLO_ID,1,100);
+			HAL_I2C_Mem_Write(&i2c1,dev_addr,0x00,2,(uint8_t *)&scanned_EMPLO_ID,1,100);
 			Set_Font(&Font12x18);
 			print_string(550,240,"saved",RED);
 		}
@@ -788,7 +784,6 @@ while(1)
 				 }
 			}
 		}
-
 		if(sub_page ==6)
 		{
 			//active_role=0;
@@ -1144,7 +1139,21 @@ void spi2_init(void) 		/* SPI2 : XPT2048 Touch Sensor */
 	}
 }
 
-void i2c2_init()  		//incomplete !!  please verify once before using it
+void i2c1_init(void)  		//incomplete !!  please verify once before using it
+{
+	i2c1.Instance = I2C1;
+	i2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
+	i2c1.Init.ClockSpeed = 1000000;
+	i2c1.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
+	i2c1.Init.DutyCycle = I2C_DUTYCYCLE_2;
+
+	if(HAL_I2C_Init(&i2c1) != HAL_OK)
+	{
+		printf("I2C1 Init Failed\r\n");
+	}
+}
+
+void i2c2_init(void)  		//incomplete !!  please verify once before using it
 {
 	i2c2.Instance = I2C2;
 	i2c2.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;

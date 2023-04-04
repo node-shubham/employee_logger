@@ -35,11 +35,11 @@ void var_init(void)
 
 void collect_id (void)
 {
-	HAL_I2C_Mem_Read(&hi2c1, dev_addr1, 0, 2, (uint8_t *) &(next_emp_id), sizeof(next_emp_id), 100);  ///  collect next_emp_id on page 1, address = 0
+	HAL_I2C_Mem_Read(&i2c1, dev_addr1, 0, 2, (uint8_t *) &(next_emp_id), sizeof(next_emp_id), 100);  ///  collect next_emp_id on page 1, address = 0
 	if(0xffff == next_emp_id)
 	  next_emp_id = 1;
 	print_int(next_emp_id, 780, 10, 1, 1, 0x9900ff);
-	HAL_I2C_Mem_Read(&hi2c1, dev_addr1, 2, 2, (uint8_t *) &(last_emp_id), sizeof(last_emp_id), 100);  ///  collect last_emp_id on page 1, address = 2
+	HAL_I2C_Mem_Read(&i2c1, dev_addr1, 2, 2, (uint8_t *) &(last_emp_id), sizeof(last_emp_id), 100);  ///  collect last_emp_id on page 1, address = 2
 	if(0xffff == last_emp_id)
 	  last_emp_id = 1;
 }
@@ -47,7 +47,7 @@ void collect_id (void)
 
 bool chek_employee (void)
 {
-	HAL_I2C_Mem_Read(&hi2c1, dev_addr1, calculate_addr, 2, (uint8_t *) &(read_details), sizeof(read_details), 100);  ///  READ Employee_details
+	HAL_I2C_Mem_Read(&i2c1, dev_addr1, calculate_addr, 2, (uint8_t *) &(read_details), sizeof(read_details), 100);  ///  READ Employee_details
 	if((scanned_EMPLO_ID == read_details.rd_EMPLO_id) && (scanned_UID == read_details.rd_EMPLO_RFID))
 			return 1;    // employee available
 	else
@@ -63,33 +63,33 @@ void add_Employee (void)
      }
   else
      {
-	    HAL_I2C_Mem_Read(&hi2c1, dev_addr1, calculate_addr, 2, (uint8_t *) &(read_details), sizeof(read_details), 100);  ///  READ Employee_details
+	    HAL_I2C_Mem_Read(&i2c1, dev_addr1, calculate_addr, 2, (uint8_t *) &(read_details), sizeof(read_details), 100);  ///  READ Employee_details
 	  	if((next_emp_id == read_details.rd_EMPLO_id) && (write_details.wr_EMPLO_name == read_details.rd_EMPLO_name))   ///   availble_employee
 		  {
 			print_string(10,90,"this employee is available",WHITE);
 		  }
 		else      //  when employee is not available
 		   {
-			 HAL_I2C_Mem_Write(&hi2c1, dev_addr, calculate_addr, 2, (uint8_t *) &(write_details), sizeof(write_details), 100);  ///  write employee_id
+			 HAL_I2C_Mem_Write(&i2c1, dev_addr, calculate_addr, 2, (uint8_t *) &(write_details), sizeof(write_details), 100);  ///  write employee_id
 			 HAL_Delay(5);
 			 next_emp_id++;
-			 HAL_I2C_Mem_Write(&hi2c1, dev_addr, 0, 2, (uint8_t *) &(next_emp_id), sizeof(next_emp_id), 100);  ///  write employee_id
+			 HAL_I2C_Mem_Write(&i2c1, dev_addr, 0, 2, (uint8_t *) &(next_emp_id), sizeof(next_emp_id), 100);  ///  write employee_id
 			 HAL_Delay(5);
 
 			 uint16_t store_addr = 0;
 			 uint8_t pos_1st_char = write_details.wr_EMPLO_name[0] - 65;			 // pos_1st_char can be A=0,B=1, C=2, D=3 ... Z=25
 			 uint16_t char_addr = 3648+(2*pos_1st_char);     	//   base address of page 57 = 3648
-			 HAL_I2C_Mem_Read(&hi2c1, dev_addr1, char_addr, 2, (uint8_t *) &(store_addr), sizeof(store_addr), 100);  /// character_addr on page 57 - (3648+(2*pos_1st_char))
+			 HAL_I2C_Mem_Read(&i2c1, dev_addr1, char_addr, 2, (uint8_t *) &(store_addr), sizeof(store_addr), 100);  /// character_addr on page 57 - (3648+(2*pos_1st_char))
 			 if(0xffff == store_addr)
 			   {
 				 store_addr = 3712+(256*pos_1st_char);    	//   base address of A = 3712 (page 58), 4 page = 4*64 = 256 byte
 			   }
 			 if(254>=(store_addr-(3712+(256*pos_1st_char))))
 			   {
-				 HAL_I2C_Mem_Write(&hi2c1, dev_addr, store_addr, 2, (uint8_t *) &(calculate_addr), sizeof(calculate_addr), 100);  ///
+				 HAL_I2C_Mem_Write(&i2c1, dev_addr, store_addr, 2, (uint8_t *) &(calculate_addr), sizeof(calculate_addr), 100);  ///
 				 HAL_Delay(5);
 				 store_addr += 2;
-				 HAL_I2C_Mem_Write(&hi2c1, dev_addr, char_addr, 2, (uint8_t *) &(store_addr), sizeof(store_addr), 100);  ///  page 57 base addr = 3648
+				 HAL_I2C_Mem_Write(&i2c1, dev_addr, char_addr, 2, (uint8_t *) &(store_addr), sizeof(store_addr), 100);  ///  page 57 base addr = 3648
 				 HAL_Delay(5);
 			   }
 		   }
@@ -124,7 +124,7 @@ void search_Employee (void)
 	uint16_t end_addr = 0;
 
 	uint16_t char_addr = 3648+(2*(frist_char - 65));     	//   page 57 = 3648
-	HAL_I2C_Mem_Read(&hi2c1, dev_addr1, char_addr, 2, (uint8_t *) &(end_addr), sizeof(end_addr), 100);   // find end address
+	HAL_I2C_Mem_Read(&i2c1, dev_addr1, char_addr, 2, (uint8_t *) &(end_addr), sizeof(end_addr), 100);   // find end address
 	if(0xffff == end_addr)
 	 {
 	   print_string(15,20,"this employee is not available",WHITE);
@@ -143,10 +143,10 @@ void search_Employee (void)
 				{
 				  if(0 == cnt_indx)
 					{
-					  HAL_I2C_Mem_Read(&hi2c1, dev_addr1, start_addr, 2, (uint8_t *) &(all_addr[i]), sizeof(all_addr[i]), 100);
+					  HAL_I2C_Mem_Read(&i2c1, dev_addr1, start_addr, 2, (uint8_t *) &(all_addr[i]), sizeof(all_addr[i]), 100);
 					  start_addr++;
 					}
-				  HAL_I2C_Mem_Read(&hi2c1, dev_addr1, all_addr[i], 2, (uint8_t *) &(read_details), sizeof(read_details), 100);
+				  HAL_I2C_Mem_Read(&i2c1, dev_addr1, all_addr[i], 2, (uint8_t *) &(read_details), sizeof(read_details), 100);
 				  if(read_details.rd_EMPLO_name[cnt_indx] == emp_name[cnt_indx])
 					{
 					  k = 0;
@@ -164,7 +164,7 @@ void search_Employee (void)
 	   char display_arr[21] = {0};
 	   for(int i = 0; i < k; i++)
 		  {
-			HAL_I2C_Mem_Read(&hi2c1, dev_addr1, all_addr[i], 2, (uint8_t *) &(read_details), sizeof(read_details), 100);
+			HAL_I2C_Mem_Read(&i2c1, dev_addr1, all_addr[i], 2, (uint8_t *) &(read_details), sizeof(read_details), 100);
 			print_string(90, (194+(53*i)), "E",0x9900ff);
 			print_int(read_details.rd_EMPLO_id, 99, (194+(53*i)), 1, 1, 0x9900ff);
 			print_string(170, (194+(53*i)), read_details.rd_EMPLO_name, 0x9900ff);
@@ -185,15 +185,13 @@ void delete_Employee (void)
   del = 1;
   search_Employee();
   while(del)
-	  {
-	    if(isTouched(200, 300, (194+(53*1)), 205))
-	      {
+  {
+	if(isTouched(200, 300, (194+(53*1)), 205))
+	{
 
-	      }
-
-
-	del = 0;
 	}
+	del = 0;
+  }
 }
 
 
@@ -203,7 +201,7 @@ void erase_EEPROM (void)
 	uint64_t erase_data = 0xffffffffffffffff;
 	while(strt_erse_addr<EEPROM_LAST_ADDR)  // EEPROM_LAST_ADDR means witch address is last for erase.
 	{
-	  HAL_I2C_Mem_Write(&hi2c1, dev_addr, strt_erse_addr, 2, (uint8_t *) &(erase_data), sizeof(erase_data), 100);  ///  write employee_id
+	  HAL_I2C_Mem_Write(&i2c1, dev_addr, strt_erse_addr, 2, (uint8_t *) &(erase_data), sizeof(erase_data), 100);  ///  write employee_id
 		HAL_Delay(5);
 		strt_erse_addr += 8;
 	}

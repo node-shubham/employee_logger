@@ -12,7 +12,7 @@
 #define LAST_EMP_ADDR         32736
 #define EEPROM_LAST_ADDR      32767
 
-extern I2C_HandleTypeDef hi2c1;
+extern I2C_HandleTypeDef i2c1;
 
 #if 1
 struct WRITE_DETAILS
