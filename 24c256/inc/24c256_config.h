@@ -9,7 +9,7 @@
 #include "ssd1963.h"
 #include "stdbool.h"
 
-#define FRIST_EMP_ADDR        10368
+#define FIRST_EMP_ADDR        10368
 #define LAST_EMP_ADDR         32736
 #define EEPROM_LAST_ADDR      32767
 
