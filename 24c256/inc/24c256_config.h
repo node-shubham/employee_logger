@@ -9,6 +9,7 @@
 #include "ssd1963.h"
 #include "stdbool.h"
 
+#define FRIST_EMP_ADDR        10368
 #define LAST_EMP_ADDR         32736
 #define EEPROM_LAST_ADDR      32767
 
@@ -50,12 +51,11 @@ struct READ_DETAILS
 
 bool chek_employee (void);
 void collect_id (void);
-void display_Employee (void);
+// void display_Employee (void);
 void add_Employee (void);
 void erase_EEPROM (void);
 void search_Employee (void);
 void delete_Employee (void);
-void var_init(void);
 
 
 //////*********************************** Global variable ***************////////////

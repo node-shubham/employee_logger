@@ -154,7 +154,6 @@ uint8_t role_id =0;
 
  int ia=128;
  uint8_t temp_str[100]={0};
-void tst(void);
 /**************************************************************/
 
 void sysclock_config(void);
@@ -265,23 +264,23 @@ uint8_t check_validcard(void){
 void read_card(void)
 {
 	//if(rc522_checkCard(rfid_id))
-		{
-			memset(data,0,sizeof(data));
-			memset(issue_uid,0,sizeof(issue_uid));
+	{
+		memset(data,0,sizeof(data));
+		memset(issue_uid,0,sizeof(issue_uid));
 #if (DEBUG_UART)
-			HAL_UART_Transmit(&uart1,(uint8_t *)"RFID UID :",strlen("RFID UID :"),1000);
-			sprintf(data,"%x %x %x %x\r\n",rfid_id[0],rfid_id[1],rfid_id[2],rfid_id[3]);
-			HAL_UART_Transmit(&uart1,(uint8_t *)data,sizeof(data),1000);
+	HAL_UART_Transmit(&uart1,(uint8_t *)"RFID UID :",strlen("RFID UID :"),1000);
+	sprintf(data,"%x %x %x %x\r\n",rfid_id[0],rfid_id[1],rfid_id[2],rfid_id[3]);
+	HAL_UART_Transmit(&uart1,(uint8_t *)data,sizeof(data),1000);
 #endif
-			if(rfid_id[0] !=	0x26)
-			{
-				for(int i=0;i<4;i++)
-					issue_uid[i]= rfid_id[i];
-			}
-			HAL_GPIO_WritePin(GPIOB,GPIO_PIN_2,GPIO_PIN_SET);
-			HAL_Delay(1000);
-			HAL_GPIO_WritePin(GPIOB,GPIO_PIN_2,GPIO_PIN_RESET);
+		if(rfid_id[0] !=	0x26)
+		{
+			for(int i=0;i<4;i++)
+				issue_uid[i]= rfid_id[i];
 		}
+		HAL_GPIO_WritePin(GPIOB,GPIO_PIN_2,GPIO_PIN_SET);
+		HAL_Delay(1000);
+		HAL_GPIO_WritePin(GPIOB,GPIO_PIN_2,GPIO_PIN_RESET);
+	}
 }
 
 int main()
@@ -297,11 +296,6 @@ int main()
 	//tim5_init();
 
 
-	HAL_I2C_Mem_Write(&i2c1,dev_addr,0x00,2,(uint8_t *)&emp_id_read,2,100);
-	HAL_Delay(100);
-	HAL_I2C_Mem_Read(&i2c1, dev_addr1, 0x00, 2, (uint8_t *)&test_id, 2, 100);
-
-	//HAL_I2C_Mem_Read(&i2c1,dev_addr, 0,2,(uint8_t *)temp_str,sizeof(temp_str),100);
 
 	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, GPIO_PIN_SET);
 	MFRC522_Init();
@@ -312,7 +306,7 @@ int main()
 	XPT2046_Init();
 #endif
 	Front_screen();
-
+	curr_page = 1 ;
 
 #if (USE_FINGERPRINT)
   uart_init(USART1,9600);
@@ -321,8 +315,8 @@ int main()
   /* disable stdout buffering */
   setvbuf(stdout, NULL, _IONBF, 0);
 
- // 	r307_init();
-  	//fingerprint_match_loop();
+	r307_init();
+	fingerprint_match_loop();
 
 	HAL_GPIO_WritePin(GPIOB,GPIO_PIN_2,GPIO_PIN_SET);
 	HAL_Delay(50);
@@ -330,23 +324,24 @@ int main()
 	HAL_Delay(50);
 #endif
 
+#if (USE_EEPROM)
+	HAL_I2C_Mem_Write(&i2c1,dev_addr,0x00,2,(uint8_t *)&emp_id_read,2,100);
+	HAL_Delay(100);
+	HAL_I2C_Mem_Read(&i2c1, dev_addr1, 0x00, 2, (uint8_t *)&test_id, 2, 100);
+#endif
 	HAL_UART_Transmit(&uart1,(uint8_t *)msg,sizeof(msg),1000);
-	curr_page = 1 ;
+
 
 //erase_EEPROM();
 
 
 status = Read_MFRC522(VersionReg);
 sprintf(str1,"Running RC522");
-sprintf(str2,"\tver:%x\r\n", status);
+sprintf(str2,"\r\t version:%x\r\n", status);
 HAL_UART_Transmit(&uart1,(uint8_t *)str1,strlen(str1),1000);
 HAL_UART_Transmit(&uart1,(uint8_t *)str2,strlen(str2),1000);
 
-//while(1)
-//{
-//	HAL_Delay(200);
-//	rfid_read();
-//}
+
 //collect_id();
 while(1)
 {
@@ -392,7 +387,7 @@ while(1)
 			for(ia=0;ia<5;ia++)
 			{
 				calculate_addr = 128+(32*(scanned_EMPLO_ID-1));
-				display_Employee();
+//				display_Employee();
 				print_string(170,194+ia*52,read_details.rd_EMPLO_name,BLACK);
 				scanned_EMPLO_ID++;
 			}
@@ -439,7 +434,7 @@ while(1)
 			for(ia=0;ia<emp_id_read;ia++)
 			{
 				calculate_addr = 128+(32*(scanned_EMPLO_ID-1));
-				display_Employee();
+//				display_Employee();
 				print_string(170,194+ia*52,read_details.rd_EMPLO_name,BLACK);
 				scanned_EMPLO_ID++;
 			}
@@ -541,7 +536,7 @@ while(1)
 			}
 		}
 
-		if(isTouched( 550, 650, 248, 308)) 	// Save
+		if(isTouched( 550, 650, 248, 308)) 	// SAVE
 		{
 			HAL_Delay(500);
 			scanned_EMPLO_ID = ++emp_id_read;
@@ -881,7 +876,6 @@ while(1)
 		//HAL_Delay(500);
 		static uint8_t pos =0;
 		int x=0,x1=0,y=31,y1=0,k=0;
-		static int cnt=0;
 		if(isTouched(197, 503, 69, 135)) // hide keypad  197, 503, 69, 135
 		{
 			keypad_down=!keypad_down;
@@ -943,7 +937,7 @@ while(1)
 
 		}
 
-/*****************************  CURRENT PAGE 7 ************************/
+/*****************************************  CURRENT PAGE 7 *********************************************/
 	if(curr_page == 7)
 	{
 		if(isTouched( 190, 590, 36, 84)) //190,590,36,84
@@ -1339,8 +1333,117 @@ void rfid_read(void)
 
 }
 
+
+
 void assign_card(void)
 {
+	status = 0;
+	status = MFRC522_Request(PICC_REQIDL, cardstr);
+	if(status == MI_OK)
+	{
+		sprintf(str1,"Card:%x,%x,%x", cardstr[0], cardstr[1], cardstr[2]);
+		HAL_Delay(2);
+		status = MFRC522_Anticoll(cardstr);
+		if(status == MI_OK) {
+			sprintf(str2,"UID:%x %x %x %x \r\n", cardstr[0], cardstr[1], cardstr[2], cardstr[3]);
+			HAL_UART_Transmit(&uart1,(uint8_t *)str2,strlen(str2),1000);
+			UID[0] = cardstr[0];
+			UID[1] = cardstr[1];
+			UID[2] = cardstr[2];
+			UID[3] = cardstr[3];
+			UID[4] = cardstr[4];
+			HAL_Delay(2);
+			status = MFRC522_SelectTag(cardstr);
+			if (status > 0){
+			  SectorKey[0] = ((Mx1[0][0])^(UID[0])) + ((Mx1[0][1])^(UID[1])) + ((Mx1[0][2])^(UID[2])) + ((Mx1[0][3])^(UID[3]));// 0x11; //KeyA[0]
+			  SectorKey[1] = ((Mx1[1][0])^(UID[0])) + ((Mx1[1][1])^(UID[1])) + ((Mx1[1][2])^(UID[2])) + ((Mx1[1][3])^(UID[3]));// 0x11; //KeyA[0]
+			  SectorKey[2] = ((Mx1[2][0])^(UID[0])) + ((Mx1[2][1])^(UID[1])) + ((Mx1[2][2])^(UID[2])) + ((Mx1[2][3])^(UID[3]));// 0x11; //KeyA[0]
+			  SectorKey[3] = ((Mx1[3][0])^(UID[0])) + ((Mx1[3][1])^(UID[1])) + ((Mx1[3][2])^(UID[2])) + ((Mx1[3][3])^(UID[3]));// 0x11; //KeyA[0]
+			  SectorKey[4] = ((Mx1[4][0])^(UID[0])) + ((Mx1[4][1])^(UID[1])) + ((Mx1[4][2])^(UID[2])) + ((Mx1[4][3])^(UID[3]));// 0x11; //KeyA[0]
+			  SectorKey[5] = ((Mx1[5][0])^(UID[0])) + ((Mx1[5][1])^(UID[1])) + ((Mx1[5][2])^(UID[2])) + ((Mx1[5][3])^(UID[3]));// 0x11; //KeyA[0]
+			  HAL_Delay(2);
+			  status = MFRC522_Auth(0x60, 3, SectorKey, cardstr);
+			  if (status == MI_OK){
+				  sprintf(str3, "Auth. OK");
+				  HAL_UART_Transmit(&uart1,(uint8_t *)str3,strlen(str3),1000);
+				  // Clean-Up the Card:
+				  card_data[0] = 0xFF;
+				  card_data[1] = 0xFF;
+				  card_data[2] = 0xFF;
+				  card_data[3] = 0xFF;
+				  card_data[4] = 0xFF;
+				  card_data[5] = 0xFF;
+				  card_data[6] = 0xFF; //Access_bits[6]
+				  card_data[7] = 0x07; //Access_bits[7]
+				  card_data[8] = 0x80; //Access_bits[8]
+				  card_data[9] = 0x00;  //user_byte[9]
+				  card_data[10] = 0x00; //user_byte[10]
+				  card_data[11] = 0x00; //user_byte[11]
+				  HAL_Delay(2);
+				  status = MFRC522_Write(3, card_data);
+				  if(status == MI_OK) {
+					  result++;
+					  sprintf(str3, "                ");
+					  sprintf(str4, "Card Cleared!");
+					  HAL_UART_Transmit(&uart1,(uint8_t *)str3,strlen(str3),1000);
+					  HAL_UART_Transmit(&uart1,(uint8_t *)str4,strlen(str4),1000);
+				  }
+			  }
+		   }
+		}
+	}
+	  MFRC522_StopCrypto1();
+	  HAL_Delay(20);
+	  MFRC522_Halt();
+
+	  for (int i = 0; i < 16; i++) {cardstr[i] = 0;}
+	  status = 0;
+	  // Find cards
+	  HAL_Delay(2);
+	  status = MFRC522_Request(PICC_REQIDL, cardstr);
+	  HAL_Delay(2);
+	  status = MFRC522_Anticoll(cardstr);
+	  HAL_Delay(2);
+	  status = MFRC522_SelectTag(cardstr);
+	  SectorKey[0] = 0xFF;
+	  SectorKey[1] = 0xFF;
+	  SectorKey[2] = 0xFF;
+	  SectorKey[3] = 0xFF;
+	  SectorKey[4] = 0xFF;
+	  SectorKey[5] = 0xFF;
+	  HAL_Delay(2);
+	  status = MFRC522_Auth(0x60, 3, SectorKey, cardstr);
+	  if (status == MI_OK){
+		  card_data[0] = ((Mx1[0][0])^(UID[0])) + ((Mx1[0][1])^(UID[1])) + ((Mx1[0][2])^(UID[2])) + ((Mx1[0][3])^(UID[3]));// 0x11; //KeyA[0]
+		  card_data[1] = ((Mx1[1][0])^(UID[0])) + ((Mx1[1][1])^(UID[1])) + ((Mx1[1][2])^(UID[2])) + ((Mx1[1][3])^(UID[3]));// 0x11; //KeyA[0]
+		  card_data[2] = ((Mx1[2][0])^(UID[0])) + ((Mx1[2][1])^(UID[1])) + ((Mx1[2][2])^(UID[2])) + ((Mx1[2][3])^(UID[3]));// 0x11; //KeyA[0]
+		  card_data[3] = ((Mx1[3][0])^(UID[0])) + ((Mx1[3][1])^(UID[1])) + ((Mx1[3][2])^(UID[2])) + ((Mx1[3][3])^(UID[3]));// 0x11; //KeyA[0]
+		  card_data[4] = ((Mx1[4][0])^(UID[0])) + ((Mx1[4][1])^(UID[1])) + ((Mx1[4][2])^(UID[2])) + ((Mx1[4][3])^(UID[3]));// 0x11; //KeyA[0]
+		  card_data[5] = ((Mx1[5][0])^(UID[0])) + ((Mx1[5][1])^(UID[1])) + ((Mx1[5][2])^(UID[2])) + ((Mx1[5][3])^(UID[3]));// 0x11; //KeyA[0]
+		  card_data[6] = 0xFF; //Access_bits[6]
+		  card_data[7] = 0x07; //Access_bits[7]
+		  card_data[8] = 0x80; //Access_bits[8]
+		  card_data[9] = 0x41; //user_byte[9]
+		  card_data[10] = 0x42; //user_byte[10]
+		  card_data[11] = 0x43; //user_byte[11]
+		  HAL_Delay(2);
+		  status = MFRC522_Write(3, card_data);
+		  if(status == MI_OK) {
+			  sprintf(str3, "Card Set!");
+			  HAL_UART_Transmit(&uart1,(uint8_t *)str3,strlen(str3),1000);
+		  }
+		  else{
+			  sprintf(str4, "New Card!");
+			  HAL_UART_Transmit(&uart1,(uint8_t *)str4,strlen(str4),1000);
+		  }
+		unsigned char bxe[16]={0};
+		status =MFRC522_Read(3, bxe);
+		if(status == MI_OK) {
+			sprintf(str2,"\r\nDATA:%x %x %x \r\n", bxe[9], bxe[10], bxe[11]);
+			HAL_UART_Transmit(&uart1,(uint8_t *)str2,strlen(str2),1000);
+		}
+	  }
+#if 0
 	status = 0;
 	status = MFRC522_Request(PICC_REQIDL, cardstr);
 	if(status == MI_OK)
@@ -1405,6 +1508,7 @@ void assign_card(void)
 	HAL_Delay(10);
 	MFRC522_StopCrypto1();
 	MFRC522_Halt();
+#endif
 }
 
 

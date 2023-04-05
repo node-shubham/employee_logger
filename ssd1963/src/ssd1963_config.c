@@ -501,7 +501,7 @@ void attendence_search(void)
 	//draw_circle(760, 418-table_y+1, 20, 0x9900ff);
 	fill_circle(760, 418-table_y, 20, 0xcedcfd);
 	fill_circle(760, 418-table_y, 18, 0xe7eefe);
-  symbol_dwn_Arrow (760, 423-table_y, 0x737373);  /// for DOWN Arrow  symbol
+    symbol_dwn_Arrow (760, 423-table_y, 0x737373);  /// for DOWN Arrow  symbol
 
 ////////////////////////// for table  ///////////////////////////////////////////////////////////
 
