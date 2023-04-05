@@ -37,6 +37,7 @@ void collect_id (void)
 }
 
 
+
 bool chek_employee (void)
 {
 	calculate_addr = FRIST_EMP_ADDR +(32*(scanned_EMPLO_ID-1));  // employee details store from page no. 162 to 511 (last page)
@@ -49,6 +50,7 @@ bool chek_employee (void)
 	else
 		return 0;   //  employee not available
 }
+
 
 void add_Employee (void)
 {
