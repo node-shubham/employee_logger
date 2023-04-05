@@ -4,7 +4,7 @@
 
 
 /*********
-calculate_addr = 10368+(32*(scanned_EMPLO_ID-1));  // employee details store from page no. 162 to 511 (last page)
+calculate_addr = FRIST_EMP_ADDR+(32*(scanned_EMPLO_ID-1));  // employee details store from page no. 162 to 511 (last page)
 ***********/
 
 bool del = 0;
@@ -39,16 +39,20 @@ void collect_id (void)
 
 bool chek_employee (void)
 {
+	calculate_addr = FRIST_EMP_ADDR +(32*(scanned_EMPLO_ID-1));  // employee details store from page no. 162 to 511 (last page)
 	HAL_I2C_Mem_Read(&i2c1, dev_addr1, calculate_addr, 2, (uint8_t *) &(read_details), sizeof(read_details), 100);  ///  READ Employee_details
 	if((scanned_EMPLO_ID == read_details.rd_EMPLO_id) && (scanned_UID == read_details.rd_EMPLO_RFID))
-			return 1;    // employee available
+	  {
+		print_string(50, 190, read_details.rd_EMPLO_name, 0x9900ff);
+		return 1;    // employee available
+	  }
 	else
-			return 0;   //  employee not available
+		return 0;   //  employee not available
 }
 
 void add_Employee (void)
 {
-  calculate_addr = 10368+(32*(next_emp_id-1));  // employee details store from page no. 162 to 511 (last page)
+  calculate_addr = FRIST_EMP_ADDR +(32*(next_emp_id-1));  // employee details store from page no. 162 to 511 (last page)
   if(LAST_EMP_ADDR < calculate_addr)
 	 {
 		print_string(10,90,"This employee_id is out of memory range",0x9900ff);
@@ -88,9 +92,10 @@ void add_Employee (void)
      }
 }
 
+#if 0
 void display_Employee (void)
 {
- calculate_addr = 10368+(32*(scanned_EMPLO_ID-1));  // employee details store from page no. 162 to 511 (last page)
+ // calculate_addr = FRIST_EMP_ADDR +(32*(scanned_EMPLO_ID-1));  // employee details store from page no. 162 to 511 (last page)
  if(LAST_EMP_ADDR < calculate_addr)
    {
 	 print_string(10,90,"This employee_id is out of memory range",0x9900ff);
@@ -107,6 +112,7 @@ void display_Employee (void)
 			}
 	 }
 }
+#endif
 
 void search_Employee (void)
 {
@@ -157,7 +163,7 @@ void search_Employee (void)
 	   for(int i = 0; i < serch_emp_no; i++)
 		  {
 			HAL_I2C_Mem_Read(&i2c1, dev_addr1, all_addr[i], 2, (uint8_t *) &(read_details), sizeof(read_details), 100);
-			print_string(90, (194+(53*i)), "E",0x9900ff);
+			print_string(90, (194+(53*i)), "E", 0x9900ff);
 			print_int(read_details.rd_EMPLO_id, 99, (194+(53*i)), 1, 1, 0x9900ff);
 			print_string(170, (194+(53*i)), read_details.rd_EMPLO_name, 0x9900ff);
 			sprintf(display_arr, "%d:%d       %d:%d", read_details.rd_entry_HH, read_details.rd_entry_MM, read_details.rd_exit_HH, read_details.rd_exit_MM);
@@ -175,21 +181,27 @@ void search_Employee (void)
 void delete_Employee (void)
 {
   uint8_t y = 0;
+  uint16_t deleted_empId = 0;
   del = 1;
   search_Employee();
-  while(del)
-	  {
-	    if(isTouched(100, 678, 179+(52*y), 225+(52*y)))
-	      {
-            draw_rect(100, 678, (179+(52*y)), (225+(52*y)), RED_2);
-            HAL_I2C_Mem_Read(&i2c1, dev_addr1, del_addr[y], 2, (uint8_t *) &(read_details), sizeof(read_details), 100);
+  if(serch_emp_no)
+   {
+	  while(del)
+	  	  {
+	  	    if(isTouched(100, 678, 179+(52*y), 225+(52*y)))
+	  	      {
+	            draw_rect(100, 678, (179+(52*y)), (225+(52*y)), RED_2);
+	            deleted_empId = ((del_addr[y] - FRIST_EMP_ADDR)/32)+1;
+	       //     HAL_I2C_Mem_Read(&i2c1, dev_addr1, del_addr[y], 2, (uint8_t *) &(read_details), sizeof(read_details), 100);
 
-	    	del = 0;
-	      }
-	    y++;
-	    if(serch_emp_no == y)
-	       y = 0;
-	  }
+	  	    	del = 0;
+	  	      }
+	  	    y++;
+	  	    if(serch_emp_no <= y)
+	  	       y = 0;
+	  	  }
+   }
+
 }
 
 
