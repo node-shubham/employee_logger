@@ -387,7 +387,7 @@ while(1)
 			for(ia=0;ia<5;ia++)
 			{
 				calculate_addr = 128+(32*(scanned_EMPLO_ID-1));
-				display_Employee();
+//				display_Employee();
 				print_string(170,194+ia*52,read_details.rd_EMPLO_name,BLACK);
 				scanned_EMPLO_ID++;
 			}
@@ -434,7 +434,7 @@ while(1)
 			for(ia=0;ia<emp_id_read;ia++)
 			{
 				calculate_addr = 128+(32*(scanned_EMPLO_ID-1));
-				display_Employee();
+//				display_Employee();
 				print_string(170,194+ia*52,read_details.rd_EMPLO_name,BLACK);
 				scanned_EMPLO_ID++;
 			}
