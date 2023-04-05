@@ -335,16 +335,25 @@ void NewUser_Card(void)
 void BackBtn(void)
 {
 	//draw_roundrect(8, 72, 10, 70, GREEN);
-	fill_circle(40, 40, 30, WHITE);
-	fill_circle(40, 40, 26, RED);
-	for(int i=0; i<=4; i++)
-	{
-		draw_line(25, 39+i, 55, 39+i, WHITE);
-	}
+	fill_circle(40, 40, 26, WHITE);
+	fill_circle(40, 40, 22, PURPLE);
+	symbol(27, 40, '<', WHITE);
+	draw_line(30, 39, 50, 39, WHITE);
+	draw_line(30, 40, 50, 40, WHITE);
+	draw_line(30, 41, 50, 41, WHITE);
+//	for(int i=0; i<3; i++)
+//	{
+//		draw_line(25, 38+i, 55, 38+i, WHITE);
+//		draw_line(22+i, 40+i, 38+i, 25+i, WHITE);
+//		draw_line(22+i, 40-i, 38+i, 53-i, WHITE);
+//	}
 
-	print_image(10,100,60,60,back);
+
 	//Set_Font(&Font12x18);
-	draw_vl(30, 36, 8, GREEN);
+//	draw_vl(38, 26, 27, GREEN);
+//	draw_line(22, 40, 38, 26, GREEN);
+//	draw_line(22, 40, 38, 53, GREEN);
+
 }
 
 
