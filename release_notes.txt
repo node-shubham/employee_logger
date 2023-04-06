@@ -9,4 +9,9 @@
 	
 *v1.5.0	
 	Rfid sensor fixed
-*v1.5.1 update eeprom by NP 
+	
+*v1.5.1 
+	update eeprom 
+
+*v1.6.0
+	assigning id / clean/set card + lots of improvement

@@ -10,7 +10,6 @@
 
 extern SPI_HandleTypeDef spi1;
 
-
 #define RC522_CS_GPIO_Port	GPIOB
 #define RC522_CS_Pin				GPIO_PIN_0
 

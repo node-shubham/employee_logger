@@ -11,7 +11,7 @@ bool del = 0;
 uint8_t dev_addr = 0xA0;
 uint8_t dev_addr1 = 0xA1;
 uint8_t serch_emp_no = 0;
-uint16_t next_emp_id = 0;
+uint16_t next_emp_id = 11;
 uint16_t last_emp_id = 0;
 uint16_t last_del_id = 0;
 uint16_t scanned_EMPLO_ID = 0;
@@ -38,6 +38,7 @@ void collect_id (void)
 }
 
 
+
 bool chek_employee (void)
 {
 	calculate_addr = FIRST_EMP_ADDR +(32*(scanned_EMPLO_ID-1));  // employee details store from page no. 162 to 511 (last page)
@@ -50,6 +51,7 @@ bool chek_employee (void)
 	else
 		return 0;   //  employee not available
 }
+
 
 void add_Employee (void)
 {
@@ -177,7 +179,6 @@ void search_Employee (void)
 	 }
 	}
 }
-
 
 void delete_Employee (void)
 {
