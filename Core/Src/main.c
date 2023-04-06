@@ -248,7 +248,7 @@ uint8_t check_validcard(uint16_t emp_id){
 
 #if 1
 	memset(uid_read,0,sizeof(uid_read));
-	calculate_addr = FRIST_EMP_ADDR+(32*(emp_id-1))+4;
+	calculate_addr = FIRST_EMP_ADDR+(32*(emp_id-1))+4;
 	HAL_I2C_Mem_Read(&i2c1, dev_addr1, calculate_addr, 2, (uint8_t *)&uid_read, 4, 100);
 	sprintf(str1,"UID FROM EEPROM :%x %x %x %x\r\n",uid_read[0],uid_read[1],uid_read[2],uid_read[3]);
 	HAL_UART_Transmit(&uart1,(uint8_t *)str1,strlen(str1),1000);
@@ -349,7 +349,7 @@ HAL_UART_Transmit(&uart1,(uint8_t *)str2,strlen(str2),1000);
 #endif
 
 
-calculate_addr = FRIST_EMP_ADDR+(32*(11-1));
+calculate_addr = FIRST_EMP_ADDR+(32*(11-1));
 HAL_I2C_Mem_Read(&i2c1, dev_addr1, calculate_addr, 2, (uint8_t *)&read_details, sizeof(read_details), 100);
 //while(1);
 //collect_id();
