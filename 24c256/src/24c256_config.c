@@ -197,14 +197,16 @@ void delete_Employee (void)
 				 HAL_I2C_Mem_Read(&i2c1, dev_addr1, 3700, 2, (uint8_t *) &(delStore_addr), sizeof(delStore_addr), 100);  //  store of delStore_addr on page 57 and block 26th- (3648+(2*26)) = 3700
 				 if(0xffff == delStore_addr)
 				   {
-					 delStore_addr = 3392;       	//   base address of page 53 = 3648
+					 delStore_addr = 3392;       	//   base address of page 53 = 3392, for store deleted id
 				   }
 				 if(254>=(delStore_addr - 3392))
 				   {
 					 HAL_I2C_Mem_Write(&i2c1, dev_addr, delStore_addr, 2, (uint8_t *) &(deleted_empId), sizeof(deleted_empId), 100);  ///
 					 HAL_Delay(5);
+					 HAL_I2C_Mem_Write(&i2c1, dev_addr, 4, 2, (uint8_t *) &(deleted_empId), sizeof(deleted_empId), 100);  ///
+					 HAL_Delay(5);
 					 delStore_addr += 2;
-					 HAL_I2C_Mem_Write(&i2c1, dev_addr, 3700, 2, (uint8_t *) &(delStore_addr), sizeof(delStore_addr), 100);  ///  page 57 base addr = 3648
+					 HAL_I2C_Mem_Write(&i2c1, dev_addr, 3700, 2, (uint8_t *) &(delStore_addr), sizeof(delStore_addr), 100);
 					 HAL_Delay(5);
 				   }
 
