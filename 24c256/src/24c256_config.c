@@ -13,6 +13,7 @@ uint8_t dev_addr1 = 0xA1;
 uint8_t serch_emp_no = 0;
 uint16_t next_emp_id = 11;
 uint16_t last_emp_id = 0;
+uint16_t last_del_id = 0;
 uint16_t scanned_EMPLO_ID = 0;
 uint16_t calculate_addr = 0;
 uint16_t del_addr[5] = {0};
@@ -40,7 +41,7 @@ void collect_id (void)
 
 bool chek_employee (void)
 {
-	calculate_addr = FRIST_EMP_ADDR +(32*(scanned_EMPLO_ID-1));  // employee details store from page no. 162 to 511 (last page)
+	calculate_addr = FIRST_EMP_ADDR +(32*(scanned_EMPLO_ID-1));  // employee details store from page no. 162 to 511 (last page)
 	HAL_I2C_Mem_Read(&i2c1, dev_addr1, calculate_addr, 2, (uint8_t *) &(read_details), sizeof(read_details), 100);  ///  READ Employee_details
 	if((scanned_EMPLO_ID == read_details.rd_EMPLO_id) && (scanned_UID == read_details.rd_EMPLO_RFID))
 	  {
@@ -54,7 +55,7 @@ bool chek_employee (void)
 
 void add_Employee (void)
 {
-  calculate_addr = FRIST_EMP_ADDR +(32*(next_emp_id-1));  // employee details store from page no. 162 to 511 (last page)
+  calculate_addr = FIRST_EMP_ADDR +(32*(next_emp_id-1));  // employee details store from page no. 162 to 511 (last page)
   if(LAST_EMP_ADDR < calculate_addr)
 	 {
 		print_string(10,90,"This employee_id is out of memory range",0x9900ff);
@@ -193,8 +194,21 @@ void delete_Employee (void)
 	  	    if(isTouched(100, 678, 179+(52*y), 225+(52*y)))
 	  	      {
 	            draw_rect(100, 678, (179+(52*y)), (225+(52*y)), RED_2);
-	            deleted_empId = ((del_addr[y] - FRIST_EMP_ADDR)/32)+1;
-	       //     HAL_I2C_Mem_Read(&i2c1, dev_addr1, del_addr[y], 2, (uint8_t *) &(read_details), sizeof(read_details), 100);
+	            deleted_empId = ((del_addr[y] - FIRST_EMP_ADDR)/32)+1;
+	            uint16_t delStore_addr = 0;
+				 HAL_I2C_Mem_Read(&i2c1, dev_addr1, 3700, 2, (uint8_t *) &(delStore_addr), sizeof(delStore_addr), 100);  //  store of delStore_addr on page 57 and block 26th- (3648+(2*26)) = 3700
+				 if(0xffff == delStore_addr)
+				   {
+					 delStore_addr = 3392;       	//   base address of page 53 = 3648
+				   }
+				 if(254>=(delStore_addr - 3392))
+				   {
+					 HAL_I2C_Mem_Write(&i2c1, dev_addr, delStore_addr, 2, (uint8_t *) &(deleted_empId), sizeof(deleted_empId), 100);  ///
+					 HAL_Delay(5);
+					 delStore_addr += 2;
+					 HAL_I2C_Mem_Write(&i2c1, dev_addr, 3700, 2, (uint8_t *) &(delStore_addr), sizeof(delStore_addr), 100);  ///  page 57 base addr = 3648
+					 HAL_Delay(5);
+				   }
 
 	  	    	del = 0;
 	  	      }

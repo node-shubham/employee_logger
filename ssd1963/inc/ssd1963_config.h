@@ -82,6 +82,7 @@
 	void attendence_search(void);
 	void Role_Page(void);
 	void AllUser_Page(void);
+	void BackSpaceBtn(u32 x, u32 y);
 
 
 	void NewEntry_page(void);
