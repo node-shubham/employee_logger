@@ -728,7 +728,7 @@
 		void v_slider(u32 x, u32 y,u32 len, u32 color)
 		{
 			draw_roundrect(x,x+20,y,y+len,color);
-			fill_area(x+3,x+17,y+3,y+len-3,0x00627d);
+			fill_area(x+3,x+17,y+3,y+len-3,WHITE);
 			//fill_circle(x+10,y+len-40,14,0x00627d);
 			//draw_circle(x+10,y+len-40, 15, color);
 		}

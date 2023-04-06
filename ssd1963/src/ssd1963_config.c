@@ -165,6 +165,7 @@ void Front_screen(void)
 	//print_string(360,250,"09:00 AM",WHITE);
 	//print_string(350,300,"24/01/2023",WHITE);
 	print_image(355,180,87,120,thumb);
+	v_slider(450, 185,  100, WHITE);
 }
 
 //########################   ADMIN_SCREEN  ########################################
