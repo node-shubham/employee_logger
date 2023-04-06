@@ -135,7 +135,7 @@ bool UC_FLAG = 0;
 bool NUM_FLAG = 0;
 bool SAVE_EDIT_FLAG =0;
 bool drop_btn;
-bool keypad_down = 1;
+uint8_t keypad_down = 0;
 
 //uint32_t ADMIN[4] = {95,385,55,225};
 
@@ -462,7 +462,7 @@ while(1)
 			curr_page =6;
 			sub_page =7;
 			PageKeyPad();
-			//keypad_down = 0;
+			keypad_down = 1;
 			fill_area(210,400,80,120,0xe7eefe);
 			Set_Font(&Font12x18);
 			print_string(220,90,emp_name,0x737373);
@@ -879,30 +879,27 @@ while(1)
 		if(isTouched(197, 503, 69, 135)) // hide keypad  197, 503, 69, 135
 		{
 			keypad_down=!keypad_down;
-			if(keypad_down)
+			if(keypad_down == 1)
 			 {
 				//clear_area();
 					fill_area(0,800,200,480,PURPLE);
 					NewEntry_page();
 					curr_page = 4;
-				}
-//							else
-//							{
-//								fill_area(0,800,200,480,PURPLE);
-//								attendence_search();
-//								curr_page = 7;
-//							}
+			 }
+
+
+
 
 			if(curr_page == 7)
 			{
 			}
 		}
 
-		if(touchX >= 150 && touchX <= 215 && touchY >= 290+y && touchY <= 330+y) //caps  150,215,310+y,350+y
+		if(isTouched(150, 215, 290+y, 330+y)) //caps  150,215,310+y,350+y
 		{
 			UC_FLAG = !UC_FLAG;
 		}
-		if(touchX >= 275 && touchX <= 515 && touchY >= 340+y && touchY <= 380+y)		// space 275,515,360+y,400+y
+		if(isTouched(275, 515, 340+y, 380+y))		// space 275,515,360+y,400+y
 		{
 			HAL_Delay(100);
 
@@ -910,7 +907,7 @@ while(1)
 			*(emp_name+pos) =32;
 			pos++;
 		}
-		if(touchX >= 575 && touchX <= 640 && touchY >= 290+y && touchY <= 330+y) //backspace  575,640,310+y,350+y
+		if(isTouched( 575, 640, 290+y, 330+y)) //backspace  575,640,310+y,350+y
 		{
 			pos--;
 			fill_area(220+(pos*12),235+(pos*12),85,115,0xe7eefe);
@@ -921,7 +918,7 @@ while(1)
 			x1+=25*idx1;
 			for(int idx2=0; idx2<=9-(idx1*2-k); idx2++)
 			{
-				if(touchX >= x1+150+x && touchX <= x1+190+x && touchY >= y1+190+y && touchY <= y1+230+y)  //keys x1+105+x,x1+155+x,y1+205+y,y1+255+y
+				if(isTouched( x1+150+x, x1+190+x, y1+190+y, y1+230+y))  //keys x1+105+x,x1+155+x,y1+205+y,y1+255+y
 				{
 							print_char(220+(pos*12),90,char_key[idx1][idx2],RED);
 							*(emp_name+pos) =char_key[idx1][idx2];
@@ -940,13 +937,18 @@ while(1)
 /*****************************************  CURRENT PAGE 7 *********************************************/
 	if(curr_page == 7)
 	{
-		if(isTouched( 190, 590, 36, 84)) //190,590,36,84
+		if(isTouched( 190, 590, 36, 84)) //190,590,36,84 search attendance
 		{
 			PageKeyPad();
-			keypad_down = 0;
+			keypad_down = 2;
 			curr_page = 6;
 			print_string(200,50,emp_name,0x737373); //190,590,36,84,
 		}
+		if(isTouched( 190, 590, 36, 84)) // HIDE KEYPAD
+		{
+
+		}
+
 		if(isTouched( 8, 72, 10, 70)) // back
 		{
 			pos=0;
