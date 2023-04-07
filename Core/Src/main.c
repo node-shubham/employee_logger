@@ -13,7 +13,6 @@
  *  		  : RTOS based task scheduling and using WFI -sleep mode
  *  		  : SSD1963 display for application and touch based logging and monitoring.
  *
- *
  *  	 Pins :	PA0-PA7 (Display data pins)
  *  	 	  :	PC13,PC14,PC15,PB8,PB9 (Display ctrl pins)
  *  	 	  :	PB12,PB13,PB14,PB15, (SPI2 - Display touch pins)
@@ -90,9 +89,8 @@ char tmp_str[65]={'\0'};
 
 u_char status, cardstr[MAX_LEN+1];
 u_char card_data[17];
-uint32_t delay_val = 1000;
-uint16_t result = 0;
 u_char UID[5];
+u_char issue_uid[MAX_LEN+1];
 
 
 // a private key to scramble data writing/reading to/from RFID card:
@@ -142,7 +140,9 @@ uint8_t keypad_down = 0;
 int onetime =1;
 
 /*************************************************************/
+
 uint16_t emp_id_read=19;
+
 uint8_t test_id=0;
 
 uint8_t desgn_id =0;
@@ -192,7 +192,7 @@ uint8_t pos =0;
 
 uint32_t freq=0;
 uint8_t rfid_id[4];
-uint8_t issue_uid[4];
+
 
 char card_auth[4]= {0x43,0xeb,0x79,0x03};
 char msg[]="Approach your Proximate card\r\n";
@@ -233,40 +233,9 @@ static void display_handler(void * param)
 #endif
 
 
-uint8_t check_validcard(uint16_t emp_id){
-
-	/*
-	scanned_EMPLO_ID = emp_id;
-	if(chek_employee())
-	{
-		return 1;
-	}
-	return 0;
-	*/
-
-	///*
-
-#if 1
-	memset(uid_read,0,sizeof(uid_read));
-	calculate_addr = FIRST_EMP_ADDR+(32*(emp_id-1))+4;
-	HAL_I2C_Mem_Read(&i2c1, dev_addr1, calculate_addr, 2, (uint8_t *)&uid_read, 4, 100);
-	sprintf(str1,"UID FROM EEPROM :%x %x %x %x\r\n",uid_read[0],uid_read[1],uid_read[2],uid_read[3]);
-	HAL_UART_Transmit(&uart1,(uint8_t *)str1,strlen(str1),1000);
-	if((uid_read[3]==cardstr[0])&&(uid_read[2]==cardstr[1])&&(uid_read[1]==cardstr[2])&&(uid_read[0]==cardstr[3]))
-	{
-		char msg[] = "Access Granted\r\n";
-		HAL_UART_Transmit(&uart1,(uint8_t *)msg,sizeof(msg),1000);
-		return 1;
-	}
-	char msg[] = "Access Denied\r\n";
-	HAL_UART_Transmit(&uart1,(uint8_t *)msg,sizeof(msg),1000);
-	return 0;
-	 //*/
-#endif
-
-}
 
 
+/*
 void read_card(void)
 {
 	//if(rc522_checkCard(rfid_id))
@@ -288,6 +257,7 @@ void read_card(void)
 		HAL_GPIO_WritePin(GPIOB,GPIO_PIN_2,GPIO_PIN_RESET);
 	}
 }
+*/
 
 int main()
 {
@@ -301,8 +271,6 @@ int main()
 	//i2c2_init();
 	//tim5_init();
 
-
-
 	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, GPIO_PIN_SET);
 	MFRC522_Init();
 
@@ -310,8 +278,9 @@ int main()
 #if (USE_SSD1963_DISPLAY)
 	ssd1963_setup();
 	XPT2046_Init();
-#endif
+
 	Front_screen();
+#endif
 	curr_page = 1 ;
 
 #if (USE_FINGERPRINT)
@@ -348,42 +317,33 @@ HAL_UART_Transmit(&uart1,(uint8_t *)str1,strlen(str1),1000);
 HAL_UART_Transmit(&uart1,(uint8_t *)str2,strlen(str2),1000);
 #endif
 
-#if 1
-            //// begin naveen/////////////////////////////////////////
 
-            next_emp_id = emp_id_read;
-			scanned_UID = (((0xffffffff & issue_uid[0])<<24)|((0xffffffff & issue_uid[1])<<16)|((0xffffffff & issue_uid[2])<<8)|issue_uid[3]);
-		//	calculate_addr = 128+(32*(scanned_EMPLO_ID-1));
+#if 0
+next_emp_id = emp_id_read;
+scanned_UID = (((0xffffffff & cardstr[3])<<24)|((0xffffffff & cardstr[2])<<16)|((0xffffffff & cardstr[1])<<8)|cardstr[0]);
+//calculate_addr = 128+(32*(scanned_EMPLO_ID-1));
 
-            strcpy(write_details.wr_EMPLO_name, "NAVEEN P.");
-			write_details.wr_employee_code = 'E';
-			write_details.wr_EMPLO_id = next_emp_id;
-			write_details.wr_EMPLO_desig = desgn_id;
-			write_details.wr_EMPLO_role = role_id;
-			write_details.wr_EMPLO_RFID = scanned_UID;
+/////////////////  data access section in structure by user  //////////////////////
 
-			add_Employee();
+strcpy(write_details.wr_EMPLO_name, "hello");
+write_details.wr_employee_code = 'E';
+write_details.wr_EMPLO_id = next_emp_id;
+write_details.wr_EMPLO_desig = desgn_id;
+write_details.wr_EMPLO_role = role_id;
+write_details.wr_EMPLO_RFID = scanned_UID;
 
-			/*HAL_I2C_Mem_Write(&i2c1, dev_addr, calculate_addr, 2, (uint8_t *) &(write_details), sizeof(write_details), 100);  ///  write employee_id
-			HAL_Delay(5);*/
-
-
-            HAL_I2C_Mem_Read(&i2c1, dev_addr1, calculate_addr, 2, (uint8_t *)&read_details, sizeof(read_details), 100);
-
-            while(1);
-
-            /////////////// end naveen //////////////////////////////////////
+add_Employee();
+HAL_I2C_Mem_Read(&i2c1, dev_addr1, calculate_addr, 2, (uint8_t *)&read_details, sizeof(read_details), 100);
+//while(1);
 #endif
 
 
-
-//collect_id();
 while(1)
 {
 	touchX = (getX() + 12);
 	touchY = (470 - getY());
 
-	HAL_Delay(200);
+	HAL_Delay(400);
 	read_touch();
 	rfid_read();
 	/*****************************************  CURRENT PAGE 1 ****************************************************/
@@ -416,6 +376,7 @@ while(1)
 
 		if(isTouched( 500, 600, 85, 205))  // SEARCH ATTENDANCE
 		{
+#if (USE_EEPROM)
 			attendence_search();
 			scanned_EMPLO_ID =1;
 			calculate_addr = 128+(32*(scanned_EMPLO_ID-1));
@@ -426,6 +387,7 @@ while(1)
 				print_string(170,194+ia*52,read_details.rd_EMPLO_name,BLACK);
 				scanned_EMPLO_ID++;
 			}
+#endif
 			curr_page = 7;
 		}
 		if(isTouched(200, 300, 275, 395))  // USER ROLE
@@ -441,13 +403,18 @@ while(1)
 
 			//if(touchX >= 200 && touchX <= 350 && touchY >= 200 && touchY <= 250) // SYSTEM RESET
 		   {
+#if (USE_EEPROM)
 			    erase_EEPROM();
-				HAL_GPIO_WritePin(GPIOB,GPIO_PIN_2,GPIO_PIN_SET);
+#endif
+			    HAL_GPIO_WritePin(GPIOB,GPIO_PIN_2,GPIO_PIN_SET);
 				HAL_Delay(200);
 				HAL_GPIO_WritePin(GPIOB,GPIO_PIN_2,GPIO_PIN_RESET);
+
+#if (USE_EEPROM)
 			  //HAL_I2C_Mem_Write(&i2c1,dev_addr,0x00,2,0,1,100);
 				int val=0;
 				HAL_I2C_Mem_Write(&i2c1,dev_addr,0x00,2,(uint8_t *)&val,1,100);
+#endif
 		   }
 		}
 	}
@@ -464,6 +431,7 @@ while(1)
 		if(isTouched( 327, 580, 280, 360)) // ALL USER
 		{
 			AllUser_Page();
+#if (USE_EEPROM)
 			scanned_EMPLO_ID = 1;
 			calculate_addr = 128+(32*(scanned_EMPLO_ID-1));
 			for(ia=0;ia<emp_id_read;ia++)
@@ -473,6 +441,7 @@ while(1)
 				print_string(170,194+ia*52,read_details.rd_EMPLO_name,BLACK);
 				scanned_EMPLO_ID++;
 			}
+#endif
 			//print_string(170,194,emp_name,0x9900ff);
 			curr_page = 5;
 		}
@@ -483,8 +452,6 @@ while(1)
 			curr_page = 2;
 		}
 		//print_int(next_emp_id, 620, 150, 0, 0, BLACK);
-
-
 	}
 
 /*****************************************  CURRENT PAGE 4 ****************************************************/
@@ -572,25 +539,21 @@ while(1)
 
 		if(isTouched( 550, 650, 248, 308)) 	// SAVE
 		{
+#if (USE_EEPROM)
 			HAL_Delay(500);
-			scanned_EMPLO_ID = emp_id_read;
-			scanned_UID = (((0xffffffff & issue_uid[0])<<24)|((0xffffffff & issue_uid[1])<<16)|((0xffffffff & issue_uid[2])<<8)|issue_uid[3]);
-			calculate_addr = 128+(32*(scanned_EMPLO_ID-1));
-
-			/////////////////  data access section in structure by user  //////////////////////
-
+			next_emp_id = emp_id_read;
+			scanned_UID = (((0xffffffff & issue_uid[3])<<24)|((0xffffffff & issue_uid[2])<<16)|((0xffffffff & issue_uid[1])<<8)|issue_uid[0]);
 			strcpy(write_details.wr_EMPLO_name, emp_name);
 			write_details.wr_employee_code = 'E';
-			write_details.wr_EMPLO_id = scanned_EMPLO_ID;
+			write_details.wr_EMPLO_id = next_emp_id;
 			write_details.wr_EMPLO_desig = desgn_id;
 			write_details.wr_EMPLO_role = role_id;
 			write_details.wr_EMPLO_RFID = scanned_UID;
 
-			HAL_I2C_Mem_Write(&i2c1, dev_addr, calculate_addr, 2, (uint8_t *) &(write_details), sizeof(write_details), 100);  ///  write employee_id
+			add_Employee();
+			HAL_I2C_Mem_Read(&i2c1, dev_addr1, calculate_addr, 2, (uint8_t *)&read_details, sizeof(read_details), 100);
+#endif
 			HAL_Delay(5);
-
-		//	add_Employee();
-
 			//HAL_I2C_Mem_Write(&i2c1,dev_addr,0x00,2,(uint8_t *)&scanned_EMPLO_ID,1,100);
 			Set_Font(&Font12x18);
 			print_string(550,240,"saved",RED);
@@ -706,7 +669,6 @@ while(1)
 				 }
 			}
 		}
-
 	}
 
 
@@ -728,7 +690,6 @@ while(1)
 				NewUser_Desig1(0xe7eefe);
 				NewUser_Role1(0xe7eefe);
 				NewUser_Card1(0xe7eefe);
-
 			}
 			else
 			{
@@ -923,20 +884,16 @@ while(1)
 					NewEntry_page();
 					curr_page = 4;
 			 }
-
-
-
-
 			if(curr_page == 7)
 			{
 			}
 		}
 
-		if(isTouched(150, 215, 290+y, 330+y)) //caps  150,215,310+y,350+y
+		if(isTouched(150, 215, 290+y, 330+y)) //caps
 		{
 			UC_FLAG = !UC_FLAG;
 		}
-		if(isTouched(275, 515, 340+y, 380+y))		// space 275,515,360+y,400+y
+		if(isTouched(275, 515, 340+y, 380+y))		// space
 		{
 			HAL_Delay(100);
 
@@ -944,7 +901,7 @@ while(1)
 			*(emp_name+pos) =32;
 			pos++;
 		}
-		if(isTouched( 575, 640, 290+y, 330+y)) //backspace  575,640,310+y,350+y
+		if(isTouched( 575, 640, 290+y, 330+y)) //backspace
 		{
 			pos--;
 			fill_area(220+(pos*12),235+(pos*12),85,115,0xe7eefe);
@@ -972,40 +929,32 @@ while(1)
 		}
 
 /*****************************************  CURRENT PAGE 7 *********************************************/
-	if(curr_page == 7)
-	{
-		if(isTouched( 190, 590, 36, 84)) //190,590,36,84 search attendance
-		{
+	if(curr_page == 7){
+		if(isTouched( 190, 590, 36, 84)){ 			// search attendance
 			PageKeyPad();
 			keypad_down = 2;
 			curr_page = 6;
-			print_string(200,50,emp_name,0x737373); //190,590,36,84,
+			print_string(200,50,emp_name,0x737373);
 		}
-		if(isTouched( 190, 590, 36, 84)) // HIDE KEYPAD
-		{
-
+		if(isTouched( 190, 590, 36, 84)){ // HIDE KEYPAD
 		}
 
-		if(isTouched( 8, 72, 10, 70)) // back
-		{
+		if(isTouched( 8, 72, 10, 70)){		// back
 			pos=0;
 			memset(emp_name,'\0',17);
 			Admin_screen();
 			curr_page = 2;
 		}
 	}
-/*****************************************  CURRENT PAGE 8 ****************************************************/
-	if(curr_page == 8)
-	{
-		if(isTouched( 8, 72, 10, 70)) // back
-		{
+
+	/********************  CURRENT PAGE 8 *********************/
+	if(curr_page == 8){
+		if(isTouched( 8, 72, 10, 70)){		// back
 			Admin_screen();
 			curr_page = 2;
 		}
 	}
 }
-
-
 
 	/* Timebase start 100ms */
 	//HAL_TIM_Base_Start_IT(&tim5);
@@ -1106,7 +1055,6 @@ void gpio_init(void)
 
 #if (USE_SSD1963_DISPLAY)
 
-
 	GPIO_InitTypeDef SSD_DATA_PINS ={0};
 
 	SSD_DATA_PINS.Pin = GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_2 | GPIO_PIN_3 \
@@ -1118,7 +1066,6 @@ void gpio_init(void)
 	HAL_GPIO_Init(GPIOA, &SSD_DATA_PINS);
 
 	GPIO_InitTypeDef SSD_CTRL_PINS ={0};
-
 	SSD_CTRL_PINS.Pin = GPIO_PIN_13 | GPIO_PIN_14| GPIO_PIN_15;
 
 	SSD_CTRL_PINS.Mode = GPIO_MODE_OUTPUT_PP;
@@ -1126,9 +1073,7 @@ void gpio_init(void)
 	SSD_CTRL_PINS.Speed = GPIO_SPEED_FREQ_LOW;
 
 	HAL_GPIO_Init(GPIOC, &SSD_CTRL_PINS);
-
 	SSD_CTRL_PINS.Pin = GPIO_PIN_8 | GPIO_PIN_9 | GPIO_PIN_12 ;
-
 	HAL_GPIO_Init(GPIOB, &SSD_CTRL_PINS);
 #endif
 
@@ -1148,8 +1093,6 @@ void gpio_init(void)
 	HAL_GPIO_Init(GPIOA, &RFID_SPI);
 	HAL_GPIO_WritePin(GPIOA,GPIO_PIN_0,GPIO_PIN_RESET);
 #endif
-
-
 
 
 #if (DEBUG_LED)
@@ -1214,12 +1157,10 @@ void spi1_init(void)
 	{
 		printf("SPI1 Init Failed\r\n");
 	}
-
 }
 
 void spi2_init(void) 		/* SPI2 : XPT2048 Touch Sensor */
 {
-
 	spi2.Instance = SPI2;
 	spi2.Init.Mode = SPI_MODE_MASTER;
 	spi2.Init.Direction = SPI_DIRECTION_2LINES;
@@ -1239,7 +1180,6 @@ void spi2_init(void) 		/* SPI2 : XPT2048 Touch Sensor */
 
 void i2c1_init(void)  		// 	using in eeprom
 {
-
 	i2c1.Instance = I2C1;
 	i2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
 	i2c1.Init.ClockSpeed = 1000000;
@@ -1299,202 +1239,6 @@ static void read_touch(void)
 	TIM5->SR = 0;
 	*/
 }
-
-
-void rfid_read(void)
-{
-	status = 0;
-	status = MFRC522_Request(PICC_REQIDL, cardstr);
-	if(status == MI_OK)
-	{
-		sprintf(str1,"Card:%x,%x,%x", cardstr[0], cardstr[1], cardstr[2]);
-		HAL_Delay(2);
-		status = MFRC522_Anticoll(cardstr);
-		if(status == MI_OK) {
-			uint16_t read_empId=0;
-			sprintf(str2,"UID:%x %x %x %x \r\n", cardstr[0], cardstr[1], cardstr[2], cardstr[3]);
-			HAL_UART_Transmit(&uart1,(uint8_t *)str2,strlen(str2),1000);
-			UID[0] = cardstr[0];
-			UID[1] = cardstr[1];
-			UID[2] = cardstr[2];
-			UID[3] = cardstr[3];
-			UID[4] = cardstr[4];
-			HAL_Delay(10);
-			status = MFRC522_SelectTag(cardstr);
-			if (status > 0){
-			  SectorKey[0] = ((Mx1[0][0])^(UID[0])) + ((Mx1[0][1])^(UID[1])) + ((Mx1[0][2])^(UID[2])) + ((Mx1[0][3])^(UID[3]));// 0x11; //KeyA[0]
-			  SectorKey[1] = ((Mx1[1][0])^(UID[0])) + ((Mx1[1][1])^(UID[1])) + ((Mx1[1][2])^(UID[2])) + ((Mx1[1][3])^(UID[3]));// 0x11; //KeyA[0]
-			  SectorKey[2] = ((Mx1[2][0])^(UID[0])) + ((Mx1[2][1])^(UID[1])) + ((Mx1[2][2])^(UID[2])) + ((Mx1[2][3])^(UID[3]));// 0x11; //KeyA[0]
-			  SectorKey[3] = ((Mx1[3][0])^(UID[0])) + ((Mx1[3][1])^(UID[1])) + ((Mx1[3][2])^(UID[2])) + ((Mx1[3][3])^(UID[3]));// 0x11; //KeyA[0]
-			  SectorKey[4] = ((Mx1[4][0])^(UID[0])) + ((Mx1[4][1])^(UID[1])) + ((Mx1[4][2])^(UID[2])) + ((Mx1[4][3])^(UID[3]));// 0x11; //KeyA[0]
-			  SectorKey[5] = ((Mx1[5][0])^(UID[0])) + ((Mx1[5][1])^(UID[1])) + ((Mx1[5][2])^(UID[2])) + ((Mx1[5][3])^(UID[3]));// 0x11; //KeyA[0]
-			  HAL_Delay(10);
-			  status = MFRC522_Auth(0x60, 3, SectorKey, cardstr);
-			  unsigned char user_bytes[16]={0};
-			  status =MFRC522_Read(3, user_bytes);
-			  if(status == MI_OK) {
-				sprintf(str2,"DATA:%x %x %x %x \r\n", user_bytes[9], user_bytes[10], user_bytes[11], user_bytes[12]);
-				HAL_UART_Transmit(&uart1,(uint8_t *)str2,strlen(str2),1000);
-
-				read_empId = (((user_bytes[10]& 0xffff)<<8)| (user_bytes[11]& 0x00ff));
-				sprintf(str2,"employee id in card : %d\r\n", read_empId);
-				HAL_UART_Transmit(&uart1,(uint8_t *)str2,strlen(str2),1000);
-			  }
-			}
-			if(1==check_validcard(read_empId))
-			{
-				HAL_GPIO_WritePin(GPIOB,GPIO_PIN_2,GPIO_PIN_SET);
-				HAL_Delay(100);
-				HAL_GPIO_WritePin(GPIOB,GPIO_PIN_2,GPIO_PIN_RESET);
-#if (DEBUG_UART)
-				//HAL_UART_Transmit(&uart1,(uint8_t *)"Authorised Access\r\n",strlen("Authorised Access\r\n"),1000);
-#endif
-			}
-			MFRC522_StopCrypto1();
-			MFRC522_Halt();
-		}
-	}
-	/*
-	if(rc522_checkCard(rfid_id))
-		{
-			memset(data,0,sizeof(data));
-#if (DEBUG_UART)
-			HAL_UART_Transmit(&uart1,(uint8_t *)"RFID UID :",strlen("RFID UID :"),1000);
-			sprintf(data,"%x %x %x %x\r\n",rfid_id[0],rfid_id[1],rfid_id[2],rfid_id[3]);
-			HAL_UART_Transmit(&uart1,(uint8_t *)data,sizeof(data),1000);
-#endif
-			if(1==check_validcard())
-			{
-				HAL_GPIO_WritePin(GPIOB,GPIO_PIN_2,GPIO_PIN_SET);
-				HAL_Delay(100);
-				HAL_GPIO_WritePin(GPIOB,GPIO_PIN_2,GPIO_PIN_RESET);
-#if (DEBUG_UART)
-				HAL_UART_Transmit(&uart1,(uint8_t *)"Authorised Access\r\n",strlen("Authorised Access\r\n"),1000);
-#endif
-			}
-		}
-	*/
-
-}
-
-
-
-void assign_card(void)
-{
-	status = 0;
-	status = MFRC522_Request(PICC_REQIDL, cardstr);
-	if(status == MI_OK)
-	{
-		sprintf(str1,"Card:%x,%x,%x", cardstr[0], cardstr[1], cardstr[2]);
-		HAL_Delay(2);
-		status = MFRC522_Anticoll(cardstr);
-		if(status == MI_OK) {
-			sprintf(str2,"UID:%x %x %x %x \r\n", cardstr[0], cardstr[1], cardstr[2], cardstr[3]);
-			HAL_UART_Transmit(&uart1,(uint8_t *)str2,strlen(str2),1000);
-			UID[0] = cardstr[0];
-			UID[1] = cardstr[1];
-			UID[2] = cardstr[2];
-			UID[3] = cardstr[3];
-			UID[4] = cardstr[4];
-			HAL_Delay(2);
-			status = MFRC522_SelectTag(cardstr);
-			if (status > 0){
-			  SectorKey[0] = ((Mx1[0][0])^(UID[0])) + ((Mx1[0][1])^(UID[1])) + ((Mx1[0][2])^(UID[2])) + ((Mx1[0][3])^(UID[3]));// 0x11; //KeyA[0]
-			  SectorKey[1] = ((Mx1[1][0])^(UID[0])) + ((Mx1[1][1])^(UID[1])) + ((Mx1[1][2])^(UID[2])) + ((Mx1[1][3])^(UID[3]));// 0x11; //KeyA[0]
-			  SectorKey[2] = ((Mx1[2][0])^(UID[0])) + ((Mx1[2][1])^(UID[1])) + ((Mx1[2][2])^(UID[2])) + ((Mx1[2][3])^(UID[3]));// 0x11; //KeyA[0]
-			  SectorKey[3] = ((Mx1[3][0])^(UID[0])) + ((Mx1[3][1])^(UID[1])) + ((Mx1[3][2])^(UID[2])) + ((Mx1[3][3])^(UID[3]));// 0x11; //KeyA[0]
-			  SectorKey[4] = ((Mx1[4][0])^(UID[0])) + ((Mx1[4][1])^(UID[1])) + ((Mx1[4][2])^(UID[2])) + ((Mx1[4][3])^(UID[3]));// 0x11; //KeyA[0]
-			  SectorKey[5] = ((Mx1[5][0])^(UID[0])) + ((Mx1[5][1])^(UID[1])) + ((Mx1[5][2])^(UID[2])) + ((Mx1[5][3])^(UID[3]));// 0x11; //KeyA[0]
-			  HAL_Delay(2);
-			  status = MFRC522_Auth(0x60, 3, SectorKey, cardstr);
-			  if (status == MI_OK){
-				  sprintf(str3, "Auth. OK");
-				  HAL_UART_Transmit(&uart1,(uint8_t *)str3,strlen(str3),1000);
-				  // Clean-Up the Card:
-				  card_data[0] = 0xFF;
-				  card_data[1] = 0xFF;
-				  card_data[2] = 0xFF;
-				  card_data[3] = 0xFF;
-				  card_data[4] = 0xFF;
-				  card_data[5] = 0xFF;
-				  card_data[6] = 0xFF; //Access_bits[6]
-				  card_data[7] = 0x07; //Access_bits[7]
-				  card_data[8] = 0x80; //Access_bits[8]
-				  card_data[9] = 0x00;  //user_byte[9]
-				  card_data[10] = 0x00; //user_byte[10]
-				  card_data[11] = 0x00; //user_byte[11]
-				  HAL_Delay(2);
-				  status = MFRC522_Write(3, card_data);
-				  if(status == MI_OK) {
-					  result++;
-					  sprintf(str3, "                ");
-					  sprintf(str4, "Card Cleared!");
-					  HAL_UART_Transmit(&uart1,(uint8_t *)str3,strlen(str3),1000);
-					  HAL_UART_Transmit(&uart1,(uint8_t *)str4,strlen(str4),1000);
-				  }
-			  }
-		   }
-		}
-	}
-	MFRC522_StopCrypto1();
-	HAL_Delay(20);
-	MFRC522_Halt();
-
-	uint8_t e_id[2]={0};
-	e_id[0] =	(emp_id_read>>8)& 0xff;
-	e_id[1] = 	emp_id_read & 0xff;
-
-	for (int i = 0; i < 16; i++) {cardstr[i] = 0;}
-	status = 0;
-	// Find cards
-	HAL_Delay(2);
-	status = MFRC522_Request(PICC_REQIDL, cardstr);
-	HAL_Delay(2);
-	status = MFRC522_Anticoll(cardstr);
-	HAL_Delay(2);
-	status = MFRC522_SelectTag(cardstr);
-	SectorKey[0] = 0xFF;
-	SectorKey[1] = 0xFF;
-	SectorKey[2] = 0xFF;
-	SectorKey[3] = 0xFF;
-	SectorKey[4] = 0xFF;
-	SectorKey[5] = 0xFF;
-	HAL_Delay(2);
-	status = MFRC522_Auth(0x60, 3, SectorKey, cardstr);
-	if (status == MI_OK){
-	  card_data[0] = ((Mx1[0][0])^(UID[0])) + ((Mx1[0][1])^(UID[1])) + ((Mx1[0][2])^(UID[2])) + ((Mx1[0][3])^(UID[3]));// 0x11; //KeyA[0]
-	  card_data[1] = ((Mx1[1][0])^(UID[0])) + ((Mx1[1][1])^(UID[1])) + ((Mx1[1][2])^(UID[2])) + ((Mx1[1][3])^(UID[3]));// 0x11; //KeyA[0]
-	  card_data[2] = ((Mx1[2][0])^(UID[0])) + ((Mx1[2][1])^(UID[1])) + ((Mx1[2][2])^(UID[2])) + ((Mx1[2][3])^(UID[3]));// 0x11; //KeyA[0]
-	  card_data[3] = ((Mx1[3][0])^(UID[0])) + ((Mx1[3][1])^(UID[1])) + ((Mx1[3][2])^(UID[2])) + ((Mx1[3][3])^(UID[3]));// 0x11; //KeyA[0]
-	  card_data[4] = ((Mx1[4][0])^(UID[0])) + ((Mx1[4][1])^(UID[1])) + ((Mx1[4][2])^(UID[2])) + ((Mx1[4][3])^(UID[3]));// 0x11; //KeyA[0]
-	  card_data[5] = ((Mx1[5][0])^(UID[0])) + ((Mx1[5][1])^(UID[1])) + ((Mx1[5][2])^(UID[2])) + ((Mx1[5][3])^(UID[3]));// 0x11; //KeyA[0]
-	  card_data[6] = 0xFF; //Access_bits[6]
-	  card_data[7] = 0x07; //Access_bits[7]
-	  card_data[8] = 0x80; //Access_bits[8]
-
-	  card_data[9] = 0x00; //user_byte[9]
-	  card_data[10] = e_id[0]; //user_byte[10]
-	  card_data[11] = e_id[1]; //user_byte[11]
-	  HAL_Delay(2);
-	  status = MFRC522_Write(3, card_data);
-	  if(status == MI_OK) {
-		  sprintf(str3, "Card Set!");
-		  HAL_UART_Transmit(&uart1,(uint8_t *)str3,strlen(str3),1000);
-	  }
-	  else{
-		  sprintf(str4, "New Card!");
-		  HAL_UART_Transmit(&uart1,(uint8_t *)str4,strlen(str4),1000);
-	  }
-	  unsigned char user_bytes[16]={0};
-	  status =MFRC522_Read(3, user_bytes);
-	  if(status == MI_OK) {
-		sprintf(str2,"DATA:%x %x %x %x \r\n", user_bytes[9], user_bytes[10], user_bytes[11], user_bytes[12]);
-		HAL_UART_Transmit(&uart1,(uint8_t *)str2,strlen(str2),1000);
-	  }
-	}
-}
-
-
 
 
 /***************************************************************************************************************************/
