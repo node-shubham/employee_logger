@@ -11,14 +11,14 @@ bool del = 0;
 uint8_t dev_addr = 0xA0;
 uint8_t dev_addr1 = 0xA1;
 uint8_t serch_emp_no = 0;
-uint16_t next_emp_id = 11;
+uint16_t next_emp_id = 0;
 uint16_t last_emp_id = 0;
 uint16_t last_del_id = 0;
 uint16_t scanned_EMPLO_ID = 0;
 uint16_t calculate_addr = 0;
 uint16_t del_addr[5] = {0};
 uint32_t scanned_UID = 0;
-char emp_name[19] = {0};
+char emp_name[19] = "np";  //"{0};
 
 struct WRITE_DETAILS write_details;
 struct READ_DETAILS read_details;
