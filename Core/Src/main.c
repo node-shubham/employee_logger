@@ -89,9 +89,8 @@ char tmp_str[65]={'\0'};
 
 u_char status, cardstr[MAX_LEN+1];
 u_char card_data[17];
-uint32_t delay_val = 1000;
-uint16_t result = 0;
 u_char UID[5];
+u_char issue_uid[MAX_LEN+1];
 
 
 // a private key to scramble data writing/reading to/from RFID card:
@@ -141,7 +140,9 @@ uint8_t keypad_down = 0;
 int onetime =1;
 
 /*************************************************************/
-uint16_t emp_id_read=36;
+
+uint16_t emp_id_read=19;
+
 uint8_t test_id=0;
 
 uint8_t desgn_id =0;
@@ -191,7 +192,7 @@ uint8_t pos =0;
 
 uint32_t freq=0;
 uint8_t rfid_id[4];
-uint8_t issue_uid[4];
+
 
 char card_auth[4]= {0x43,0xeb,0x79,0x03};
 char msg[]="Approach your Proximate card\r\n";
@@ -316,7 +317,8 @@ HAL_UART_Transmit(&uart1,(uint8_t *)str1,strlen(str1),1000);
 HAL_UART_Transmit(&uart1,(uint8_t *)str2,strlen(str2),1000);
 #endif
 
-#if (USE_EEPROM)
+
+#if 0
 next_emp_id = emp_id_read;
 scanned_UID = (((0xffffffff & cardstr[3])<<24)|((0xffffffff & cardstr[2])<<16)|((0xffffffff & cardstr[1])<<8)|cardstr[0]);
 //calculate_addr = 128+(32*(scanned_EMPLO_ID-1));
@@ -333,15 +335,15 @@ write_details.wr_EMPLO_RFID = scanned_UID;
 add_Employee();
 HAL_I2C_Mem_Read(&i2c1, dev_addr1, calculate_addr, 2, (uint8_t *)&read_details, sizeof(read_details), 100);
 //while(1);
-//collect_id();
 #endif
+
 
 while(1)
 {
 	touchX = (getX() + 12);
 	touchY = (470 - getY());
 
-	HAL_Delay(200);
+	HAL_Delay(400);
 	read_touch();
 	rfid_read();
 	/*****************************************  CURRENT PAGE 1 ****************************************************/
@@ -539,25 +541,19 @@ while(1)
 		{
 #if (USE_EEPROM)
 			HAL_Delay(500);
-			scanned_EMPLO_ID = emp_id_read;
-			scanned_UID = (((0xffffffff & cardstr[3])<<24)|((0xffffffff & cardstr[2])<<16)|((0xffffffff & cardstr[1])<<8)|cardstr[0]);
-			calculate_addr = 128+(32*(scanned_EMPLO_ID-1));
-
-			/////////////////  data access section in structure by user  //////////////////////
-
+			next_emp_id = emp_id_read;
+			scanned_UID = (((0xffffffff & issue_uid[3])<<24)|((0xffffffff & issue_uid[2])<<16)|((0xffffffff & issue_uid[1])<<8)|issue_uid[0]);
 			strcpy(write_details.wr_EMPLO_name, emp_name);
 			write_details.wr_employee_code = 'E';
-			write_details.wr_EMPLO_id = scanned_EMPLO_ID;
+			write_details.wr_EMPLO_id = next_emp_id;
 			write_details.wr_EMPLO_desig = desgn_id;
 			write_details.wr_EMPLO_role = role_id;
 			write_details.wr_EMPLO_RFID = scanned_UID;
 
-			HAL_I2C_Mem_Write(&i2c1, dev_addr, calculate_addr, 2, (uint8_t *) &(write_details), sizeof(write_details), 100);  ///  write employee_id
+			add_Employee();
+			HAL_I2C_Mem_Read(&i2c1, dev_addr1, calculate_addr, 2, (uint8_t *)&read_details, sizeof(read_details), 100);
 #endif
 			HAL_Delay(5);
-
-		//	add_Employee();
-
 			//HAL_I2C_Mem_Write(&i2c1,dev_addr,0x00,2,(uint8_t *)&scanned_EMPLO_ID,1,100);
 			Set_Font(&Font12x18);
 			print_string(550,240,"saved",RED);

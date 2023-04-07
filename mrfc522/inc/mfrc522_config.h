@@ -25,6 +25,7 @@ extern I2C_HandleTypeDef i2c1;
 
 extern u_char status;
 extern u_char cardstr[MAX_LEN+1];
+extern u_char issue_uid[MAX_LEN+1];
 extern u_char card_data[17];
 extern u_char UID[5];
 

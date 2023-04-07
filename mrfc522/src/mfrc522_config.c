@@ -25,7 +25,7 @@ uint8_t check_validcard(uint16_t emp_id){
 	HAL_I2C_Mem_Read(&i2c1, dev_addr1, calculate_addr, 2, (uint8_t *)&uid_read, 4, 100);
 	sprintf(str1,"UID FROM EEPROM :%x %x %x %x\r\n",uid_read[0],uid_read[1],uid_read[2],uid_read[3]);
 	HAL_UART_Transmit(&uart1,(uint8_t *)str1,strlen(str1),1000);
-	if((uid_read[3]==cardstr[0])&&(uid_read[2]==cardstr[1])&&(uid_read[1]==cardstr[2])&&(uid_read[0]==cardstr[3]))
+	if((uid_read[0]==cardstr[0])&&(uid_read[1]==cardstr[1])&&(uid_read[2]==cardstr[2])&&(uid_read[3]==cardstr[3]))
 	{
 		char msg[] = "Access Granted\r\n";
 		HAL_UART_Transmit(&uart1,(uint8_t *)msg,sizeof(msg),1000);
@@ -41,6 +41,10 @@ uint8_t check_validcard(uint16_t emp_id){
 
 void rfid_read(void)
 {
+//	sprintf(str2,"#### TEST :%x %x %x %x \r\n", cardstr[0], cardstr[1], cardstr[2], cardstr[3]);
+//	HAL_UART_Transmit(&uart1,(uint8_t *)str2,strlen(str2),1000);
+//	memset(cardstr,0,4);
+
 	status = 0;
 	status = MFRC522_Request(PICC_REQIDL, cardstr);
 	if(status == MI_OK)
@@ -204,6 +208,14 @@ void assign_card(void)
 		sprintf(str2,"DATA:%x %x %x %x \r\n", user_bytes[9], user_bytes[10], user_bytes[11], user_bytes[12]);
 		HAL_UART_Transmit(&uart1,(uint8_t *)str2,strlen(str2),1000);
 	  }
+		if(cardstr[0] !=	0x26)
+		{
+			for(int i=0;i<4;i++)
+				issue_uid[i]= cardstr[i];
+		}
+		HAL_GPIO_WritePin(GPIOB,GPIO_PIN_2,GPIO_PIN_SET);
+		HAL_Delay(1000);
+		HAL_GPIO_WritePin(GPIOB,GPIO_PIN_2,GPIO_PIN_RESET);
 	}
 }
 
