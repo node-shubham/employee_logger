@@ -16,8 +16,6 @@ extern SPI_HandleTypeDef spi1;
 #define MFRC522_RST_LOW() 		GPIOB->BSRR= (1<<1)<<16;
 #define MFRC522_RST_HIGH() 		GPIOB->BSRR= (1<<1);
 
-//#define RC522_Rst_GPIO_Port	GPIOB
-//#define RC522_Rst_Pin				GPIO_PIN_1
 
 //Maximum length of the array
 #define MAX_LEN 16
