@@ -52,10 +52,11 @@ struct READ_DETAILS
 bool chek_employee (void);
 void collect_id (void);
 // void display_Employee (void);
-void add_Employee (void);
-void erase_EEPROM (void);
-void search_Employee (void);
-void delete_Employee (void);
+void add_Employee(void);
+void erase_EEPROM(void);
+void search_Employee(void);
+void delete_Employee(void);
+void next_empID(void);
 
 
 //////*********************************** Global variable ***************////////////

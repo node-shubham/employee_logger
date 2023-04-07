@@ -12,32 +12,46 @@ uint8_t dev_addr = 0xA0;
 uint8_t dev_addr1 = 0xA1;
 uint8_t serch_emp_no = 0;
 uint16_t next_emp_id = 0;
-uint16_t last_emp_id = 0;
-uint16_t last_del_id = 0;
+//uint16_t last_emp_id = 0;
 uint16_t scanned_EMPLO_ID = 0;
 uint16_t calculate_addr = 0;
 uint16_t del_addr[5] = {0};
 uint32_t scanned_UID = 0;
-char emp_name[19] = "np";  //"{0};
+char emp_name[19] = {0};
 
 struct WRITE_DETAILS write_details;
 struct READ_DETAILS read_details;
 
-
+#if 0
 void collect_id (void)
-{
+{   uint16_t last_del_id = 0;
+	HAL_I2C_Mem_Read(&i2c1, dev_addr1, 4, 2, (uint8_t *) &(last_del_id), sizeof(last_del_id), 100);  ///  collect next_emp_id on page 1, address = 0
+	if(0xffff != last_del_id)
+	  {
+		next_emp_id = last_del_id;
+	  }
+	else
+	  {
+		HAL_I2C_Mem_Read(&i2c1, dev_addr1, 2, 2, (uint8_t *) &(last_emp_id), sizeof(last_emp_id), 100);  ///  collect last_emp_id on page 1, address = 2
+	    if(0xffff != last_emp_id)
+	    	next_emp_id = last_emp_id;
+	    else
+
+	  }
 	HAL_I2C_Mem_Read(&i2c1, dev_addr1, 0, 2, (uint8_t *) &(next_emp_id), sizeof(next_emp_id), 100);  ///  collect next_emp_id on page 1, address = 0
     HAL_Delay(100);
 
 	if(0xffff == next_emp_id)
 	   next_emp_id = 1;
 
-	HAL_I2C_Mem_Read(&i2c1, dev_addr1, 2, 2, (uint8_t *) &(last_emp_id), sizeof(last_emp_id), 100);  ///  collect last_emp_id on page 1, address = 2
-	if(0xffff == last_emp_id)
-	  last_emp_id = 1;
+
 }
+#endif
 
-
+void next_empID(void)
+{
+	//HAL_I2C_Mem_Read(&hi2c, dev_addr1,)
+}
 
 bool chek_employee (void)
 {
@@ -63,17 +77,29 @@ void add_Employee (void)
   else
      {
 	    HAL_I2C_Mem_Read(&i2c1, dev_addr1, calculate_addr, 2, (uint8_t *) &(read_details), sizeof(read_details), 100);  ///  READ Employee_details
+
 	  	if((next_emp_id == read_details.rd_EMPLO_id) && (write_details.wr_EMPLO_name == read_details.rd_EMPLO_name))   ///   availble_employee
 		  {
 			print_string(10,90,"this employee is available",WHITE);
 		  }
 		else      //  when employee is not available
 		   {
-			 HAL_I2C_Mem_Write(&i2c1, dev_addr, calculate_addr, 2, (uint8_t *) &(write_details), sizeof(write_details), 100);  ///  write employee_id
+			 HAL_I2C_Mem_Write(&i2c1, dev_addr, calculate_addr, 2, (uint8_t *) &(write_details), sizeof(write_details), 100);  ///  write Employee_details
 			 HAL_Delay(5);
-			 next_emp_id++;
-			 HAL_I2C_Mem_Write(&i2c1, dev_addr, 0, 2, (uint8_t *) &(next_emp_id), sizeof(next_emp_id), 100);  ///  write employee_id
-			 HAL_Delay(5);
+
+
+	///////////////////////////////////new change/////////////////////////////////
+			 uint16_t last_deleteID = 0;
+			 HAL_I2C_Mem_Read(&i2c1, dev_addr1, 4, 2, (uint8_t *) &(last_deleteID), sizeof(last_deleteID), 100);  ///  read last_del_id on page 1, address = 4
+			 	if(0xffff == last_deleteID)
+			 	  {
+			 		next_emp_id++;
+			 		HAL_I2C_Mem_Write(&i2c1, dev_addr, 0, 2, (uint8_t *) &(next_emp_id), sizeof(next_emp_id), 100);  /// update next_emp_id on page 1, address = 0
+			 		HAL_Delay(5);
+			 	  }
+
+   ////////////////////////////////////////////////////////////////////////////////
+
 
 			 uint16_t store_addr = 0;
 			 uint8_t pos_1st_char = write_details.wr_EMPLO_name[0] - 65;			 // pos_1st_char can be A=0,B=1, C=2, D=3 ... Z=25
@@ -204,7 +230,9 @@ void delete_Employee (void)
 				   {
 					 HAL_I2C_Mem_Write(&i2c1, dev_addr, delStore_addr, 2, (uint8_t *) &(deleted_empId), sizeof(deleted_empId), 100);  ///
 					 HAL_Delay(5);
-					 HAL_I2C_Mem_Write(&i2c1, dev_addr, 4, 2, (uint8_t *) &(deleted_empId), sizeof(deleted_empId), 100);  ///
+					 HAL_I2C_Mem_Write(&i2c1, dev_addr, 4, 2, (uint8_t *) &(deleted_empId), sizeof(deleted_empId), 100);  /// write deleted_empId as a last_del_id
+					 HAL_Delay(5);
+					 HAL_I2C_Mem_Write(&i2c1, dev_addr, 0, 2, (uint8_t *) &(deleted_empId), sizeof(deleted_empId), 100);  /// write deleted_empId as a next_emp_id
 					 HAL_Delay(5);
 					 delStore_addr += 2;
 					 HAL_I2C_Mem_Write(&i2c1, dev_addr, 3700, 2, (uint8_t *) &(delStore_addr), sizeof(delStore_addr), 100);
