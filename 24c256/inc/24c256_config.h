@@ -8,6 +8,7 @@
 #include "string.h"
 #include "ssd1963.h"
 #include "stdbool.h"
+#include "user_global.h"
 
 #define FRIST_EMP_ADDR        10368
 #define LAST_EMP_ADDR         32736

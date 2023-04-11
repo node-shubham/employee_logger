@@ -25,27 +25,27 @@
 #include "user_global.h"
 
 #if (USE_SSD1963_DISPLAY)
-	#include "ssd1963.h"
-	#include "xpt2046.h"
+#include "ssd1963.h"
+#include "xpt2046.h"
 #endif
 
 #if (USE_RFID)
-	#include "mfrc522.h"
+#include "mfrc522.h"
 #endif
 
 #if (USE_FINGERPRINT)
-	#include "fpm.h"
-	#include "uart_drv.h"
-	//#include "r307_config.h"
+#include "fpm.h"
+#include "uart_drv.h"
+//#include "r307_config.h"
 #endif
 
 #if (USE_FREERTOS)
-	#include "FreeRTOS.h"
-	#include "task.h"
+#include "FreeRTOS.h"
+#include "task.h"
 #endif
 
 #if (USE_EEPROM)
-	#include "24c256_config.h"
+#include "24c256_config.h"
 #endif
 
 
@@ -59,7 +59,7 @@
 #if (USE_FINGERPRINT)
 int __io_putchar(int ch)
 {
-    return uart_write(USART1, (uint8_t *)&ch, 1);
+	return uart_write(USART1, (uint8_t *)&ch, 1);
 }
 #endif
 
@@ -97,7 +97,7 @@ u_char UID[5];
 
 // a private key to scramble data writing/reading to/from RFID card:
 u_char Mx1[7][5]={{0x12,0x45,0xF2,0xA8},{0xB2,0x6C,0x39,0x83},{0x55,0xE5,0xDA,0x18},
-				{0x1F,0x09,0xCA,0x75},{0x99,0xA2,0x50,0xEC},{0x2C,0x88,0x7F,0x3D}};
+		{0x1F,0x09,0xCA,0x75},{0x99,0xA2,0x50,0xEC},{0x2C,0x88,0x7F,0x3D}};
 u_char SectorKey[7];
 
 uint8_t char_cnt=0;
@@ -148,12 +148,12 @@ uint8_t test_id=0;
 uint8_t desgn_id =0;
 uint8_t role_id =0;
 
- /*******temp************/
+/*******temp************/
 
- u_char uid_read[4] ={0};
+u_char uid_read[4] ={0};
 
- int ia=128;
- uint8_t temp_str[100]={0};
+int ia=128;
+uint8_t temp_str[100]={0};
 /**************************************************************/
 
 void sysclock_config(void);
@@ -257,7 +257,7 @@ uint8_t check_validcard(void){
 			return 1;
 		}
 	}
-	*/
+	 */
 }
 
 
@@ -268,9 +268,9 @@ void read_card(void)
 		memset(data,0,sizeof(data));
 		memset(issue_uid,0,sizeof(issue_uid));
 #if (DEBUG_UART)
-	HAL_UART_Transmit(&uart1,(uint8_t *)"RFID UID :",strlen("RFID UID :"),1000);
-	sprintf(data,"%x %x %x %x\r\n",rfid_id[0],rfid_id[1],rfid_id[2],rfid_id[3]);
-	HAL_UART_Transmit(&uart1,(uint8_t *)data,sizeof(data),1000);
+		HAL_UART_Transmit(&uart1,(uint8_t *)"RFID UID :",strlen("RFID UID :"),1000);
+		sprintf(data,"%x %x %x %x\r\n",rfid_id[0],rfid_id[1],rfid_id[2],rfid_id[3]);
+		HAL_UART_Transmit(&uart1,(uint8_t *)data,sizeof(data),1000);
 #endif
 		if(rfid_id[0] !=	0x26)
 		{
@@ -309,11 +309,11 @@ int main()
 	curr_page = 1 ;
 
 #if (USE_FINGERPRINT)
-  uart_init(USART1,9600);
-  uart_init(USART6,57600);
+	uart_init(USART1,9600);
+	uart_init(USART6,57600);
 
-  /* disable stdout buffering */
-  setvbuf(stdout, NULL, _IONBF, 0);
+	/* disable stdout buffering */
+	setvbuf(stdout, NULL, _IONBF, 0);
 
 	r307_init();
 	fingerprint_match_loop();
@@ -332,32 +332,32 @@ int main()
 	HAL_UART_Transmit(&uart1,(uint8_t *)msg,sizeof(msg),1000);
 
 
-//erase_EEPROM();
+	//erase_EEPROM();
 
 
-status = Read_MFRC522(VersionReg);
-sprintf(str1,"Running RC522");
-sprintf(str2,"\r\t version:%x\r\n", status);
-HAL_UART_Transmit(&uart1,(uint8_t *)str1,strlen(str1),1000);
-HAL_UART_Transmit(&uart1,(uint8_t *)str2,strlen(str2),1000);
+	status = Read_MFRC522(VersionReg);
+	sprintf(str1,"Running RC522");
+	sprintf(str2,"\r\t version:%x\r\n", status);
+	HAL_UART_Transmit(&uart1,(uint8_t *)str1,strlen(str1),1000);
+	HAL_UART_Transmit(&uart1,(uint8_t *)str2,strlen(str2),1000);
 
 
-//collect_id();
-while(1)
-{
-	touchX = (getX() + 12);
-	touchY = (470 - getY());
-
-	HAL_Delay(200);
-	read_touch();
-	rfid_read();
-	/*****************************************  CURRENT PAGE 1 ****************************************************/
-
-	if(curr_page == 1)
+	//collect_id();
+	while(1)
 	{
-		Admin_screen();
-		curr_page = 2;
-		/*
+		touchX = (getX() + 12);
+		touchY = (470 - getY());
+
+		HAL_Delay(200);
+		read_touch();
+		rfid_read();
+		/*****************************************  CURRENT PAGE 1 ****************************************************/
+
+		if(curr_page == 1)
+		{
+			Admin_screen();
+			curr_page = 2;
+			/*
 		if(1==check_validcard())
 		{
 			Tick_logo();
@@ -369,210 +369,207 @@ while(1)
 		}
 		touchX=0;
 		touchY=0;
-		*/
-	}
-
-/*****************************************  CURRENT PAGE 2 ****************************************************/
-	if(curr_page == 2){
-		if(isTouched(200, 300, 85, 205)){	// USER MANAGEMENT
-			User_Management();
-			curr_page = 3;
+			 */
 		}
 
-		if(isTouched( 500, 600, 85, 205))  // SEARCH ATTENDANCE
-		{
-			attendence_search();
-			scanned_EMPLO_ID =1;
-			calculate_addr = 128+(32*(scanned_EMPLO_ID-1));
-			for(ia=0;ia<5;ia++)
+		/*****************************************  CURRENT PAGE 2 ****************************************************/
+		if(curr_page == 2){
+			if(isTouched(200, 300, 85, 205)){	// USER MANAGEMENT
+				User_Management();
+				curr_page = 3;
+			}
+
+			if(isTouched( 500, 600, 85, 205))  // SEARCH ATTENDANCE
 			{
+				attendence_search();
+				scanned_EMPLO_ID =1;
 				calculate_addr = 128+(32*(scanned_EMPLO_ID-1));
-//				display_Employee();
-				print_string(170,194+ia*52,read_details.rd_EMPLO_name,BLACK);
-				scanned_EMPLO_ID++;
+				for(ia=0;ia<5;ia++)
+				{
+					calculate_addr = 128+(32*(scanned_EMPLO_ID-1));
+					//				display_Employee();
+					print_string(170,194+ia*52,read_details.rd_EMPLO_name,BLACK);
+					scanned_EMPLO_ID++;
+				}
+				curr_page = 7;
 			}
-			curr_page = 7;
-		}
-		if(isTouched(200, 300, 275, 395))  // USER ROLE
-		{
-			Role_Page();
-			curr_page = 8;
-		}
-		if(isTouched( 500, 600, 275, 395))  // SETTING
-		{
-			//fill_screen(PURPLE);
-			//fill_roundrect(200, 350, 200, 250, YELLOW_2, PURPLE);
-			//print_string(210, 205, "SYSTEM RESET", WHITE);
-
-			//if(touchX >= 200 && touchX <= 350 && touchY >= 200 && touchY <= 250) // SYSTEM RESET
-		   {
-			    erase_EEPROM();
-				HAL_GPIO_WritePin(GPIOB,GPIO_PIN_2,GPIO_PIN_SET);
-				HAL_Delay(200);
-				HAL_GPIO_WritePin(GPIOB,GPIO_PIN_2,GPIO_PIN_RESET);
-			  //HAL_I2C_Mem_Write(&i2c1,dev_addr,0x00,2,0,1,100);
-				int val=0;
-				HAL_I2C_Mem_Write(&i2c1,dev_addr,0x00,2,(uint8_t *)&val,1,100);
-		   }
-		}
-	}
-
-/*****************************************  CURRENT PAGE 3 ****************************************************/
-
-	if(curr_page == 3)
-	{
-		if(isTouched( 327, 580, 115, 195)) // NEW USER
-		{
-			NewEntry_page();
-			curr_page = 4;
-		}
-		if(isTouched( 327, 580, 280, 360)) // ALL USER
-		{
-			AllUser_Page();
-			scanned_EMPLO_ID = 1;
-			calculate_addr = 128+(32*(scanned_EMPLO_ID-1));
-			for(ia=0;ia<emp_id_read;ia++)
+			if(isTouched(200, 300, 275, 395))  // USER ROLE
 			{
+				Role_Page();
+				curr_page = 8;
+			}
+			if(isTouched( 500, 600, 275, 395))  // SETTING
+			{
+				//fill_screen(PURPLE);
+				//fill_roundrect(200, 350, 200, 250, YELLOW_2, PURPLE);
+				//print_string(210, 205, "SYSTEM RESET", WHITE);
+
+				//if(touchX >= 200 && touchX <= 350 && touchY >= 200 && touchY <= 250) // SYSTEM RESET
+				{
+					erase_EEPROM();
+					HAL_GPIO_WritePin(GPIOB,GPIO_PIN_2,GPIO_PIN_SET);
+					HAL_Delay(200);
+					HAL_GPIO_WritePin(GPIOB,GPIO_PIN_2,GPIO_PIN_RESET);
+					//HAL_I2C_Mem_Write(&i2c1,dev_addr,0x00,2,0,1,100);
+					int val=0;
+					HAL_I2C_Mem_Write(&i2c1,dev_addr,0x00,2,(uint8_t *)&val,1,100);
+				}
+			}
+		}
+
+		/*****************************************  CURRENT PAGE 3 ****************************************************/
+
+		if(curr_page == 3)
+		{
+			if(isTouched( 327, 580, 115, 195)) // NEW USER
+			{
+				NewEntry_page();
+				curr_page = 4;
+			}
+			if(isTouched( 327, 580, 280, 360)) // ALL USER
+			{
+				AllUser_Page();
+				scanned_EMPLO_ID = 1;
 				calculate_addr = 128+(32*(scanned_EMPLO_ID-1));
-//				display_Employee();
-				print_string(170,194+ia*52,read_details.rd_EMPLO_name,BLACK);
-				scanned_EMPLO_ID++;
+				for(ia=0;ia<emp_id_read;ia++)
+				{
+					calculate_addr = 128+(32*(scanned_EMPLO_ID-1));
+					//				display_Employee();
+					print_string(170,194+ia*52,read_details.rd_EMPLO_name,BLACK);
+					scanned_EMPLO_ID++;
+				}
+				//print_string(170,194,emp_name,0x9900ff);
+				curr_page = 5;
 			}
-			//print_string(170,194,emp_name,0x9900ff);
-			curr_page = 5;
-		}
-		if(isTouched( 8, 72, 10, 70)) // BACK
-		{
-			Admin_screen();
-
-			curr_page = 2;
-		}
-		//print_int(next_emp_id, 620, 150, 0, 0, BLACK);
-
-
-	}
-
-/*****************************************  CURRENT PAGE 4 ****************************************************/
-	if(curr_page == 4)
-	{
-		print_int(test_id, 590, 100, 0, 0, GREY);
-		if(isTouched( 197, 503, 69, 135)) // NAME
-		{
-			curr_page =6;
-			sub_page =7;
-			PageKeyPad();
-			keypad_down = 1;
-			fill_area(210,400,80,120,0xe7eefe);
-			Set_Font(&Font12x18);
-			print_string(220,90,emp_name,0x737373);
-		}
-		if(isTouched( 450, 500, 170, 220)) // DESGI.
-		{
-			sub_page =1;
-			drop_btn = !drop_btn;
-			if(drop_btn)
+			if(isTouched( 8, 72, 10, 70)) // BACK
 			{
-				NewUser_Name();
-				NewUser_Desig(0,0,0,0);
-				dropdown(&dropdown_desgn[0],4,0,0,0);
+				Admin_screen();
+
+				curr_page = 2;
 			}
-			else
-			{
-				sub_page=0;
-				fill_area(197,503,234,280+120,WHITE);
-				NewUser_Role();
-				NewUser_Card();
-			}
-		}
-		if(isTouched( 450, 500, 260, 310)) // ROLE
-		{
-			sub_page =2;
-			drop_btn = !drop_btn;
-			if(drop_btn)
-			{
-				NewUser_Role();
-				NewUser_Card();
-				dropdown(&dropdown_role[0],3,0,0,-120);
-			}
-			else
-			{
-				sub_page=0;
-				fill_area(197,503,124,170+80,WHITE);
-				NewUser_Name();
-				NewUser_Desig(0,0,0,0);
-			}
+			//print_int(next_emp_id, 620, 150, 0, 0, BLACK);
+
 
 		}
-		if(isTouched( 450, 500, 355, 405)) // CARD/THUMB
+
+		/*****************************************  CURRENT PAGE 4 ****************************************************/
+		if(curr_page == 4)
 		{
-			sub_page =3;
-			drop_btn = !drop_btn;
-			if(drop_btn)
+			print_int(test_id, 590, 100, 0, 0, GREY);
+			if(isTouched( 197, 503, 69, 135)) // NAME
 			{
-				NewUser_Name();
-				NewUser_Desig(0,0,0,0);
-				NewUser_Card();
-				dropdown(&dropdown_CardThumb[0],2,0,0,10);
+				curr_page =6;
+				sub_page =7;
+				PageKeyPad();
+				keypad_down = 1;
+				fill_area(210,400,80,120,0xe7eefe);
+				Set_Font(&Font12x18);
+				print_string(220,90,emp_name,0x737373);
 			}
-			else
+			if(isTouched( 450, 500, 170, 220)) // DESGI.
 			{
-				sub_page=0;
-				fill_area(197,503,244,300+40,WHITE);
-				NewUser_Role();
+				sub_page =1;
+				drop_btn = !drop_btn;
+				if(drop_btn)
+				{
+					NewUser_Name();
+					NewUser_Desig(0,0,0,0);
+					dropdown(&dropdown_desgn[0],4,0,0,0);
+				}
+				else
+				{
+					sub_page=0;
+					fill_area(197,503,234,280+120,WHITE);
+					NewUser_Role();
+					NewUser_Card();
+				}
 			}
-		}
-
-		if(isTouched( 550, 650, 348, 408)) 	// SCAN
-		{
-			sub_page=3;
-			if(active_role == 0)
+			if(isTouched( 450, 500, 260, 310)) // ROLE
 			{
-				//read_card();
-				assign_card();
+				sub_page =2;
+				drop_btn = !drop_btn;
+				if(drop_btn)
+				{
+					NewUser_Role();
+					NewUser_Card();
+					dropdown(&dropdown_role[0],3,0,0,-120);
+				}
+				else
+				{
+					sub_page=0;
+					fill_area(197,503,124,170+80,WHITE);
+					NewUser_Name();
+					NewUser_Desig(0,0,0,0);
+				}
+
 			}
-			if(active_role == 1)
+			if(isTouched( 450, 500, 355, 405)) // CARD/THUMB
 			{
-				Front_screen();
+				sub_page =3;
+				drop_btn = !drop_btn;
+				if(drop_btn)
+				{
+					NewUser_Name();
+					NewUser_Desig(0,0,0,0);
+					NewUser_Card();
+					dropdown(&dropdown_CardThumb[0],2,0,0,10);
+				}
+				else
+				{
+					sub_page=0;
+					fill_area(197,503,244,300+40,WHITE);
+					NewUser_Role();
+				}
 			}
-		}
 
-		if(isTouched( 550, 650, 248, 308)) 	// SAVE
-		{
-			HAL_Delay(500);
-			scanned_EMPLO_ID = ++emp_id_read;
-			scanned_UID = (((0xffffffff & issue_uid[0])<<24)|((0xffffffff & issue_uid[1])<<16)|((0xffffffff & issue_uid[2])<<8)|issue_uid[3]);
-			calculate_addr = 128+(32*(scanned_EMPLO_ID-1));
-
-			/////////////////  data access section in structure by user  //////////////////////
-
-			strcpy(write_details.wr_EMPLO_name, emp_name);
-			write_details.wr_employee_code = 'E';
-			write_details.wr_EMPLO_id = scanned_EMPLO_ID;
-			write_details.wr_EMPLO_desig = desgn_id;
-			write_details.wr_EMPLO_role = role_id;
-			write_details.wr_EMPLO_RFID = scanned_UID;
-
-			add_Employee();
-
-			HAL_I2C_Mem_Write(&i2c1,dev_addr,0x00,2,(uint8_t *)&scanned_EMPLO_ID,1,100);
-			Set_Font(&Font12x18);
-			print_string(550,240,"saved",RED);
-		}
-		if(isTouched( 8, 72, 10, 70)) //back
-		{
-			pos=0;
-			memset(emp_name,'\0',17);
-			User_Management();
-			curr_page = 3;
-		}
-
-		if((sub_page ==1))
-		{
-
-			if(touchX >= 197 && touchX <= 503)
+			if(isTouched( 550, 650, 348, 408)) 	// SCAN
 			{
-				 if(touchY >= 234 && touchY <= 280)
-				 {
+				sub_page=3;
+				if(active_role == 0)
+				{
+					//read_card();
+					assign_card();
+				}
+				if(active_role == 1)
+				{
+					Front_screen();
+				}
+			}
+
+			if(isTouched( 550, 650, 248, 308)) 	// SAVE
+			{
+				HAL_Delay(500);
+				scanned_EMPLO_ID = ++emp_id_read;
+				scanned_UID = (((0xffffffff & issue_uid[0])<<24)|((0xffffffff & issue_uid[1])<<16)|((0xffffffff & issue_uid[2])<<8)|issue_uid[3]);
+				calculate_addr = 128+(32*(scanned_EMPLO_ID-1));
+
+				/////////////////  data access section in structure by user  //////////////////////
+
+				strcpy(write_details.wr_EMPLO_name, emp_name);
+				write_details.wr_employee_code = 'E';
+				write_details.wr_EMPLO_id = scanned_EMPLO_ID;
+				write_details.wr_EMPLO_desig = desgn_id;
+				write_details.wr_EMPLO_role = role_id;
+				write_details.wr_EMPLO_RFID = scanned_UID;
+
+				add_Employee();
+
+				HAL_I2C_Mem_Write(&i2c1,dev_addr,0x00,2,(uint8_t *)&scanned_EMPLO_ID,1,100);
+				Set_Font(&Font12x18);
+				print_string(550,240,"saved",RED);
+			}
+			if(isTouched( 8, 72, 10, 70)) //back
+			{
+				pos=0;
+				memset(emp_name,'\0',17);
+				User_Management();
+				curr_page = 3;
+			}
+
+			if((sub_page ==1))
+			{
+				if(isTouched(197, 503, 234, 280))
+				{
 					active_role =0;
 					desgn_ptr =	dropdown_desgn[0];
 					fill_area(210,400,180,210,0xe7eefe);
@@ -580,393 +577,379 @@ while(1)
 					print_string(220,190,desgn_ptr,0x737373);
 					dropdown(&dropdown_desgn[0],4,0,0,0);
 					desgn_id =0;
-				 }
-				 if(touchY >= 234+40 && touchY <= 280+40)
-				 {
+				}
+				if(isTouched(197, 503, 234+40, 280+40))
+				{
 					active_role =1;
 					desgn_ptr =	dropdown_desgn[1];
 					fill_area(210,400,180,210,0xe7eefe);
 					print_string(220,190,desgn_ptr,0x737373);
 					dropdown(&dropdown_desgn[0],4,0,0,0);
 					desgn_id =1;
-				 }
-				 if(touchY >= 234+80 && touchY <= 280+80)
-				 {
-					 active_role =2;
-					 desgn_ptr =	dropdown_desgn[2];
-					 fill_area(210,400,180,210,0xe7eefe);
-					 print_string(220,190,desgn_ptr,0x737373);
-					 dropdown(&dropdown_desgn[0],4,0,0,0);
-					 desgn_id =2;
-				 }
-				 if(touchY >= 234+120 && touchY <= 280+120)
-				 {
-					 active_role =3;
-					 desgn_ptr = dropdown_desgn[3];
-					 fill_area(210,400,180,210,0xe7eefe);
-					 print_string(220,190,desgn_ptr,0x737373);
-					 dropdown(&dropdown_desgn[0],4,0,0,0);
-					 desgn_id =3;
-				 }
+				}
+				if(isTouched(197, 503, 234+80, 280+80))
+				{
+					active_role =2;
+					desgn_ptr =	dropdown_desgn[2];
+					fill_area(210,400,180,210,0xe7eefe);
+					print_string(220,190,desgn_ptr,0x737373);
+					dropdown(&dropdown_desgn[0],4,0,0,0);
+					desgn_id =2;
+				}
+				if(isTouched(197, 503, 234+120, 280+120))
+				{
+					active_role =3;
+					desgn_ptr = dropdown_desgn[3];
+					fill_area(210,400,180,210,0xe7eefe);
+					print_string(220,190,desgn_ptr,0x737373);
+					dropdown(&dropdown_desgn[0],4,0,0,0);
+					desgn_id =3;
+				}
 			}
-		}
 
-		if(sub_page ==2)
-		{
-			//active_role=0;
-			if(touchX >= 197 && touchX <= 503)
+			if(sub_page ==2)
 			{
-				 if(touchY >= 124 && touchY <= 170)
-				 {
-					 active_role =0;
-					 role_ptr =	dropdown_role[0];
-					 fill_area(210,400,270,310,0xe7eefe);
-					 print_string(220,280,role_ptr,0x737373);
-					 dropdown(&dropdown_role[0],3,0,0,-120);
-					 role_id =0;
-				 }
-				 if(touchY >= 124+40 && touchY <= 170+40)
-				 {
+				//active_role=0;
+				if(isTouched(197, 503, 124, 170))
+				{
+					active_role =0;
+					role_ptr =	dropdown_role[0];
+					fill_area(210,400,270,310,0xe7eefe);
+					print_string(220,280,role_ptr,0x737373);
+					dropdown(&dropdown_role[0],3,0,0,-120);
+					role_id =0;
+				}
+				if(isTouched(197, 503, 124+40, 170+40))
+				{
 					active_role =1;
 					role_ptr =	dropdown_role[1];
 					fill_area(210,400,270,310,0xe7eefe);
 					print_string(220,280,role_ptr,0x737373);
 					dropdown(&dropdown_role[0],3,0,0,-120);
 					role_id =1;
-				 }
-				 if(touchY >= 124+80 && touchY <= 170+80)
-				 {
+				}
+				if(isTouched(197, 503, 124+80, 170+80))
+				{
 					active_role =2;
 					role_ptr =	dropdown_role[2];
 					fill_area(210,400,270,310,0xe7eefe);
 					print_string(220,280,role_ptr,0x737373);
-					 dropdown(&dropdown_role[0],3,0,0,-120);
+					dropdown(&dropdown_role[0],3,0,0,-120);
 					role_id =2;
-				 }
+				}
 			}
-		}
 
-		if(sub_page ==3)
-		{
-			//active_role=0;
-			if(touchX >= 197 && touchX <= 503)
+			if(sub_page ==3)
 			{
-				 if(touchY >= 254 && touchY <= 300)
-				 {
+				//active_role=0;
+				if(isTouched(197,503, 254, 300))
+				{
 					active_role =0;
 					card_ptr = dropdown_CardThumb[0];
 					fill_area(210,400,370,400,0xe7eefe);
 					print_string(220,375,card_ptr,0x737373);
 					dropdown(&dropdown_CardThumb[0],2,0,0,10);
-				 }
-				 if(touchY >= 254+40 && touchY <= 300+40)
-				 {
+				}
+				if(isTouched(197, 503,  254+40, 300+40))
+				{
 					active_role =1;
 					card_ptr = dropdown_CardThumb[1];
 					fill_area(210,400,370,400,0xe7eefe);
 					print_string(220,375,card_ptr,0x737373);
 					dropdown(&dropdown_CardThumb[0],2,0,0,10);
-				 }
+				}
 			}
 		}
 
-	}
 
-
-/*****************************************  CURRENT PAGE 5 ****************************************************/
+		/*****************************************  CURRENT PAGE 5 ****************************************************/
 		//###################################   FOR ALL USER   ################################################
-	if(curr_page == 5)
-	{
-		if(isTouched( 630, 720, 121, 169))  //SAVE  630,720,121,169
+		if(curr_page == 5)
 		{
-		}
-		if(isTouched( 590, 670, 121, 169))   //EDIT  494,584,121,169
-		{
-			SAVE_EDIT_FLAG = !SAVE_EDIT_FLAG;
-			if(SAVE_EDIT_FLAG)
+			if(isTouched( 630, 720, 121, 169))  //SAVE  630,720,121,169
 			{
-				active_page = 1;
-				fill_roundrect(593,667,124,166,0xe7eefe,0xcedcfd);
-				print_string(610,138,"SAVE",0x737373);
-				NewUser_Desig1(0xe7eefe);
-				NewUser_Role1(0xe7eefe);
-				NewUser_Card1(0xe7eefe);
-
 			}
-			else
+			if(isTouched( 590, 670, 121, 169))   //EDIT  494,584,121,169
 			{
-				active_page = 0;
-				fill_roundrect(593,667,124,166,0xe7eefe,0xcedcfd);
-				print_string(610,138,"EDIT",0x737373);
-				NewUser_Desig1(0xcedcfd);
-				NewUser_Role1(0xcedcfd);
-				NewUser_Card1(0xcedcfd);
-			}
-		}
+				SAVE_EDIT_FLAG = !SAVE_EDIT_FLAG;
+				if(SAVE_EDIT_FLAG)
+				{
+					active_page = 1;
+					fill_roundrect(593,667,124,166,0xe7eefe,0xcedcfd);
+					print_string(610,138,"SAVE",0x737373);
+					NewUser_Desig1(0xe7eefe);
+					NewUser_Role1(0xe7eefe);
+					NewUser_Card1(0xe7eefe);
 
-		if(active_page == 1)
+				}
+				else
+				{
+					active_page = 0;
+					fill_roundrect(593,667,124,166,0xe7eefe,0xcedcfd);
+					print_string(610,138,"EDIT",0x737373);
+					NewUser_Desig1(0xcedcfd);
+					NewUser_Role1(0xcedcfd);
+					NewUser_Card1(0xcedcfd);
+				}
+			}
+
+			if(active_page == 1)
 			{
-			 if(isTouched( 620,670,199,259))     //	494,720,199,259,0xcedcfd  //desig
+				if(isTouched( 620,670,199,259))     //	494,720,199,259,0xcedcfd  //desig
 				{
 					sub_page =4;
 					drop_btn = !drop_btn;
 					if(drop_btn)
 					{
-					//	NewUser_Name();
+						//	NewUser_Name();
 						NewUser_Desig1(0xe7eefe);
 						dropdown(&dropdown_desgn[0],4,297,167,32);
 					}
 					else
 					{
-				    	sub_page=0;
+						sub_page=0;
 						fill_area(494,670,266,320+120,0xfffafa);
-							//AllUser_Page();
+						//AllUser_Page();
 						NewUser_Role1(0xe7eefe);
 						NewUser_Card1(0xe7eefe);
 					}
 				}
 				if(isTouched( 620,670,289,349))//	494,720,289,349,//role
 				{
-					   sub_page =5;
-					   drop_btn = !drop_btn;
-					   if(drop_btn)
-						{
-							NewUser_Role1(0xe7eefe);
-							NewUser_Card1(0xe7eefe);
-							dropdown(&dropdown_role[0],3,297,167,-80);
-						}
-						else
-						{
-							sub_page=0;
-							fill_area(494,670,154,200+80,0xfffafa);
-							//AllUser_Page();
-							//NewUser_Name();
-							NewUser_Desig1(0xe7eefe);
-							SaveAndEdit();
-						}
+					sub_page =5;
+					drop_btn = !drop_btn;
+					if(drop_btn)
+					{
+						NewUser_Role1(0xe7eefe);
+						NewUser_Card1(0xe7eefe);
+						dropdown(&dropdown_role[0],3,297,167,-80);
 					}
-		if(isTouched( 620,670,379,439))//	494,720,379,439 // card
-			{
-				sub_page =6;
-				drop_btn = !drop_btn;
-				if(drop_btn)
-				{
-					//NewUser_Name();
-					NewUser_Desig1(0xe7eefe);
-					NewUser_Card1(0xe7eefe);
-					dropdown(&dropdown_CardThumb[0],2,297,167,50);
+					else
+					{
+						sub_page=0;
+						fill_area(494,670,154,200+80,0xfffafa);
+						//AllUser_Page();
+						//NewUser_Name();
+						NewUser_Desig1(0xe7eefe);
+						SaveAndEdit();
+					}
 				}
-				else
+				if(isTouched( 620,670,379,439))//	494,720,379,439 // card
 				{
-					sub_page=0;
-					fill_area(494,670,284,330+40,0xfffafa);
-					//AllUser_Page();
-					NewUser_Role1(0xe7eefe);
+					sub_page =6;
+					drop_btn = !drop_btn;
+					if(drop_btn)
+					{
+						//NewUser_Name();
+						NewUser_Desig1(0xe7eefe);
+						NewUser_Card1(0xe7eefe);
+						dropdown(&dropdown_CardThumb[0],2,297,167,50);
+					}
+					else
+					{
+						sub_page=0;
+						fill_area(494,670,284,330+40,0xfffafa);
+						//AllUser_Page();
+						NewUser_Role1(0xe7eefe);
+					}
 				}
 			}
-		}
-		if(isTouched( 8, 72, 10, 70)) //back
-		{
-			fill_area(25, 725, 96, 464,PURPLE);
-			User_Management();
-			curr_page = 3;
-		}
-
-		if((sub_page ==4))
-		{
-			if(touchX >= 494 && touchX <= 720)
+			if(isTouched( 8, 72, 10, 70)) //back
 			{
-			 if(touchY >= 266 && touchY <= 312)
-			 {
-				active_role =0;
-				desgn_ptr =	dropdown_desgn[0];
-				fill_area(499,630,204,254,0xe7eefe);//0xe7eefe
-				print_string(510,214,desgn_ptr,0x737373);
-				dropdown(&dropdown_desgn[0],4,297,167,32);
-			 }
-			 if(touchY >= 266+40 && touchY <= 312+40)
-			 {
-				active_role =1;
-				desgn_ptr =	dropdown_desgn[1];
-				fill_area(499,630,204,254,0xe7eefe);
-				print_string(510,214,desgn_ptr,0x737373);
-				dropdown(&dropdown_desgn[0],4,297,167,32);
-			 }
-			 if(touchY >= 266+80 && touchY <= 312+80)
-			 {
-				active_role =2;
-				desgn_ptr =	dropdown_desgn[2];
-				fill_area(499,630,204,254,0xe7eefe);
-				print_string(510,214,desgn_ptr,0x737373);
-				dropdown(&dropdown_desgn[0],4,297,167,32);
-			 }
-			 if(touchY >= 266+120 && touchY <= 312+120)
-			 {
-				active_role =3;
-				desgn_ptr =	dropdown_desgn[3];
-
-				fill_area(499,630,204,254,0xe7eefe);
-				print_string(510,214,desgn_ptr,0x737373);
-				dropdown(&dropdown_desgn[0],4,297,167,32);
-			 }
+				fill_area(25, 725, 96, 464,PURPLE);
+				User_Management();
+				curr_page = 3;
 			}
-		}
 
-		if(sub_page ==5)
-		{
-			//active_role=0;
-			if(touchX >= 494 && touchX <= 720)
+			if((sub_page ==4))
 			{
-				 if(touchY >= 154 && touchY <= 200)
-				 {
+				if(isTouched(494, 720, 266, 312))
+				{
+					active_role =0;
+					desgn_ptr =	dropdown_desgn[0];
+					fill_area(499,630,204,254,0xe7eefe);//0xe7eefe
+					print_string(510,214,desgn_ptr,0x737373);
+					dropdown(&dropdown_desgn[0],4,297,167,32);
+				}
+				if(isTouched(494, 720, 266+40, 312+40))
+				{
+					active_role =1;
+					desgn_ptr =	dropdown_desgn[1];
+					fill_area(499,630,204,254,0xe7eefe);
+					print_string(510,214,desgn_ptr,0x737373);
+					dropdown(&dropdown_desgn[0],4,297,167,32);
+				}
+				if(isTouched(494, 720, 266+80, 312+80))
+				{
+					active_role =2;
+					desgn_ptr =	dropdown_desgn[2];
+					fill_area(499,630,204,254,0xe7eefe);
+					print_string(510,214,desgn_ptr,0x737373);
+					dropdown(&dropdown_desgn[0],4,297,167,32);
+				}
+				if(isTouched(494, 720, 266+120,  312+120))
+				{
+					active_role =3;
+					desgn_ptr =	dropdown_desgn[3];
+
+					fill_area(499,630,204,254,0xe7eefe);
+					print_string(510,214,desgn_ptr,0x737373);
+					dropdown(&dropdown_desgn[0],4,297,167,32);
+				}
+			}
+
+			if(sub_page ==5)
+			{
+				//active_role=0;
+				if(isTouched(494, 720,  154, 200))
+				{
 					active_role =0;
 					role_ptr =	dropdown_role[0];
 					fill_area(499,630,294,344,0xe7eefe);
 					print_string(510,307,role_ptr,0x737373);
 					dropdown(&dropdown_role[0],3,297,167,-80);
-				 }
-				 if(touchY >= 154+40 && touchY <= 200+40)
-				 {
+				}
+				if(isTouched(494, 720,  154+40,  200+40))
+				{
 					active_role =1;
 					role_ptr =	dropdown_role[1];
 					fill_area(499,630,294,344,0xe7eefe);
 					print_string(510,307,role_ptr,0x737373);
 					dropdown(&dropdown_role[0],3,297,167,-80);
-				 }
-				 if(touchY >= 154+80 && touchY <= 200+80)
-				 {
+				}
+				if(isTouched(494, 720,  154+80,  200+80))
+				{
 					active_role =2;
 					role_ptr =	dropdown_role[2];
 					fill_area(499,630,294,344,0xe7eefe);
 					print_string(510,307,role_ptr,0x737373);
 					dropdown(&dropdown_role[0],3,297,167,-80);
-				 }
+				}
 			}
-		}
-		if(sub_page ==6)
-		{
-			//active_role=0;
-			if(touchX >= 494 && touchX <= 720)
+			if(sub_page ==6)
 			{
-				 if(touchY >= 284 && touchY <= 330)
-				 {
-					active_role =0;
-					card_ptr = dropdown_CardThumb[0];
-					fill_area(499,630,384,434,0xe7eefe);
-					print_string(510,400,card_ptr,0x737373);
-					dropdown(&dropdown_CardThumb[0],2,297,167,50);
-				 }
-				 if(touchY >= 284+40 && touchY <= 330+40)
-				 {
-					active_role =1;
-					card_ptr = dropdown_CardThumb[1];
-					fill_area(499, 630, 384,434,0xe7eefe);
-					print_string(510,400,card_ptr,0x737373);
-					dropdown(&dropdown_CardThumb[0],2,297,167,50);
-				 }
+				//active_role=0;
+				if(touchX >= 494 && touchX <= 720)
+				{
+					if(isTouched(494, 720,  284,  330))
+					{
+						active_role =0;
+						card_ptr = dropdown_CardThumb[0];
+						fill_area(499,630,384,434,0xe7eefe);
+						print_string(510,400,card_ptr,0x737373);
+						dropdown(&dropdown_CardThumb[0],2,297,167,50);
+					}
+					if(isTouched(494, 720,  284+40 , 330+40))
+					{
+						active_role =1;
+						card_ptr = dropdown_CardThumb[1];
+						fill_area(499, 630, 384,434,0xe7eefe);
+						print_string(510,400,card_ptr,0x737373);
+						dropdown(&dropdown_CardThumb[0],2,297,167,50);
+					}
+				}
 			}
 		}
-	}
 
-/****************************  CURRENT PAGE 6 ***  KEYPAD_TOUCH**************************/
-	if(curr_page == 6)
-	{
-		Set_Font(&Font12x18);
-		//Set_Font(&Font16x24);
-		//HAL_Delay(500);
-		static uint8_t pos =0;
-		int x=0,x1=0,y=31,y1=0,k=0;
-		if(isTouched(197, 503, 69, 135)) // hide keypad  197, 503, 69, 135
+		/****************************  CURRENT PAGE 6 ***  KEYPAD_TOUCH**************************/
+		if(curr_page == 6)
 		{
-			keypad_down=!keypad_down;
-			if(keypad_down == 1)
-			 {
-				//clear_area();
+			Set_Font(&Font12x18);
+			//Set_Font(&Font16x24);
+			//HAL_Delay(500);
+			static uint8_t pos =0;
+			int x=0,x1=0,y=31,y1=0,k=0;
+			if(isTouched(197, 503, 69, 135)) // hide keypad  197, 503, 69, 135
+			{
+				keypad_down=!keypad_down;
+				if(keypad_down == 1)
+				{
+					//clear_area();
 					fill_area(0,800,200,480,PURPLE);
 					NewEntry_page();
 					curr_page = 4;
-			 }
-
-
-
-
-			if(curr_page == 7)
-			{
-			}
-		}
-
-		if(isTouched(150, 215, 290+y, 330+y)) //caps  150,215,310+y,350+y
-		{
-			UC_FLAG = !UC_FLAG;
-		}
-		if(isTouched(275, 515, 340+y, 380+y))		// space 275,515,360+y,400+y
-		{
-			HAL_Delay(100);
-
-			print_char(220+(pos*12),85,32,0xe7eefe);
-			*(emp_name+pos) =32;
-			pos++;
-		}
-		if(isTouched( 575, 640, 290+y, 330+y)) //backspace  575,640,310+y,350+y
-		{
-			pos--;
-			fill_area(220+(pos*12),235+(pos*12),85,115,0xe7eefe);
-		}
-
-		for(int idx1=0; idx1<3; idx1++)
-		{
-			x1+=25*idx1;
-			for(int idx2=0; idx2<=9-(idx1*2-k); idx2++)
-			{
-				if(isTouched( x1+150+x, x1+190+x, y1+190+y, y1+230+y))  //keys x1+105+x,x1+155+x,y1+205+y,y1+255+y
-				{
-							print_char(220+(pos*12),90,char_key[idx1][idx2],RED);
-							*(emp_name+pos) =char_key[idx1][idx2];
-						pos++;
 				}
-				x+=50;
+
+
+
+
+				if(curr_page == 7)
+				{
+				}
 			}
-			x=0;
-			k=1;
-			y1+=50;
-		}
-		*(emp_name+pos+1)= '\0';
+
+			if(isTouched(150, 215, 290+y, 330+y)) //caps  150,215,310+y,350+y
+			{
+				UC_FLAG = !UC_FLAG;
+			}
+			if(isTouched(275, 515, 340+y, 380+y))		// space 275,515,360+y,400+y
+			{
+				HAL_Delay(100);
+
+				print_char(220+(pos*12),85,32,0xe7eefe);
+				*(emp_name+pos) =32;
+				pos++;
+			}
+			if(isTouched( 575, 640, 290+y, 330+y)) //backspace  575,640,310+y,350+y
+			{
+				pos--;
+				fill_area(220+(pos*12),235+(pos*12),85,115,0xe7eefe);
+			}
+
+			for(int idx1=0; idx1<3; idx1++)
+			{
+				x1+=25*idx1;
+				for(int idx2=0; idx2<=9-(idx1*2-k); idx2++)
+				{
+					if(isTouched( x1+150+x, x1+190+x, y1+190+y, y1+230+y))  //keys x1+105+x,x1+155+x,y1+205+y,y1+255+y
+					{
+						print_char(220+(pos*12),90,char_key[idx1][idx2],RED);
+						*(emp_name+pos) =char_key[idx1][idx2];
+						pos++;
+					}
+					x+=50;
+				}
+				x=0;
+				k=1;
+				y1+=50;
+			}
+			*(emp_name+pos+1)= '\0';
 
 		}
 
-/*****************************************  CURRENT PAGE 7 *********************************************/
-	if(curr_page == 7)
-	{
-		if(isTouched( 190, 590, 36, 84)) //190,590,36,84 search attendance
+		/*****************************************  CURRENT PAGE 7 *********************************************/
+		if(curr_page == 7)
 		{
-			PageKeyPad();
-			keypad_down = 2;
-			curr_page = 6;
-			print_string(200,50,emp_name,0x737373); //190,590,36,84,
-		}
-		if(isTouched( 190, 590, 36, 84)) // HIDE KEYPAD
-		{
+			if(isTouched( 190, 590, 36, 84)) //190,590,36,84 search attendance
+			{
+				PageKeyPad();
+				keypad_down = 2;
+				curr_page = 6;
+				print_string(200,50,emp_name,0x737373); //190,590,36,84,
+			}
+			if(isTouched( 190, 590, 36, 84)) // HIDE KEYPAD
+			{
 
-		}
+			}
 
-		if(isTouched( 8, 72, 10, 70)) // back
+			if(isTouched( 8, 72, 10, 70)) // back
+			{
+				pos=0;
+				memset(emp_name,'\0',17);
+				Admin_screen();
+				curr_page = 2;
+			}
+		}
+		/*****************************************  CURRENT PAGE 8 ****************************************************/
+		if(curr_page == 8)
 		{
-			pos=0;
-			memset(emp_name,'\0',17);
-			Admin_screen();
-			curr_page = 2;
+			if(isTouched( 8, 72, 10, 70)) // back
+			{
+				Admin_screen();
+				curr_page = 2;
+			}
 		}
 	}
-/*****************************************  CURRENT PAGE 8 ****************************************************/
-	if(curr_page == 8)
-	{
-		if(isTouched( 8, 72, 10, 70)) // back
-		{
-			Admin_screen();
-			curr_page = 2;
-		}
-	}
-}
 
 
 
@@ -1073,7 +1056,7 @@ void gpio_init(void)
 	GPIO_InitTypeDef SSD_DATA_PINS ={0};
 
 	SSD_DATA_PINS.Pin = GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_2 | GPIO_PIN_3 \
-						| GPIO_PIN_4 | GPIO_PIN_5 | GPIO_PIN_6 | GPIO_PIN_7;
+			| GPIO_PIN_4 | GPIO_PIN_5 | GPIO_PIN_6 | GPIO_PIN_7;
 
 	SSD_DATA_PINS.Mode = GPIO_MODE_OUTPUT_PP;
 	SSD_DATA_PINS.Pull = GPIO_NOPULL;
@@ -1240,7 +1223,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	if(htim->Instance == TIM5)
 	{
 #if (DEBUG_LED)
-	HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
+		HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
 #endif
 	}
 }
@@ -1260,7 +1243,7 @@ static void read_touch(void)
 	/*
 	while(!(TIM5->SR & TIM_SR_UIF)){}; 		// delay from time base
 	TIM5->SR = 0;
-	*/
+	 */
 }
 
 
@@ -1284,14 +1267,14 @@ void rfid_read(void)
 			HAL_Delay(10);
 			status = MFRC522_SelectTag(cardstr);
 			if (status > 0){
-			  SectorKey[0] = ((Mx1[0][0])^(UID[0])) + ((Mx1[0][1])^(UID[1])) + ((Mx1[0][2])^(UID[2])) + ((Mx1[0][3])^(UID[3]));// 0x11; //KeyA[0]
-			  SectorKey[1] = ((Mx1[1][0])^(UID[0])) + ((Mx1[1][1])^(UID[1])) + ((Mx1[1][2])^(UID[2])) + ((Mx1[1][3])^(UID[3]));// 0x11; //KeyA[0]
-			  SectorKey[2] = ((Mx1[2][0])^(UID[0])) + ((Mx1[2][1])^(UID[1])) + ((Mx1[2][2])^(UID[2])) + ((Mx1[2][3])^(UID[3]));// 0x11; //KeyA[0]
-			  SectorKey[3] = ((Mx1[3][0])^(UID[0])) + ((Mx1[3][1])^(UID[1])) + ((Mx1[3][2])^(UID[2])) + ((Mx1[3][3])^(UID[3]));// 0x11; //KeyA[0]
-			  SectorKey[4] = ((Mx1[4][0])^(UID[0])) + ((Mx1[4][1])^(UID[1])) + ((Mx1[4][2])^(UID[2])) + ((Mx1[4][3])^(UID[3]));// 0x11; //KeyA[0]
-			  SectorKey[5] = ((Mx1[5][0])^(UID[0])) + ((Mx1[5][1])^(UID[1])) + ((Mx1[5][2])^(UID[2])) + ((Mx1[5][3])^(UID[3]));// 0x11; //KeyA[0]
-			  HAL_Delay(10);
-			  status = MFRC522_Auth(0x60, 3, SectorKey, cardstr);
+				SectorKey[0] = ((Mx1[0][0])^(UID[0])) + ((Mx1[0][1])^(UID[1])) + ((Mx1[0][2])^(UID[2])) + ((Mx1[0][3])^(UID[3]));// 0x11; //KeyA[0]
+				SectorKey[1] = ((Mx1[1][0])^(UID[0])) + ((Mx1[1][1])^(UID[1])) + ((Mx1[1][2])^(UID[2])) + ((Mx1[1][3])^(UID[3]));// 0x11; //KeyA[0]
+				SectorKey[2] = ((Mx1[2][0])^(UID[0])) + ((Mx1[2][1])^(UID[1])) + ((Mx1[2][2])^(UID[2])) + ((Mx1[2][3])^(UID[3]));// 0x11; //KeyA[0]
+				SectorKey[3] = ((Mx1[3][0])^(UID[0])) + ((Mx1[3][1])^(UID[1])) + ((Mx1[3][2])^(UID[2])) + ((Mx1[3][3])^(UID[3]));// 0x11; //KeyA[0]
+				SectorKey[4] = ((Mx1[4][0])^(UID[0])) + ((Mx1[4][1])^(UID[1])) + ((Mx1[4][2])^(UID[2])) + ((Mx1[4][3])^(UID[3]));// 0x11; //KeyA[0]
+				SectorKey[5] = ((Mx1[5][0])^(UID[0])) + ((Mx1[5][1])^(UID[1])) + ((Mx1[5][2])^(UID[2])) + ((Mx1[5][3])^(UID[3]));// 0x11; //KeyA[0]
+				HAL_Delay(10);
+				status = MFRC522_Auth(0x60, 3, SectorKey, cardstr);
 				unsigned char bxe[16]={0};
 				status =MFRC522_Read(3, bxe);
 				if(status == MI_OK) {
@@ -1331,7 +1314,7 @@ void rfid_read(void)
 #endif
 			}
 		}
-	*/
+	 */
 
 }
 
@@ -1357,94 +1340,94 @@ void assign_card(void)
 			HAL_Delay(2);
 			status = MFRC522_SelectTag(cardstr);
 			if (status > 0){
-			  SectorKey[0] = ((Mx1[0][0])^(UID[0])) + ((Mx1[0][1])^(UID[1])) + ((Mx1[0][2])^(UID[2])) + ((Mx1[0][3])^(UID[3]));// 0x11; //KeyA[0]
-			  SectorKey[1] = ((Mx1[1][0])^(UID[0])) + ((Mx1[1][1])^(UID[1])) + ((Mx1[1][2])^(UID[2])) + ((Mx1[1][3])^(UID[3]));// 0x11; //KeyA[0]
-			  SectorKey[2] = ((Mx1[2][0])^(UID[0])) + ((Mx1[2][1])^(UID[1])) + ((Mx1[2][2])^(UID[2])) + ((Mx1[2][3])^(UID[3]));// 0x11; //KeyA[0]
-			  SectorKey[3] = ((Mx1[3][0])^(UID[0])) + ((Mx1[3][1])^(UID[1])) + ((Mx1[3][2])^(UID[2])) + ((Mx1[3][3])^(UID[3]));// 0x11; //KeyA[0]
-			  SectorKey[4] = ((Mx1[4][0])^(UID[0])) + ((Mx1[4][1])^(UID[1])) + ((Mx1[4][2])^(UID[2])) + ((Mx1[4][3])^(UID[3]));// 0x11; //KeyA[0]
-			  SectorKey[5] = ((Mx1[5][0])^(UID[0])) + ((Mx1[5][1])^(UID[1])) + ((Mx1[5][2])^(UID[2])) + ((Mx1[5][3])^(UID[3]));// 0x11; //KeyA[0]
-			  HAL_Delay(2);
-			  status = MFRC522_Auth(0x60, 3, SectorKey, cardstr);
-			  if (status == MI_OK){
-				  sprintf(str3, "Auth. OK");
-				  HAL_UART_Transmit(&uart1,(uint8_t *)str3,strlen(str3),1000);
-				  // Clean-Up the Card:
-				  card_data[0] = 0xFF;
-				  card_data[1] = 0xFF;
-				  card_data[2] = 0xFF;
-				  card_data[3] = 0xFF;
-				  card_data[4] = 0xFF;
-				  card_data[5] = 0xFF;
-				  card_data[6] = 0xFF; //Access_bits[6]
-				  card_data[7] = 0x07; //Access_bits[7]
-				  card_data[8] = 0x80; //Access_bits[8]
-				  card_data[9] = 0x00;  //user_byte[9]
-				  card_data[10] = 0x00; //user_byte[10]
-				  card_data[11] = 0x00; //user_byte[11]
-				  HAL_Delay(2);
-				  status = MFRC522_Write(3, card_data);
-				  if(status == MI_OK) {
-					  result++;
-					  sprintf(str3, "                ");
-					  sprintf(str4, "Card Cleared!");
-					  HAL_UART_Transmit(&uart1,(uint8_t *)str3,strlen(str3),1000);
-					  HAL_UART_Transmit(&uart1,(uint8_t *)str4,strlen(str4),1000);
-				  }
-			  }
-		   }
+				SectorKey[0] = ((Mx1[0][0])^(UID[0])) + ((Mx1[0][1])^(UID[1])) + ((Mx1[0][2])^(UID[2])) + ((Mx1[0][3])^(UID[3]));// 0x11; //KeyA[0]
+				SectorKey[1] = ((Mx1[1][0])^(UID[0])) + ((Mx1[1][1])^(UID[1])) + ((Mx1[1][2])^(UID[2])) + ((Mx1[1][3])^(UID[3]));// 0x11; //KeyA[0]
+				SectorKey[2] = ((Mx1[2][0])^(UID[0])) + ((Mx1[2][1])^(UID[1])) + ((Mx1[2][2])^(UID[2])) + ((Mx1[2][3])^(UID[3]));// 0x11; //KeyA[0]
+				SectorKey[3] = ((Mx1[3][0])^(UID[0])) + ((Mx1[3][1])^(UID[1])) + ((Mx1[3][2])^(UID[2])) + ((Mx1[3][3])^(UID[3]));// 0x11; //KeyA[0]
+				SectorKey[4] = ((Mx1[4][0])^(UID[0])) + ((Mx1[4][1])^(UID[1])) + ((Mx1[4][2])^(UID[2])) + ((Mx1[4][3])^(UID[3]));// 0x11; //KeyA[0]
+				SectorKey[5] = ((Mx1[5][0])^(UID[0])) + ((Mx1[5][1])^(UID[1])) + ((Mx1[5][2])^(UID[2])) + ((Mx1[5][3])^(UID[3]));// 0x11; //KeyA[0]
+				HAL_Delay(2);
+				status = MFRC522_Auth(0x60, 3, SectorKey, cardstr);
+				if (status == MI_OK){
+					sprintf(str3, "Auth. OK");
+					HAL_UART_Transmit(&uart1,(uint8_t *)str3,strlen(str3),1000);
+					// Clean-Up the Card:
+					card_data[0] = 0xFF;
+					card_data[1] = 0xFF;
+					card_data[2] = 0xFF;
+					card_data[3] = 0xFF;
+					card_data[4] = 0xFF;
+					card_data[5] = 0xFF;
+					card_data[6] = 0xFF; //Access_bits[6]
+					card_data[7] = 0x07; //Access_bits[7]
+					card_data[8] = 0x80; //Access_bits[8]
+					card_data[9] = 0x00;  //user_byte[9]
+					card_data[10] = 0x00; //user_byte[10]
+					card_data[11] = 0x00; //user_byte[11]
+					HAL_Delay(2);
+					status = MFRC522_Write(3, card_data);
+					if(status == MI_OK) {
+						result++;
+						sprintf(str3, "                ");
+						sprintf(str4, "Card Cleared!");
+						HAL_UART_Transmit(&uart1,(uint8_t *)str3,strlen(str3),1000);
+						HAL_UART_Transmit(&uart1,(uint8_t *)str4,strlen(str4),1000);
+					}
+				}
+			}
 		}
 	}
-	  MFRC522_StopCrypto1();
-	  HAL_Delay(20);
-	  MFRC522_Halt();
+	MFRC522_StopCrypto1();
+	HAL_Delay(20);
+	MFRC522_Halt();
 
-	  for (int i = 0; i < 16; i++) {cardstr[i] = 0;}
-	  status = 0;
-	  // Find cards
-	  HAL_Delay(2);
-	  status = MFRC522_Request(PICC_REQIDL, cardstr);
-	  HAL_Delay(2);
-	  status = MFRC522_Anticoll(cardstr);
-	  HAL_Delay(2);
-	  status = MFRC522_SelectTag(cardstr);
-	  SectorKey[0] = 0xFF;
-	  SectorKey[1] = 0xFF;
-	  SectorKey[2] = 0xFF;
-	  SectorKey[3] = 0xFF;
-	  SectorKey[4] = 0xFF;
-	  SectorKey[5] = 0xFF;
-	  HAL_Delay(2);
-	  status = MFRC522_Auth(0x60, 3, SectorKey, cardstr);
-	  if (status == MI_OK){
-		  card_data[0] = ((Mx1[0][0])^(UID[0])) + ((Mx1[0][1])^(UID[1])) + ((Mx1[0][2])^(UID[2])) + ((Mx1[0][3])^(UID[3]));// 0x11; //KeyA[0]
-		  card_data[1] = ((Mx1[1][0])^(UID[0])) + ((Mx1[1][1])^(UID[1])) + ((Mx1[1][2])^(UID[2])) + ((Mx1[1][3])^(UID[3]));// 0x11; //KeyA[0]
-		  card_data[2] = ((Mx1[2][0])^(UID[0])) + ((Mx1[2][1])^(UID[1])) + ((Mx1[2][2])^(UID[2])) + ((Mx1[2][3])^(UID[3]));// 0x11; //KeyA[0]
-		  card_data[3] = ((Mx1[3][0])^(UID[0])) + ((Mx1[3][1])^(UID[1])) + ((Mx1[3][2])^(UID[2])) + ((Mx1[3][3])^(UID[3]));// 0x11; //KeyA[0]
-		  card_data[4] = ((Mx1[4][0])^(UID[0])) + ((Mx1[4][1])^(UID[1])) + ((Mx1[4][2])^(UID[2])) + ((Mx1[4][3])^(UID[3]));// 0x11; //KeyA[0]
-		  card_data[5] = ((Mx1[5][0])^(UID[0])) + ((Mx1[5][1])^(UID[1])) + ((Mx1[5][2])^(UID[2])) + ((Mx1[5][3])^(UID[3]));// 0x11; //KeyA[0]
-		  card_data[6] = 0xFF; //Access_bits[6]
-		  card_data[7] = 0x07; //Access_bits[7]
-		  card_data[8] = 0x80; //Access_bits[8]
-		  card_data[9] = 0x41; //user_byte[9]
-		  card_data[10] = 0x42; //user_byte[10]
-		  card_data[11] = 0x43; //user_byte[11]
-		  HAL_Delay(2);
-		  status = MFRC522_Write(3, card_data);
-		  if(status == MI_OK) {
-			  sprintf(str3, "Card Set!");
-			  HAL_UART_Transmit(&uart1,(uint8_t *)str3,strlen(str3),1000);
-		  }
-		  else{
-			  sprintf(str4, "New Card!");
-			  HAL_UART_Transmit(&uart1,(uint8_t *)str4,strlen(str4),1000);
-		  }
+	for (int i = 0; i < 16; i++) {cardstr[i] = 0;}
+	status = 0;
+	// Find cards
+	HAL_Delay(2);
+	status = MFRC522_Request(PICC_REQIDL, cardstr);
+	HAL_Delay(2);
+	status = MFRC522_Anticoll(cardstr);
+	HAL_Delay(2);
+	status = MFRC522_SelectTag(cardstr);
+	SectorKey[0] = 0xFF;
+	SectorKey[1] = 0xFF;
+	SectorKey[2] = 0xFF;
+	SectorKey[3] = 0xFF;
+	SectorKey[4] = 0xFF;
+	SectorKey[5] = 0xFF;
+	HAL_Delay(2);
+	status = MFRC522_Auth(0x60, 3, SectorKey, cardstr);
+	if (status == MI_OK){
+		card_data[0] = ((Mx1[0][0])^(UID[0])) + ((Mx1[0][1])^(UID[1])) + ((Mx1[0][2])^(UID[2])) + ((Mx1[0][3])^(UID[3]));// 0x11; //KeyA[0]
+		card_data[1] = ((Mx1[1][0])^(UID[0])) + ((Mx1[1][1])^(UID[1])) + ((Mx1[1][2])^(UID[2])) + ((Mx1[1][3])^(UID[3]));// 0x11; //KeyA[0]
+		card_data[2] = ((Mx1[2][0])^(UID[0])) + ((Mx1[2][1])^(UID[1])) + ((Mx1[2][2])^(UID[2])) + ((Mx1[2][3])^(UID[3]));// 0x11; //KeyA[0]
+		card_data[3] = ((Mx1[3][0])^(UID[0])) + ((Mx1[3][1])^(UID[1])) + ((Mx1[3][2])^(UID[2])) + ((Mx1[3][3])^(UID[3]));// 0x11; //KeyA[0]
+		card_data[4] = ((Mx1[4][0])^(UID[0])) + ((Mx1[4][1])^(UID[1])) + ((Mx1[4][2])^(UID[2])) + ((Mx1[4][3])^(UID[3]));// 0x11; //KeyA[0]
+		card_data[5] = ((Mx1[5][0])^(UID[0])) + ((Mx1[5][1])^(UID[1])) + ((Mx1[5][2])^(UID[2])) + ((Mx1[5][3])^(UID[3]));// 0x11; //KeyA[0]
+		card_data[6] = 0xFF; //Access_bits[6]
+		card_data[7] = 0x07; //Access_bits[7]
+		card_data[8] = 0x80; //Access_bits[8]
+		card_data[9] = 0x41; //user_byte[9]
+		card_data[10] = 0x42; //user_byte[10]
+		card_data[11] = 0x43; //user_byte[11]
+		HAL_Delay(2);
+		status = MFRC522_Write(3, card_data);
+		if(status == MI_OK) {
+			sprintf(str3, "Card Set!");
+			HAL_UART_Transmit(&uart1,(uint8_t *)str3,strlen(str3),1000);
+		}
+		else{
+			sprintf(str4, "New Card!");
+			HAL_UART_Transmit(&uart1,(uint8_t *)str4,strlen(str4),1000);
+		}
 		unsigned char bxe[16]={0};
 		status =MFRC522_Read(3, bxe);
 		if(status == MI_OK) {
 			sprintf(str2,"\r\nDATA:%x %x %x \r\n", bxe[9], bxe[10], bxe[11]);
 			HAL_UART_Transmit(&uart1,(uint8_t *)str2,strlen(str2),1000);
 		}
-	  }
+	}
 #if 0
 	status = 0;
 	status = MFRC522_Request(PICC_REQIDL, cardstr);
@@ -1465,14 +1448,14 @@ void assign_card(void)
 			HAL_Delay(10);
 			status = MFRC522_SelectTag(cardstr);
 			if (status > 0){
-			  SectorKey[0] = ((Mx1[0][0])^(UID[0])) + ((Mx1[0][1])^(UID[1])) + ((Mx1[0][2])^(UID[2])) + ((Mx1[0][3])^(UID[3]));// 0x11; //KeyA[0]
-			  SectorKey[1] = ((Mx1[1][0])^(UID[0])) + ((Mx1[1][1])^(UID[1])) + ((Mx1[1][2])^(UID[2])) + ((Mx1[1][3])^(UID[3]));// 0x11; //KeyA[0]
-			  SectorKey[2] = ((Mx1[2][0])^(UID[0])) + ((Mx1[2][1])^(UID[1])) + ((Mx1[2][2])^(UID[2])) + ((Mx1[2][3])^(UID[3]));// 0x11; //KeyA[0]
-			  SectorKey[3] = ((Mx1[3][0])^(UID[0])) + ((Mx1[3][1])^(UID[1])) + ((Mx1[3][2])^(UID[2])) + ((Mx1[3][3])^(UID[3]));// 0x11; //KeyA[0]
-			  SectorKey[4] = ((Mx1[4][0])^(UID[0])) + ((Mx1[4][1])^(UID[1])) + ((Mx1[4][2])^(UID[2])) + ((Mx1[4][3])^(UID[3]));// 0x11; //KeyA[0]
-			  SectorKey[5] = ((Mx1[5][0])^(UID[0])) + ((Mx1[5][1])^(UID[1])) + ((Mx1[5][2])^(UID[2])) + ((Mx1[5][3])^(UID[3]));// 0x11; //KeyA[0]
-			  HAL_Delay(10);
-			  status = MFRC522_Auth(0x60, 3, SectorKey, cardstr);
+				SectorKey[0] = ((Mx1[0][0])^(UID[0])) + ((Mx1[0][1])^(UID[1])) + ((Mx1[0][2])^(UID[2])) + ((Mx1[0][3])^(UID[3]));// 0x11; //KeyA[0]
+				SectorKey[1] = ((Mx1[1][0])^(UID[0])) + ((Mx1[1][1])^(UID[1])) + ((Mx1[1][2])^(UID[2])) + ((Mx1[1][3])^(UID[3]));// 0x11; //KeyA[0]
+				SectorKey[2] = ((Mx1[2][0])^(UID[0])) + ((Mx1[2][1])^(UID[1])) + ((Mx1[2][2])^(UID[2])) + ((Mx1[2][3])^(UID[3]));// 0x11; //KeyA[0]
+				SectorKey[3] = ((Mx1[3][0])^(UID[0])) + ((Mx1[3][1])^(UID[1])) + ((Mx1[3][2])^(UID[2])) + ((Mx1[3][3])^(UID[3]));// 0x11; //KeyA[0]
+				SectorKey[4] = ((Mx1[4][0])^(UID[0])) + ((Mx1[4][1])^(UID[1])) + ((Mx1[4][2])^(UID[2])) + ((Mx1[4][3])^(UID[3]));// 0x11; //KeyA[0]
+				SectorKey[5] = ((Mx1[5][0])^(UID[0])) + ((Mx1[5][1])^(UID[1])) + ((Mx1[5][2])^(UID[2])) + ((Mx1[5][3])^(UID[3]));// 0x11; //KeyA[0]
+				HAL_Delay(10);
+				status = MFRC522_Auth(0x60, 3, SectorKey, cardstr);
 				unsigned char bxe[16]={0};
 				status =MFRC522_Read(3, bxe);
 				if(status == MI_OK) {
@@ -1481,22 +1464,22 @@ void assign_card(void)
 				}
 				else{
 					for (int i = 0; i < 16; i++) {cardstr[i] = 0;}
-				  status = 0;
-				  // Find cards
-				  HAL_Delay(10);
-				  status = MFRC522_Request(PICC_REQIDL, cardstr);
-				  HAL_Delay(10);
-				  status = MFRC522_Anticoll(cardstr);
-				  HAL_Delay(10);
-				  status = MFRC522_SelectTag(cardstr);
+					status = 0;
+					// Find cards
+					HAL_Delay(10);
+					status = MFRC522_Request(PICC_REQIDL, cardstr);
+					HAL_Delay(10);
+					status = MFRC522_Anticoll(cardstr);
+					HAL_Delay(10);
+					status = MFRC522_SelectTag(cardstr);
 					SectorKey[0] = 0xFF;
-				  SectorKey[1] = 0xFF;
-				  SectorKey[2] = 0xFF;
-				  SectorKey[3] = 0xFF;
-				  SectorKey[4] = 0xFF;
-				  SectorKey[5] = 0xFF;
-				  HAL_Delay(10);
-				  status = MFRC522_Auth(0x60, 3, SectorKey, cardstr);
+					SectorKey[1] = 0xFF;
+					SectorKey[2] = 0xFF;
+					SectorKey[3] = 0xFF;
+					SectorKey[4] = 0xFF;
+					SectorKey[5] = 0xFF;
+					HAL_Delay(10);
+					status = MFRC522_Auth(0x60, 3, SectorKey, cardstr);
 					unsigned char bxe[16]={0};
 					status =MFRC522_Read(3, bxe);
 					if(status == MI_OK) {

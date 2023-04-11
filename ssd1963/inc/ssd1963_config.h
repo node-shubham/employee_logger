@@ -19,7 +19,7 @@
 	extern bool UC_FLAG;
 	extern bool NUM_FLAG;
 	extern bool drop_btn;
-	extern bool keypad_down;
+
 
 	extern unsigned char symbol_key[3][10];
 	extern unsigned char char_key[3][10];
