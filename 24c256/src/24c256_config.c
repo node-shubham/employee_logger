@@ -116,7 +116,7 @@ bool chek_employee (void)
 	HAL_I2C_Mem_Read(&i2c1, dev_addr1, calculate_addr, 2, (uint8_t *) &(read_details), sizeof(read_details), 100);  ///  READ Employee_details
 	if((scanned_EMPLO_ID == read_details.rd_EMPLO_id) && (scanned_UID == read_details.rd_EMPLO_RFID))
 	  {
-		print_string(50, 190, read_details.rd_EMPLO_name, 0x9900ff);
+	//	print_string(50, 190, read_details.rd_EMPLO_name, 0x9900ff);
 		return 1;    // employee available
 	  }
 	else

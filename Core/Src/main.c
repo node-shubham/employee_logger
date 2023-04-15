@@ -321,7 +321,7 @@ HAL_UART_Transmit(&uart1,(uint8_t *)str2,strlen(str2),1000);
 #endif
 
 
-#if 0
+#if 0  //  for testing purpose
 next_emp_id = emp_id_read;
 scanned_UID = (((0xffffffff & cardstr[3])<<24)|((0xffffffff & cardstr[2])<<16)|((0xffffffff & cardstr[1])<<8)|cardstr[0]);
 calculate_addr = 128+(32*(next_emp_id-1));
@@ -383,11 +383,11 @@ while(1)
 #if (USE_EEPROM)
 			attendence_search();
 			scanned_EMPLO_ID =1;
-			calculate_addr = 128+(32*(scanned_EMPLO_ID-1));
+		//	calculate_addr = FIRST_EMP_ADDR+(32*(scanned_EMPLO_ID-1));
 			for(ia=0;ia<5;ia++)
 			{
-				calculate_addr = 128+(32*(scanned_EMPLO_ID-1));
-//				display_Employee();
+				calculate_addr = FIRST_EMP_ADDR+(32*(scanned_EMPLO_ID-1));
+			//	display_Employee();
 				print_string(170,194+ia*52,read_details.rd_EMPLO_name,BLACK);
 				scanned_EMPLO_ID++;
 			}
