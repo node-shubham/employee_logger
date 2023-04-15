@@ -158,8 +158,8 @@ void assign_card(void)
 	MFRC522_Halt();
 
 	uint8_t e_id[2]={0};
-	e_id[0] =	(emp_id_read>>8)& 0xff;
-	e_id[1] = 	emp_id_read & 0xff;
+	e_id[0] =	(next_emp_id>>8)& 0xff;
+	e_id[1] = 	next_emp_id & 0xff;
 
 	for (int i = 0; i < 16; i++) {cardstr[i] = 0;}
 	status = 0;
@@ -197,6 +197,7 @@ void assign_card(void)
 	  if(status == MI_OK) {
 		  sprintf(str3, "Card Set!");
 		  HAL_UART_Transmit(&uart1,(uint8_t *)str3,strlen(str3),1000);
+		  FLAG_SCAN =1;
 	  }
 	  else{
 		  sprintf(str4, "New Card!");

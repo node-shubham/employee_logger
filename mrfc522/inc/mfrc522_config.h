@@ -54,6 +54,8 @@ extern uint16_t last_emp_id;
 
 extern u_char uid_read[4];
 
+extern bool FLAG_SCAN ;
+
 //
 //#define MFRC522_CS_PORT		GPIOB
 //#define MFRC522_CS_PIN		(1<<0)

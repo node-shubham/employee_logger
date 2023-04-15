@@ -139,11 +139,13 @@ uint8_t keypad_down = 0;
 
 int onetime =1;
 
+bool FLAG_SCAN =0;
+
 /*************************************************************/
 
-uint16_t emp_id_read=19;
+//uint16_t emp_id_read=5;
 
-uint8_t test_id=0;
+//uint16_t test_id=0;
 
 uint8_t desgn_id =0;
 uint8_t role_id =0;
@@ -151,7 +153,6 @@ uint8_t role_id =0;
 /*********temp************/
 
  u_char uid_read[4] ={0};
- int ia=128;
  uint8_t temp_str[100]={0};
 
 /**************************************************************/
@@ -234,31 +235,6 @@ static void display_handler(void * param)
 
 
 
-
-/*
-void read_card(void)
-{
-	//if(rc522_checkCard(rfid_id))
-	{
-		memset(data,0,sizeof(data));
-		memset(issue_uid,0,sizeof(issue_uid));
-#if (DEBUG_UART)
-	HAL_UART_Transmit(&uart1,(uint8_t *)"RFID UID :",strlen("RFID UID :"),1000);
-	sprintf(data,"%x %x %x %x\r\n",rfid_id[0],rfid_id[1],rfid_id[2],rfid_id[3]);
-	HAL_UART_Transmit(&uart1,(uint8_t *)data,sizeof(data),1000);
-#endif
-		if(rfid_id[0] !=	0x26)
-		{
-			for(int i=0;i<4;i++)
-				issue_uid[i]= rfid_id[i];
-		}
-		HAL_GPIO_WritePin(GPIOB,GPIO_PIN_2,GPIO_PIN_SET);
-		HAL_Delay(1000);
-		HAL_GPIO_WritePin(GPIOB,GPIO_PIN_2,GPIO_PIN_RESET);
-	}
-}
-*/
-
 int main()
 {
 	HAL_Init();
@@ -299,13 +275,13 @@ int main()
 	HAL_Delay(50);
 #endif
 
-#if (USE_EEPROM)
+#if 0
 	HAL_I2C_Mem_Write(&i2c1,dev_addr,0x00,2,(uint8_t *)&emp_id_read,2,100);
 	HAL_Delay(100);
 	HAL_I2C_Mem_Read(&i2c1, dev_addr1, 0x00, 2, (uint8_t *)&test_id, 2, 100);
 #endif
-	HAL_UART_Transmit(&uart1,(uint8_t *)msg,sizeof(msg),1000);
 
+HAL_I2C_Mem_Read(&i2c1, dev_addr1, 0x00, 2, (uint8_t *)&next_emp_id, 2, 100);
 
 //erase_EEPROM();
 
@@ -317,11 +293,10 @@ HAL_UART_Transmit(&uart1,(uint8_t *)str1,strlen(str1),1000);
 HAL_UART_Transmit(&uart1,(uint8_t *)str2,strlen(str2),1000);
 #endif
 
-
 #if 0
 next_emp_id = emp_id_read;
 scanned_UID = (((0xffffffff & cardstr[3])<<24)|((0xffffffff & cardstr[2])<<16)|((0xffffffff & cardstr[1])<<8)|cardstr[0]);
-//calculate_addr = 128+(32*(scanned_EMPLO_ID-1));
+calculate_addr = 128+(32*(next_emp_id-1));
 
 /////////////////  data access section in structure by user  //////////////////////
 
@@ -332,18 +307,19 @@ write_details.wr_EMPLO_desig = desgn_id;
 write_details.wr_EMPLO_role = role_id;
 write_details.wr_EMPLO_RFID = scanned_UID;
 
-add_Employee();
+HAL_I2C_Mem_Write(&i2c1, dev_addr, calculate_addr, 2, (uint8_t *) &(write_details), sizeof(write_details), 100);  ///  write employee_id
+HAL_Delay(5);
+//add_Employee();
 HAL_I2C_Mem_Read(&i2c1, dev_addr1, calculate_addr, 2, (uint8_t *)&read_details, sizeof(read_details), 100);
-//while(1);
-#endif
 
+#endif
 
 while(1)
 {
 	touchX = (getX() + 12);
 	touchY = (470 - getY());
 
-	HAL_Delay(400);
+	HAL_Delay(100);
 	read_touch();
 	rfid_read();
 	/*****************************************  CURRENT PAGE 1 ****************************************************/
@@ -380,11 +356,11 @@ while(1)
 			attendence_search();
 			scanned_EMPLO_ID =1;
 			calculate_addr = 128+(32*(scanned_EMPLO_ID-1));
-			for(ia=0;ia<5;ia++)
+			for(int e=0;e<5;e++)
 			{
 				calculate_addr = 128+(32*(scanned_EMPLO_ID-1));
 //				display_Employee();
-				print_string(170,194+ia*52,read_details.rd_EMPLO_name,BLACK);
+				print_string(170,194+e*52,read_details.rd_EMPLO_name,BLACK);
 				scanned_EMPLO_ID++;
 			}
 #endif
@@ -411,9 +387,8 @@ while(1)
 				HAL_GPIO_WritePin(GPIOB,GPIO_PIN_2,GPIO_PIN_RESET);
 
 #if (USE_EEPROM)
-			  //HAL_I2C_Mem_Write(&i2c1,dev_addr,0x00,2,0,1,100);
-				int val=0;
-				HAL_I2C_Mem_Write(&i2c1,dev_addr,0x00,2,(uint8_t *)&val,1,100);
+				uint16_t val=1;
+				HAL_I2C_Mem_Write(&i2c1,dev_addr,0x00,2,(uint8_t *)&val,2,100);
 #endif
 		   }
 		}
@@ -427,22 +402,23 @@ while(1)
 		{
 			NewEntry_page();
 			curr_page = 4;
+			print_int(next_emp_id, 590, 100, 0, 0, GREY);
 		}
 		if(isTouched( 327, 580, 280, 360)) // ALL USER
 		{
 			AllUser_Page();
 #if (USE_EEPROM)
 			scanned_EMPLO_ID = 1;
-			calculate_addr = 128+(32*(scanned_EMPLO_ID-1));
-			for(ia=0;ia<emp_id_read;ia++)
+			for(int e=0;e<5;e++)
 			{
-				calculate_addr = 128+(32*(scanned_EMPLO_ID-1));
-//				display_Employee();
-				print_string(170,194+ia*52,read_details.rd_EMPLO_name,BLACK);
+				calculate_addr = FIRST_EMP_ADDR+(32*(scanned_EMPLO_ID-1));
+				HAL_I2C_Mem_Read(&i2c1, dev_addr1, calculate_addr, 2, (uint8_t *) &(read_details), sizeof(read_details), 100);
+				//display_Employee();
+				print_int(read_details.rd_EMPLO_id, 160, 194+e*52, 0, 0, BLACK);
+				print_string(200,194+e*52,read_details.rd_EMPLO_name,BLACK);
 				scanned_EMPLO_ID++;
 			}
 #endif
-			//print_string(170,194,emp_name,0x9900ff);
 			curr_page = 5;
 		}
 		if(isTouched( 8, 72, 10, 70)) // BACK
@@ -457,7 +433,7 @@ while(1)
 /*****************************************  CURRENT PAGE 4 ****************************************************/
 	if(curr_page == 4)
 	{
-		print_int(test_id, 590, 100, 0, 0, GREY);
+
 		if(isTouched( 197, 503, 69, 135)) // NAME
 		{
 			curr_page =6;
@@ -467,6 +443,7 @@ while(1)
 			fill_area(210,400,80,120,0xe7eefe);
 			Set_Font(&Font12x18);
 			print_string(220,90,emp_name,0x737373);
+
 		}
 		if(isTouched( 450, 500, 170, 220)) // DESGI.
 		{
@@ -525,6 +502,7 @@ while(1)
 
 		if(isTouched( 550, 650, 348, 408)) 	// SCAN
 		{
+
 			sub_page=3;
 			if(active_role == 0)
 			{
@@ -535,28 +513,44 @@ while(1)
 			{
 				Front_screen();
 			}
+
 		}
 
 		if(isTouched( 550, 650, 248, 308)) 	// SAVE
 		{
+			if((*emp_name != '\0')&&(FLAG_SCAN ==1)){
 #if (USE_EEPROM)
-			HAL_Delay(500);
-			next_emp_id = emp_id_read;
-			scanned_UID = (((0xffffffff & issue_uid[3])<<24)|((0xffffffff & issue_uid[2])<<16)|((0xffffffff & issue_uid[1])<<8)|issue_uid[0]);
-			strcpy(write_details.wr_EMPLO_name, emp_name);
-			write_details.wr_employee_code = 'E';
-			write_details.wr_EMPLO_id = next_emp_id;
-			write_details.wr_EMPLO_desig = desgn_id;
-			write_details.wr_EMPLO_role = role_id;
-			write_details.wr_EMPLO_RFID = scanned_UID;
+				HAL_Delay(500);
+				//next_emp_id = emp_id_read;
+				scanned_UID = (((0xffffffff & issue_uid[3])<<24)|((0xffffffff & issue_uid[2])<<16)|((0xffffffff & issue_uid[1])<<8)|issue_uid[0]);
+				strcpy(write_details.wr_EMPLO_name, emp_name);
+				write_details.wr_employee_code = 'E';
+				write_details.wr_EMPLO_id = next_emp_id;
+				write_details.wr_EMPLO_desig = desgn_id;
+				write_details.wr_EMPLO_role = role_id;
+				write_details.wr_EMPLO_RFID = scanned_UID;
 
-			add_Employee();
-			HAL_I2C_Mem_Read(&i2c1, dev_addr1, calculate_addr, 2, (uint8_t *)&read_details, sizeof(read_details), 100);
+				add_Employee();
+				HAL_I2C_Mem_Read(&i2c1, dev_addr1, calculate_addr, 2, (uint8_t *)&read_details, sizeof(read_details), 100);
 #endif
-			HAL_Delay(5);
-			//HAL_I2C_Mem_Write(&i2c1,dev_addr,0x00,2,(uint8_t *)&scanned_EMPLO_ID,1,100);
-			Set_Font(&Font12x18);
-			print_string(550,240,"saved",RED);
+				HAL_Delay(5);
+				//HAL_I2C_Mem_Write(&i2c1,dev_addr,0x00,2,(uint8_t *)&scanned_EMPLO_ID,1,100);
+				Set_Font(&Font12x18);
+				print_string(530,220,"Saved",RED);
+				HAL_Delay(2000);
+				print_string(530,220,"Saved",WHITE);
+				FLAG_SCAN =0;
+			}
+			else if((*emp_name == '\0')&& (FLAG_SCAN ==0)){
+				print_string(530,220,"Name Empty",RED);
+				HAL_Delay(2000);
+				print_string(530,220,"Name Empty",WHITE);
+			}
+			else {
+				print_string(530,220,"Not Scanned",RED);
+				HAL_Delay(2000);
+				print_string(530,220,"Not Scanned",WHITE);
+			}
 		}
 		if(isTouched( 8, 72, 10, 70)) //back
 		{
@@ -883,6 +877,7 @@ while(1)
 					fill_area(0,800,200,480,PURPLE);
 					NewEntry_page();
 					curr_page = 4;
+					print_int(next_emp_id, 590, 100, 0, 0, GREY);
 			 }
 			if(curr_page == 7)
 			{
