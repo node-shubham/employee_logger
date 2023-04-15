@@ -7,6 +7,9 @@
 calculate_addr = FRIST_EMP_ADDR+(32*(scanned_EMPLO_ID-1));  // employee details store from page no. 162 to 511 (last page)
 ***********/
 
+extern uint16_t emp_id_read;
+extern uint16_t test_id;
+
 bool del = 0;
 uint8_t dev_addr = 0xA0;
 uint8_t dev_addr1 = 0xA1;
@@ -48,10 +51,25 @@ void collect_id (void)
 }
 #endif
 
+
+#if 0
 void next_empID(void)
 {
+<<<<<<< HEAD
 	//HAL_I2C_Mem_Read(&hi2c, dev_addr1,)
+=======
+	//calculate_addr = FIRST_EMP_ADDR +(32*(scanned_EMPLO_ID-1));  // employee details store from page no. 162 to 511 (last page)
+	HAL_I2C_Mem_Read(&i2c1, dev_addr1, calculate_addr, 2, (uint8_t *) &(read_details), sizeof(read_details), 100);  ///  READ Employee_details
+	if((scanned_EMPLO_ID == read_details.rd_EMPLO_id) && (scanned_UID == read_details.rd_EMPLO_RFID))
+	  {
+		print_string(50, 190, read_details.rd_EMPLO_name, 0x9900ff);
+		return 1;    // employee available
+	  }
+	else
+		return 0;   //  employee not available
+>>>>>>> d4f1e693788aab0b05f4deee245d86520577d01d
 }
+#endif
 
 void add_Employee (void)
 {
@@ -126,7 +144,7 @@ bool chek_employee (void)
 
 void display_Employee (void)
 {
- // calculate_addr = FRIST_EMP_ADDR +(32*(scanned_EMPLO_ID-1));  // employee details store from page no. 162 to 511 (last page)
+ calculate_addr = FIRST_EMP_ADDR +(32*(scanned_EMPLO_ID-1));  // employee details store from page no. 162 to 511 (last page)
  if(LAST_EMP_ADDR < calculate_addr)
    {
 	 print_string(10,90,"This employee_id is out of memory range",0x9900ff);
@@ -139,7 +157,7 @@ void display_Employee (void)
 		  }
 		 else     ///    availble_employee = 0;
 		    {
-			 		   print_string(10,90,"this employee is not available",WHITE);
+			 		 //  print_string(10,90,"this employee is not available",WHITE);
 			}
 	 }
 }
@@ -240,7 +258,6 @@ void delete_Employee (void)
 					 HAL_I2C_Mem_Write(&i2c1, dev_addr, 3700, 2, (uint8_t *) &(delStore_addr), sizeof(delStore_addr), 100);
 					 HAL_Delay(5);
 				   }
-
 	  	    	del = 0;
 	  	      }
 	  	    y++;
@@ -259,8 +276,8 @@ void erase_EEPROM (void)
 	while(strt_erse_addr<EEPROM_LAST_ADDR)  // EEPROM_LAST_ADDR means witch address is last for erase.
 	{
 	  HAL_I2C_Mem_Write(&i2c1, dev_addr, strt_erse_addr, 2, (uint8_t *) &(erase_data), sizeof(erase_data), 100);  ///  write employee_id
-		HAL_Delay(5);
-		strt_erse_addr += 8;
+	  HAL_Delay(1);
+	  strt_erse_addr += 8;
 	}
 }
 
