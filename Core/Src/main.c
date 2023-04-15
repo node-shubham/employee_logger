@@ -80,6 +80,9 @@ extern char emp_name[19];
 extern uint16_t next_emp_id;
 extern uint16_t last_emp_id;
 
+char wr_str_512[10] = "naveen p.";
+char rd_str_512[10] = {0};
+
 uint8_t value = 0;
 char str1[40]={'\0'};
 char str2[40]={'\0'};
@@ -141,9 +144,9 @@ int onetime =1;
 
 /*************************************************************/
 
-uint16_t emp_id_read=19;
+uint16_t emp_id_read=12;
 
-uint8_t test_id=0;
+uint16_t test_id=0;
 
 uint8_t desgn_id =0;
 uint8_t role_id =0;
@@ -300,8 +303,8 @@ int main()
 #endif
 
 #if (USE_EEPROM)
-	HAL_I2C_Mem_Write(&i2c1,dev_addr,0x00,2,(uint8_t *)&emp_id_read,2,100);
-	HAL_Delay(100);
+	/*HAL_I2C_Mem_Write(&i2c1,dev_addr,0x00,2,(uint8_t *)&emp_id_read,2,100);
+	HAL_Delay(100);*/
 	HAL_I2C_Mem_Read(&i2c1, dev_addr1, 0x00, 2, (uint8_t *)&test_id, 2, 100);
 #endif
 	HAL_UART_Transmit(&uart1,(uint8_t *)msg,sizeof(msg),1000);
@@ -321,29 +324,30 @@ HAL_UART_Transmit(&uart1,(uint8_t *)str2,strlen(str2),1000);
 #if 0
 next_emp_id = emp_id_read;
 scanned_UID = (((0xffffffff & cardstr[3])<<24)|((0xffffffff & cardstr[2])<<16)|((0xffffffff & cardstr[1])<<8)|cardstr[0]);
-//calculate_addr = 128+(32*(scanned_EMPLO_ID-1));
+calculate_addr = 128+(32*(next_emp_id-1));
 
 /////////////////  data access section in structure by user  //////////////////////
 
-strcpy(write_details.wr_EMPLO_name, "hello");
+strcpy(write_details.wr_EMPLO_name, "chek by np");
 write_details.wr_employee_code = 'E';
 write_details.wr_EMPLO_id = next_emp_id;
 write_details.wr_EMPLO_desig = desgn_id;
 write_details.wr_EMPLO_role = role_id;
 write_details.wr_EMPLO_RFID = scanned_UID;
 
-add_Employee();
+HAL_I2C_Mem_Write(&i2c1, dev_addr, calculate_addr, 2, (uint8_t *) &(write_details), sizeof(write_details), 100);  ///
+HAL_Delay(5);
+ // add_Employee();
 HAL_I2C_Mem_Read(&i2c1, dev_addr1, calculate_addr, 2, (uint8_t *)&read_details, sizeof(read_details), 100);
-//while(1);
+while(1);
 #endif
-
 
 while(1)
 {
 	touchX = (getX() + 12);
 	touchY = (470 - getY());
 
-	HAL_Delay(400);
+	HAL_Delay(100);
 	read_touch();
 	rfid_read();
 	/*****************************************  CURRENT PAGE 1 ****************************************************/
@@ -404,7 +408,9 @@ while(1)
 			//if(touchX >= 200 && touchX <= 350 && touchY >= 200 && touchY <= 250) // SYSTEM RESET
 		   {
 #if (USE_EEPROM)
+			    fill_circle(30, 30, 5, GREEN);
 			    erase_EEPROM();
+			    fill_circle(30, 30, 5, PURPLE);
 #endif
 			    HAL_GPIO_WritePin(GPIOB,GPIO_PIN_2,GPIO_PIN_SET);
 				HAL_Delay(200);
@@ -412,8 +418,8 @@ while(1)
 
 #if (USE_EEPROM)
 			  //HAL_I2C_Mem_Write(&i2c1,dev_addr,0x00,2,0,1,100);
-				int val=0;
-				HAL_I2C_Mem_Write(&i2c1,dev_addr,0x00,2,(uint8_t *)&val,1,100);
+				uint16_t val=3;
+				HAL_I2C_Mem_Write(&i2c1,dev_addr,0x00,2,(uint8_t *)&val,2,100);
 #endif
 		   }
 		}

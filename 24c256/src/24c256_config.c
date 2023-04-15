@@ -53,20 +53,6 @@ void next_empID(void)
 	//HAL_I2C_Mem_Read(&hi2c, dev_addr1,)
 }
 
-bool chek_employee (void)
-{
-	calculate_addr = FIRST_EMP_ADDR +(32*(scanned_EMPLO_ID-1));  // employee details store from page no. 162 to 511 (last page)
-	HAL_I2C_Mem_Read(&i2c1, dev_addr1, calculate_addr, 2, (uint8_t *) &(read_details), sizeof(read_details), 100);  ///  READ Employee_details
-	if((scanned_EMPLO_ID == read_details.rd_EMPLO_id) && (scanned_UID == read_details.rd_EMPLO_RFID))
-	  {
-		print_string(50, 190, read_details.rd_EMPLO_name, 0x9900ff);
-		return 1;    // employee available
-	  }
-	else
-		return 0;   //  employee not available
-}
-
-
 void add_Employee (void)
 {
   calculate_addr = FIRST_EMP_ADDR +(32*(next_emp_id-1));  // employee details store from page no. 162 to 511 (last page)
@@ -89,6 +75,7 @@ void add_Employee (void)
 
 
 	///////////////////////////////////new change/////////////////////////////////
+
 			 uint16_t last_deleteID = 0;
 			 HAL_I2C_Mem_Read(&i2c1, dev_addr1, 4, 2, (uint8_t *) &(last_deleteID), sizeof(last_deleteID), 100);  ///  read last_del_id on page 1, address = 4
 			 	if(0xffff == last_deleteID)
@@ -97,6 +84,7 @@ void add_Employee (void)
 			 		HAL_I2C_Mem_Write(&i2c1, dev_addr, 0, 2, (uint8_t *) &(next_emp_id), sizeof(next_emp_id), 100);  /// update next_emp_id on page 1, address = 0
 			 		HAL_Delay(5);
 			 	  }
+
 
    ////////////////////////////////////////////////////////////////////////////////
 
@@ -122,6 +110,20 @@ void add_Employee (void)
 }
 
 #if 0
+bool chek_employee (void)
+{
+	calculate_addr = FIRST_EMP_ADDR +(32*(scanned_EMPLO_ID-1));  // employee details store from page no. 162 to 511 (last page)
+	HAL_I2C_Mem_Read(&i2c1, dev_addr1, calculate_addr, 2, (uint8_t *) &(read_details), sizeof(read_details), 100);  ///  READ Employee_details
+	if((scanned_EMPLO_ID == read_details.rd_EMPLO_id) && (scanned_UID == read_details.rd_EMPLO_RFID))
+	  {
+		print_string(50, 190, read_details.rd_EMPLO_name, 0x9900ff);
+		return 1;    // employee available
+	  }
+	else
+		return 0;   //  employee not available
+}
+
+
 void display_Employee (void)
 {
  // calculate_addr = FRIST_EMP_ADDR +(32*(scanned_EMPLO_ID-1));  // employee details store from page no. 162 to 511 (last page)
