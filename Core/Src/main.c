@@ -71,8 +71,6 @@ TIM_HandleTypeDef tim5;
 
 extern uint8_t dev_addr;
 extern uint8_t dev_addr1;
-extern uint16_t next_emp_id;
-extern uint16_t last_emp_id;
 extern uint16_t scanned_EMPLO_ID;
 extern uint16_t calculate_addr;
 extern uint32_t scanned_UID;
@@ -119,7 +117,7 @@ char *dropdown_desgn[4] = {"EMBEDDED","SOFTWARE","DESIGN","LEGAL"};
 char *dropdown_role[3] = {"EMPLOYEE","ADMIN","SUPER USER",};
 char *dropdown_CardThumb[2] = {"CARD","THUMB"};
 
-extern char emp_name[21];
+extern char emp_name[19];
 char *desgn_ptr =	"EMBEDDED";
 char *role_ptr = "EMPLOYEE";
 char *card_ptr = "CARD";
@@ -145,11 +143,6 @@ int onetime =1;
 bool FLAG_SCAN =0;
 
 /*************************************************************/
-
-
-uint16_t emp_id_read=12;
-
-uint16_t test_id=0;
 
 uint8_t desgn_id =0;
 uint8_t role_id =0;
@@ -185,9 +178,6 @@ static void display_handler(void * param);
 
 extern uint16_t g_pos_x;
 extern uint16_t g_pos_y;
-
-
-
 
 uint8_t pos =0;
 
@@ -429,7 +419,7 @@ while(1)
 			keypad_down = 1;
 			fill_area(210,400,80,120,0xe7eefe);
 			Set_Font(&Font12x18);
-			print_string(220,90,emp_name,0x737373);
+			print_string(220,95,emp_name,0x737373);
 
 		}
 		if(isTouched( 450, 500, 170, 220)) // DESGI.
@@ -518,7 +508,6 @@ while(1)
 				HAL_I2C_Mem_Read(&i2c1, dev_addr1, calculate_addr, 2, (uint8_t *)&read_details, sizeof(read_details), 100);
 #endif
 				HAL_Delay(5);
-				//HAL_I2C_Mem_Write(&i2c1,dev_addr,0x00,2,(uint8_t *)&scanned_EMPLO_ID,1,100);
 				Set_Font(&Font12x18);
 				print_string(530,220,"Saved",RED);
 				HAL_Delay(2000);
@@ -539,7 +528,7 @@ while(1)
 		if(isTouched( 8, 72, 10, 70)) //back
 		{
 			pos=0;
-			memset(emp_name,'\0',17);
+			memset(emp_name,'\0',19);
 			User_Management();
 			curr_page = 3;
 		}
@@ -856,8 +845,8 @@ while(1)
 				fill_area(0,800,200,480,PURPLE);
 				NewEntry_page();
 				curr_page = 4;
-				print_int(next_emp_id, 590, 100, 0, 0, GREY);
-				print_string(220,90,emp_name,0x737373);
+				print_int(next_emp_id, 590, 100, 0, 0, 0x737373);
+				print_string(220,95,emp_name,0x737373);
 
 			 }
 			if(curr_page == 7)
@@ -874,7 +863,7 @@ while(1)
 			HAL_Delay(100);
 			*(emp_name+pos) =32;
 			print_char(210+(pos*12),95,32,0xe7eefe);
-			if(pos<21){
+			if(pos<19){
 				pos++;
 			}
 		}
@@ -891,11 +880,11 @@ while(1)
 			x1+=25*idx1;
 			for(int idx2=0; idx2<=9-(idx1*2-k); idx2++)
 			{
-				if(isTouched( x1+150+x, x1+190+x, y1+190+y, y1+230+y))  //keys x1+105+x,x1+155+x,y1+205+y,y1+255+y
+				if(isTouched( x1+150+x, x1+190+x, y1+190+y, y1+230+y))
 				{
-					print_char(210+(pos*12),95,char_key[idx1][idx2],RED);
-					*(emp_name+pos) =char_key[idx1][idx2];
-					if(pos<21){
+					if(pos<19){
+						print_char(220+(pos*12),95,char_key[idx1][idx2],0x737373);
+						*(emp_name+pos) =char_key[idx1][idx2];
 						pos++;
 					}
 				}
@@ -905,7 +894,7 @@ while(1)
 			k=1;
 			y1+=50;
 		}
-		*(emp_name+pos+1)= '\0';
+		*(emp_name+pos)= '\0';
 	}
 
 /*****************************************  CURRENT PAGE 7 *********************************************/
@@ -921,7 +910,7 @@ while(1)
 
 		if(isTouched( 8, 72, 10, 70)){		// back
 			pos=0;
-			memset(emp_name,'\0',17);
+			memset(emp_name,'\0',19);
 			Admin_screen();
 			curr_page = 2;
 		}

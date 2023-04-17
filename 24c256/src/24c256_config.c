@@ -20,7 +20,7 @@ uint16_t scanned_EMPLO_ID = 0;
 uint16_t calculate_addr = 0;
 uint16_t del_addr[5] = {0};
 uint32_t scanned_UID = 0;
-char emp_name[21];
+char emp_name[19];
 
 struct WRITE_DETAILS write_details;
 struct READ_DETAILS read_details;

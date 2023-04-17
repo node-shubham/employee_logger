@@ -280,7 +280,7 @@ void NewUser_Name(void)
 		print_string(218+x,65+y,"Name",0x737373);
 
 		fill_area(210,400,80,120,0xe7eefe);
-		print_string(220,90,emp_name,0x737373);
+		//print_string(220,90,emp_name,0x737373);
 }
 
 //######################  NEW_USER(DESIG)  #############################
