@@ -266,6 +266,7 @@ void NewEntry_page(void)
 	NewUser_Role();
 	NewUser_Card();
 	//BackBtn();
+//	draw_rect(104, 540, 40, 135, GREEN);
 
 }
 
@@ -508,7 +509,7 @@ void attendence_search(void)
 
   	fill_roundrect(94, 684, 115, 440, 0xcedcfd, PURPLE);
 //	fill_area(20,730,90,140+3,0x74c69d);
-	fill_area(100,678,149-table_y,192+3-table_y,0xcedcfd);
+//	fill_area(100,678,149-table_y,192+3-table_y,0xcedcfd);
 	fill_area(100,678,200-table_y,245+3-table_y,table_color);
 	fill_area(100,678,252-table_y,297+3-table_y,table_color_2);
 	fill_area(100,678,304-table_y,349+3-table_y,table_color);
@@ -548,6 +549,7 @@ void attendence_search(void)
 	print_string(520,216-table_y,"09:30",0x737373);
 	print_string(605,216-table_y,"06:00",0x737373);
 	BackBtn();
+	print_string(200,50,emp_name,0x737373);
 }
 
 //######################################    ROLE PAGE   #######################################
