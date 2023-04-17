@@ -55,19 +55,7 @@ void collect_id (void)
 #if 0
 void next_empID(void)
 {
-<<<<<<< HEAD
 	//HAL_I2C_Mem_Read(&hi2c, dev_addr1,)
-=======
-	//calculate_addr = FIRST_EMP_ADDR +(32*(scanned_EMPLO_ID-1));  // employee details store from page no. 162 to 511 (last page)
-	HAL_I2C_Mem_Read(&i2c1, dev_addr1, calculate_addr, 2, (uint8_t *) &(read_details), sizeof(read_details), 100);  ///  READ Employee_details
-	if((scanned_EMPLO_ID == read_details.rd_EMPLO_id) && (scanned_UID == read_details.rd_EMPLO_RFID))
-	  {
-		print_string(50, 190, read_details.rd_EMPLO_name, 0x9900ff);
-		return 1;    // employee available
-	  }
-	else
-		return 0;   //  employee not available
->>>>>>> d4f1e693788aab0b05f4deee245d86520577d01d
 }
 #endif
 

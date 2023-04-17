@@ -309,42 +309,6 @@ HAL_UART_Transmit(&uart1,(uint8_t *)str1,strlen(str1),1000);
 HAL_UART_Transmit(&uart1,(uint8_t *)str2,strlen(str2),1000);
 #endif
 
-
-
-#if 0  //  for testing purpose
-
-#if 0
-
-next_emp_id = emp_id_read;
-scanned_UID = (((0xffffffff & cardstr[3])<<24)|((0xffffffff & cardstr[2])<<16)|((0xffffffff & cardstr[1])<<8)|cardstr[0]);
-calculate_addr = 128+(32*(next_emp_id-1));
-
-/////////////////  data access section in structure by user  //////////////////////
-
-strcpy(write_details.wr_EMPLO_name, "chek by np");
-write_details.wr_employee_code = 'E';
-write_details.wr_EMPLO_id = next_emp_id;
-write_details.wr_EMPLO_desig = desgn_id;
-write_details.wr_EMPLO_role = role_id;
-write_details.wr_EMPLO_RFID = scanned_UID;
-
-
-HAL_I2C_Mem_Write(&i2c1, dev_addr, calculate_addr, 2, (uint8_t *) &(write_details), sizeof(write_details), 100);  ///
-HAL_Delay(5);
- // add_Employee();
-HAL_I2C_Mem_Read(&i2c1, dev_addr1, calculate_addr, 2, (uint8_t *)&read_details, sizeof(read_details), 100);
-while(1);
-#endif
-
-
-HAL_I2C_Mem_Write(&i2c1, dev_addr, calculate_addr, 2, (uint8_t *) &(write_details), sizeof(write_details), 100);  ///  write employee_id
-HAL_Delay(5);
-//add_Employee();
-HAL_I2C_Mem_Read(&i2c1, dev_addr1, calculate_addr, 2, (uint8_t *)&read_details, sizeof(read_details), 100);
-
-#endif
-
-
 while(1)
 {
 	touchX = (getX() + 12);
@@ -475,8 +439,8 @@ while(1)
 			keypad_down = 1;
 			fill_area(210,400,80,120,0xe7eefe);
 			Set_Font(&Font12x18);
-			print_string(220,90,emp_name,0x737373);
-
+			//print_string(220,90,emp_name,0x737373);
+			print_string(220,90,emp_name,BLUE);
 		}
 		if(isTouched( 450, 500, 170, 220)) // DESGI.
 		{
@@ -696,6 +660,9 @@ while(1)
 				 }
 			}
 		}
+
+		touchX =0;
+		touchY =0;
 	}
 
 
@@ -898,12 +865,11 @@ while(1)
 	{
 		Set_Font(&Font12x18);
 		//Set_Font(&Font16x24);
-		//HAL_Delay(500);
 		static uint8_t pos =0;
 		int x=0,x1=0,y=31,y1=0,k=0;
-		if(isTouched(197, 503, 69, 135)) // hide keypad  197, 503, 69, 135
+		if(isTouched(104, 540, 40, 135)) // hide keypad  197, 503, 69, 135
 		{
-			keypad_down=!keypad_down;
+		//	keypad_down=!keypad_down;
 			if(keypad_down == 1)
 			 {
 				//clear_area();
@@ -912,8 +878,10 @@ while(1)
 					curr_page = 4;
 					print_int(next_emp_id, 590, 100, 0, 0, GREY);
 			 }
-			if(curr_page == 7)
+			if(keypad_down == 2)
 			{
+			attendence_search();
+			curr_page = 7;
 			}
 		}
 
@@ -954,7 +922,10 @@ while(1)
 		}
 		*(emp_name+pos+1)= '\0';
 
-		}
+
+		touchX =0;
+		touchY =0;
+	}
 
 /*****************************************  CURRENT PAGE 7 *********************************************/
 	if(curr_page == 7){
@@ -964,8 +935,8 @@ while(1)
 			curr_page = 6;
 			print_string(200,50,emp_name,0x737373);
 		}
-		if(isTouched( 190, 590, 36, 84)){ // HIDE KEYPAD
-		}
+//		if(isTouched( 190, 590, 36, 84)){ // HIDE KEYPAD
+//		}
 
 		if(isTouched( 8, 72, 10, 70)){		// back
 			pos=0;
@@ -973,6 +944,8 @@ while(1)
 			Admin_screen();
 			curr_page = 2;
 		}
+//		touchX =0;
+//		touchY =0;
 	}
 
 	/********************  CURRENT PAGE 8 *********************/
