@@ -11,7 +11,7 @@
     extern struct WRITE_DETAILS write_details;
     extern struct READ_DETAILS read_details;
 
-	extern char emp_name[19];
+	extern char emp_name[21];
 	extern char *desgn_ptr;
 	extern char *role_ptr;
 	extern char *card_ptr;
