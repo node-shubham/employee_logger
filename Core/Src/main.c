@@ -76,7 +76,7 @@ extern uint16_t last_emp_id;
 extern uint16_t scanned_EMPLO_ID;
 extern uint16_t calculate_addr;
 extern uint32_t scanned_UID;
-extern char emp_name[19];
+
 extern uint16_t next_emp_id;
 extern uint16_t last_emp_id;
 
@@ -119,7 +119,7 @@ char *dropdown_desgn[4] = {"EMBEDDED","SOFTWARE","DESIGN","LEGAL"};
 char *dropdown_role[3] = {"EMPLOYEE","ADMIN","SUPER USER",};
 char *dropdown_CardThumb[2] = {"CARD","THUMB"};
 
-//char emp_name[19] = {0};
+extern char emp_name[21];
 char *desgn_ptr =	"EMBEDDED";
 char *role_ptr = "EMPLOYEE";
 char *card_ptr = "CARD";
@@ -150,11 +150,6 @@ bool FLAG_SCAN =0;
 uint16_t emp_id_read=12;
 
 uint16_t test_id=0;
-
-//uint16_t emp_id_read=5;
-
-//uint16_t test_id=0;
-
 
 uint8_t desgn_id =0;
 uint8_t role_id =0;
@@ -187,10 +182,6 @@ static void rfid_handler(void * param);
 static void display_handler(void * param);
 #endif
 
-/*//static bool chek_employee (void);
-void display_Employee (void);
-void add_Employee (void);
-void erase_EEPROM (void);*/
 
 extern uint16_t g_pos_x;
 extern uint16_t g_pos_y;
@@ -203,12 +194,10 @@ uint8_t pos =0;
 uint32_t freq=0;
 uint8_t rfid_id[4];
 
-
-char card_auth[4]= {0x43,0xeb,0x79,0x03};
 char msg[]="Approach your Proximate card\r\n";
 char data[20]={0};
 
-void assign_card(void);
+bool assign_card(void);
 
 #if (USE_FREERTOS)
 BaseType_t status;
@@ -309,40 +298,6 @@ HAL_UART_Transmit(&uart1,(uint8_t *)str1,strlen(str1),1000);
 HAL_UART_Transmit(&uart1,(uint8_t *)str2,strlen(str2),1000);
 #endif
 
-
-
-#if 0  //  for testing purpose
-
-#if 0
-
-next_emp_id = emp_id_read;
-scanned_UID = (((0xffffffff & cardstr[3])<<24)|((0xffffffff & cardstr[2])<<16)|((0xffffffff & cardstr[1])<<8)|cardstr[0]);
-calculate_addr = 128+(32*(next_emp_id-1));
-
-/////////////////  data access section in structure by user  //////////////////////
-
-strcpy(write_details.wr_EMPLO_name, "chek by np");
-write_details.wr_employee_code = 'E';
-write_details.wr_EMPLO_id = next_emp_id;
-write_details.wr_EMPLO_desig = desgn_id;
-write_details.wr_EMPLO_role = role_id;
-write_details.wr_EMPLO_RFID = scanned_UID;
-
-
-HAL_I2C_Mem_Write(&i2c1, dev_addr, calculate_addr, 2, (uint8_t *) &(write_details), sizeof(write_details), 100);  ///
-HAL_Delay(5);
- // add_Employee();
-HAL_I2C_Mem_Read(&i2c1, dev_addr1, calculate_addr, 2, (uint8_t *)&read_details, sizeof(read_details), 100);
-while(1);
-#endif
-
-
-HAL_I2C_Mem_Write(&i2c1, dev_addr, calculate_addr, 2, (uint8_t *) &(write_details), sizeof(write_details), 100);  ///  write employee_id
-HAL_Delay(5);
-//add_Employee();
-HAL_I2C_Mem_Read(&i2c1, dev_addr1, calculate_addr, 2, (uint8_t *)&read_details, sizeof(read_details), 100);
-
-#endif
 
 
 while(1)
@@ -466,7 +421,6 @@ while(1)
 /*****************************************  CURRENT PAGE 4 ****************************************************/
 	if(curr_page == 4)
 	{
-
 		if(isTouched( 197, 503, 69, 135)) // NAME
 		{
 			curr_page =6;
@@ -517,7 +471,7 @@ while(1)
 		if(isTouched( 450, 500, 355, 405)) // CARD/THUMB
 		{
 			sub_page =3;
-			drop_btn = !drop_btn;
+			drop_btn = ! drop_btn;
 			if(drop_btn)
 			{
 				NewUser_Name();
@@ -535,18 +489,15 @@ while(1)
 
 		if(isTouched( 550, 650, 348, 408)) 	// SCAN
 		{
-
 			sub_page=3;
 			if(active_role == 0)
 			{
-				//read_card();
-				assign_card();
+				while(assign_card());
 			}
 			if(active_role == 1)
 			{
 				Front_screen();
 			}
-
 		}
 
 		if(isTouched( 550, 650, 248, 308)) 	// SAVE
@@ -637,7 +588,6 @@ while(1)
 				 }
 			}
 		}
-
 		if(sub_page ==2)
 		{
 			//active_role=0;
@@ -839,7 +789,6 @@ while(1)
 
 		if(sub_page ==5)
 		{
-			//active_role=0;
 			if(touchX >= 494 && touchX <= 720)
 			{
 				 if(touchY >= 154 && touchY <= 200)
@@ -870,7 +819,6 @@ while(1)
 		}
 		if(sub_page ==6)
 		{
-			//active_role=0;
 			if(touchX >= 494 && touchX <= 720)
 			{
 				 if(touchY >= 284 && touchY <= 330)
@@ -894,23 +842,23 @@ while(1)
 	}
 
 /****************************  CURRENT PAGE 6 ***  KEYPAD_TOUCH**************************/
+
 	if(curr_page == 6)
 	{
 		Set_Font(&Font12x18);
-		//Set_Font(&Font16x24);
-		//HAL_Delay(500);
-		static uint8_t pos =0;
+		//static uint8_t pos =0;
 		int x=0,x1=0,y=31,y1=0,k=0;
 		if(isTouched(197, 503, 69, 135)) // hide keypad  197, 503, 69, 135
 		{
 			keypad_down=!keypad_down;
 			if(keypad_down == 1)
 			 {
-				//clear_area();
-					fill_area(0,800,200,480,PURPLE);
-					NewEntry_page();
-					curr_page = 4;
-					print_int(next_emp_id, 590, 100, 0, 0, GREY);
+				fill_area(0,800,200,480,PURPLE);
+				NewEntry_page();
+				curr_page = 4;
+				print_int(next_emp_id, 590, 100, 0, 0, GREY);
+				print_string(220,90,emp_name,0x737373);
+
 			 }
 			if(curr_page == 7)
 			{
@@ -924,15 +872,18 @@ while(1)
 		if(isTouched(275, 515, 340+y, 380+y))		// space
 		{
 			HAL_Delay(100);
-
-			print_char(220+(pos*12),85,32,0xe7eefe);
 			*(emp_name+pos) =32;
-			pos++;
+			print_char(210+(pos*12),95,32,0xe7eefe);
+			if(pos<21){
+				pos++;
+			}
 		}
 		if(isTouched( 575, 640, 290+y, 330+y)) //backspace
 		{
-			pos--;
-			fill_area(220+(pos*12),235+(pos*12),85,115,0xe7eefe);
+			if(pos != 0){
+				pos--;
+			}
+			fill_area(220+(pos*12),232+(pos*12),85+5,112+5,0xe7eefe);
 		}
 
 		for(int idx1=0; idx1<3; idx1++)
@@ -942,9 +893,11 @@ while(1)
 			{
 				if(isTouched( x1+150+x, x1+190+x, y1+190+y, y1+230+y))  //keys x1+105+x,x1+155+x,y1+205+y,y1+255+y
 				{
-							print_char(220+(pos*12),90,char_key[idx1][idx2],RED);
-							*(emp_name+pos) =char_key[idx1][idx2];
+					print_char(210+(pos*12),95,char_key[idx1][idx2],RED);
+					*(emp_name+pos) =char_key[idx1][idx2];
+					if(pos<21){
 						pos++;
+					}
 				}
 				x+=50;
 			}
@@ -953,8 +906,7 @@ while(1)
 			y1+=50;
 		}
 		*(emp_name+pos+1)= '\0';
-
-		}
+	}
 
 /*****************************************  CURRENT PAGE 7 *********************************************/
 	if(curr_page == 7){

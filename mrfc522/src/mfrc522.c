@@ -564,6 +564,10 @@ void MFRC522_Halt(void)
   CalulateCRC(buff, 2, &buff[2]);
 
   status = MFRC522_ToCard(PCD_TRANSCEIVE, buff, 4, buff,&unLen);
+  if(status==MI_OK)
+  {
+	  ;
+  }
   //return status;
 }
 //--------------------------------------

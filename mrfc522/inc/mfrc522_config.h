@@ -48,7 +48,7 @@ extern uint16_t last_emp_id;
 extern uint16_t scanned_EMPLO_ID;
 extern uint16_t calculate_addr;
 extern uint32_t scanned_UID;
-extern char emp_name[19];
+extern char emp_name[21];
 extern uint16_t next_emp_id;
 extern uint16_t last_emp_id;
 
@@ -65,7 +65,7 @@ extern bool FLAG_SCAN ;
 
 uint8_t check_validcard(uint16_t emp_id);
 void rfid_read(void);
-void assign_card(void);
+bool assign_card(void);
 
 
 #endif /* INC_MFRC522_CONFIG_H_ */

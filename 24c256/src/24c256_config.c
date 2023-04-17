@@ -20,7 +20,7 @@ uint16_t scanned_EMPLO_ID = 0;
 uint16_t calculate_addr = 0;
 uint16_t del_addr[5] = {0};
 uint32_t scanned_UID = 0;
-char emp_name[19] = {0};
+char emp_name[21];
 
 struct WRITE_DETAILS write_details;
 struct READ_DETAILS read_details;
@@ -55,19 +55,9 @@ void collect_id (void)
 #if 0
 void next_empID(void)
 {
-<<<<<<< HEAD
+
 	//HAL_I2C_Mem_Read(&hi2c, dev_addr1,)
-=======
-	//calculate_addr = FIRST_EMP_ADDR +(32*(scanned_EMPLO_ID-1));  // employee details store from page no. 162 to 511 (last page)
-	HAL_I2C_Mem_Read(&i2c1, dev_addr1, calculate_addr, 2, (uint8_t *) &(read_details), sizeof(read_details), 100);  ///  READ Employee_details
-	if((scanned_EMPLO_ID == read_details.rd_EMPLO_id) && (scanned_UID == read_details.rd_EMPLO_RFID))
-	  {
-		print_string(50, 190, read_details.rd_EMPLO_name, 0x9900ff);
-		return 1;    // employee available
-	  }
-	else
-		return 0;   //  employee not available
->>>>>>> d4f1e693788aab0b05f4deee245d86520577d01d
+
 }
 #endif
 
@@ -90,10 +80,6 @@ void add_Employee (void)
 		   {
 			 HAL_I2C_Mem_Write(&i2c1, dev_addr, calculate_addr, 2, (uint8_t *) &(write_details), sizeof(write_details), 100);  ///  write Employee_details
 			 HAL_Delay(5);
-
-
-	///////////////////////////////////new change/////////////////////////////////
-
 			 uint16_t last_deleteID = 0;
 			 HAL_I2C_Mem_Read(&i2c1, dev_addr1, 4, 2, (uint8_t *) &(last_deleteID), sizeof(last_deleteID), 100);  ///  read last_del_id on page 1, address = 4
 			 	if(0xffff == last_deleteID)
@@ -102,11 +88,6 @@ void add_Employee (void)
 			 		HAL_I2C_Mem_Write(&i2c1, dev_addr, 0, 2, (uint8_t *) &(next_emp_id), sizeof(next_emp_id), 100);  /// update next_emp_id on page 1, address = 0
 			 		HAL_Delay(5);
 			 	  }
-
-
-   ////////////////////////////////////////////////////////////////////////////////
-
-
 			 uint16_t store_addr = 0;
 			 uint8_t pos_1st_char = write_details.wr_EMPLO_name[0] - 65;			 // pos_1st_char can be A=0,B=1, C=2, D=3 ... Z=25
 			 uint16_t char_addr = 3648+(2*pos_1st_char);     	//   base address of page 57 = 3648
@@ -208,14 +189,14 @@ void search_Employee (void)
 	   if(5<serch_emp_no)
 		   serch_emp_no=5;
 
-	   char display_arr[21] = {0};
+	   char display_arr[30] = {0};
 	   for(int i = 0; i < serch_emp_no; i++)
 		  {
 			HAL_I2C_Mem_Read(&i2c1, dev_addr1, all_addr[i], 2, (uint8_t *) &(read_details), sizeof(read_details), 100);
 			print_string(90, (194+(53*i)), "E", 0x9900ff);
 			print_int(read_details.rd_EMPLO_id, 99, (194+(53*i)), 1, 1, 0x9900ff);
 			print_string(170, (194+(53*i)), read_details.rd_EMPLO_name, 0x9900ff);
-			sprintf(display_arr, "%d:%d       %d:%d", read_details.rd_entry_HH, read_details.rd_entry_MM, read_details.rd_exit_HH, read_details.rd_exit_MM);
+			sprintf(display_arr, "%u:%u       %u:%u", read_details.rd_entry_HH, read_details.rd_entry_MM, read_details.rd_exit_HH, read_details.rd_exit_MM);
 			print_string(505, (194+(53*i)), display_arr, 0x9900ff);
 			if(1 == del)
 			  {

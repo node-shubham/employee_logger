@@ -97,7 +97,7 @@ void rfid_read(void)
 
 
 
-void assign_card(void)
+bool assign_card(void)
 {
 	status = 0;
 	status = MFRC522_Request(PICC_REQIDL, cardstr);
@@ -217,6 +217,9 @@ void assign_card(void)
 		HAL_GPIO_WritePin(GPIOB,GPIO_PIN_2,GPIO_PIN_SET);
 		HAL_Delay(1000);
 		HAL_GPIO_WritePin(GPIOB,GPIO_PIN_2,GPIO_PIN_RESET);
+
+		return 0;
 	}
+	return 1;
 }
 
