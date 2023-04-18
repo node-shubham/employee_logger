@@ -9,6 +9,7 @@ calculate_addr = FRIST_EMP_ADDR+(32*(scanned_EMPLO_ID-1));  // employee details 
 
 extern uint16_t emp_id_read;
 extern uint16_t test_id;
+extern uint16_t debug_end_addr;
 
 bool del = 0;
 uint8_t dev_addr = 0xA0;
@@ -157,12 +158,14 @@ void search_Employee (void)
 
 	uint16_t char_addr = 3648+(2*(frist_char - 65));     	//   page 57 = 3648
 	HAL_I2C_Mem_Read(&i2c1, dev_addr1, char_addr, 2, (uint8_t *) &(end_addr), sizeof(end_addr), 100);   // find end address
+	debug_end_addr = end_addr;
 	if(0xffff == end_addr)
 	 {
-	   print_string(15,20,"this employee is not available",WHITE);
+	   print_string(190,194,"employee not available",0x737373);
 	 }
 	else
 	 {
+	   print_string(190,194,"enter in else",0x737373);  ///this statement only  for test
 	   uint8_t j=0, cnt_indx=0, total_emp=0;
 	   uint16_t start_addr = 3712+(256*(frist_char - 65));
 	   total_emp = (end_addr - start_addr)+1;

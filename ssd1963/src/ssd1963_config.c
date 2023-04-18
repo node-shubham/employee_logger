@@ -549,7 +549,7 @@ void attendence_search(void)
 	print_string(520,216-table_y,"09:30",0x737373);
 	print_string(605,216-table_y,"06:00",0x737373);
 	BackBtn();
-	print_string(200,50,emp_name,0x737373);
+	print_string(200,55,emp_name,0x737373);
 }
 
 //######################################    ROLE PAGE   #######################################

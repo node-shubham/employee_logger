@@ -80,8 +80,7 @@ extern uint32_t scanned_UID;
 extern uint16_t next_emp_id;
 extern uint16_t last_emp_id;
 
-char wr_str_512[10] = "naveen p.";
-char rd_str_512[10] = {0};
+uint16_t debug_end_addr=0;
 
 uint8_t value = 0;
 char str1[40]={'\0'};
@@ -298,6 +297,7 @@ HAL_UART_Transmit(&uart1,(uint8_t *)str1,strlen(str1),1000);
 HAL_UART_Transmit(&uart1,(uint8_t *)str2,strlen(str2),1000);
 #endif
 
+HAL_I2C_Mem_Read(&i2c1, dev_addr1, 3700, 2, (uint8_t *)&debug_end_addr, 2, 100);
 
 while(1)
 {
@@ -365,9 +365,9 @@ while(1)
 			//if(touchX >= 200 && touchX <= 350 && touchY >= 200 && touchY <= 250) // SYSTEM RESET
 		   {
 #if (USE_EEPROM)
-			    fill_circle(30, 30, 5, GREEN);
+			    fill_circle(550, 290, 5, GREEN);
 			    erase_EEPROM();
-			    fill_circle(30, 30, 5, PURPLE);
+			    fill_circle(550, 290, 5, RED);
 #endif
 			    HAL_GPIO_WritePin(GPIOB,GPIO_PIN_2,GPIO_PIN_SET);
 				HAL_Delay(200);
@@ -849,7 +849,7 @@ while(1)
 	{
 		Set_Font(&Font12x18);
 		int x=0,x1=0,y=31,y1=0,k=0;
-		if(isTouched(104, 540, 40, 135)) // hide keypad  197, 503, 69, 135
+		if(isTouched(104, 535, 40, 135)) // hide keypad  197, 503, 69, 135
 		{
 		//	keypad_down=!keypad_down;
 			if(keypad_down == 1)
@@ -866,6 +866,13 @@ while(1)
 			attendence_search();
 			curr_page = 7;
 			}
+		}
+
+		if(isTouched(575, 689, 40, 88)) // Search
+		{
+			attendence_search();
+			search_Employee();
+			curr_page = 7;
 		}
 
 		if(isTouched(150, 215, 290+y, 330+y)) //caps
@@ -915,15 +922,16 @@ while(1)
 	}
 
 /*****************************************  CURRENT PAGE 7 *********************************************/
-	if(curr_page == 7){
-		if(isTouched( 190, 590, 36, 84)){ 			// search attendance
+	if(curr_page == 7)
+	{
+		if(isTouched( 190, 590, 36, 84))  // search attendance
+		{
 			PageKeyPad();
 			keypad_down = 2;
 			curr_page = 6;
-			print_string(200,50,emp_name,0x737373);
+			Set_Font(&Font12x18);
+			print_string(200,55,emp_name,0x737373);
 		}
-//		if(isTouched( 190, 590, 36, 84)){ // HIDE KEYPAD
-//		}
 
 		if(isTouched( 8, 72, 10, 70)){		// back
 			pos=0;
@@ -931,8 +939,8 @@ while(1)
 			Admin_screen();
 			curr_page = 2;
 		}
-//		touchX =0;
-//		touchY =0;
+/*		touchX =0;
+		touchY =0;*/
 	}
 
 	/********************  CURRENT PAGE 8 *********************/
