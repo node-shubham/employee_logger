@@ -9,17 +9,6 @@
 #include "mfrc522_config.h"
 
 uint8_t check_validcard(uint16_t emp_id){
-
-	/*
-	scanned_EMPLO_ID = emp_id;
-	if(chek_employee())
-	{
-		return 1;
-	}
-	return 0;
-	*/
-
-#if 1
 	memset(uid_read,0,sizeof(uid_read));
 	calculate_addr = FIRST_EMP_ADDR+(32*(emp_id-1))+4;
 	HAL_I2C_Mem_Read(&i2c1, dev_addr1, calculate_addr, 2, (uint8_t *)&uid_read, 4, 100);
@@ -34,17 +23,11 @@ uint8_t check_validcard(uint16_t emp_id){
 	char msg[] = "Access Denied\r\n";
 	HAL_UART_Transmit(&uart1,(uint8_t *)msg,sizeof(msg),1000);
 	return 0;
-#endif
-
 
 }
 
 void rfid_read(void)
 {
-//	sprintf(str2,"#### TEST :%x %x %x %x \r\n", cardstr[0], cardstr[1], cardstr[2], cardstr[3]);
-//	HAL_UART_Transmit(&uart1,(uint8_t *)str2,strlen(str2),1000);
-//	memset(cardstr,0,4);
-
 	status = 0;
 	status = MFRC522_Request(PICC_REQIDL, cardstr);
 	if(status == MI_OK)
@@ -83,11 +66,12 @@ void rfid_read(void)
 				HAL_UART_Transmit(&uart1,(uint8_t *)str2,strlen(str2),1000);
 			  }
 			}
-			if(1==check_validcard(read_empId))
-			{
-				HAL_GPIO_WritePin(GPIOB,GPIO_PIN_2,GPIO_PIN_SET);
-				HAL_Delay(100);
-				HAL_GPIO_WritePin(GPIOB,GPIO_PIN_2,GPIO_PIN_RESET);
+			if((read_empId >0)&&(read_empId<700)){
+				if(1==check_validcard(read_empId)){
+					HAL_GPIO_WritePin(GPIOB,GPIO_PIN_2,GPIO_PIN_SET);
+					HAL_Delay(100);
+					HAL_GPIO_WritePin(GPIOB,GPIO_PIN_2,GPIO_PIN_RESET);
+				}
 			}
 			MFRC522_StopCrypto1();
 			MFRC522_Halt();
