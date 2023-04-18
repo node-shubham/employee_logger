@@ -463,8 +463,8 @@ void attendence_search(void)
 	print_string(615,163-table_y,"OUT",0x737373);
 //	print_string(170,216-table_y,"NAVEEN PRAKASH MAURYA",0x9900ff);
 //	print_string(90,216-table_y,"E001",0x9900ff);
-	print_string(520,216-table_y,"09:30",0x737373);
-	print_string(605,216-table_y,"06:00",0x737373);
+//	print_string(520,216-table_y,"09:30",0x737373);
+//	print_string(605,216-table_y,"06:00",0x737373);
 	BackBtn();
 
 	//print_string(200,55,emp_name,0x737373);
