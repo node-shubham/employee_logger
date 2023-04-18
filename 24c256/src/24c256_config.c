@@ -55,9 +55,13 @@ void collect_id (void)
 #if 0
 void next_empID(void)
 {
+<<<<<<< HEAD
+	//HAL_I2C_Mem_Read(&hi2c, dev_addr1,)
+=======
 
 	//HAL_I2C_Mem_Read(&hi2c, dev_addr1,)
 
+>>>>>>> d05b5518be381acc935c129616e6250dc7bdd599
 }
 #endif
 

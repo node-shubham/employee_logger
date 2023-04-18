@@ -222,6 +222,8 @@ static void display_handler(void * param)
 #endif
 
 
+inline void keypad_touch(uint8_t who_called);
+
 
 int main()
 {
@@ -289,13 +291,11 @@ HAL_UART_Transmit(&uart1,(uint8_t *)str2,strlen(str2),1000);
 #endif
 
 
-
 while(1)
 {
+	HAL_Delay(100);
 	touchX = (getX() + 12);
 	touchY = (470 - getY());
-
-	HAL_Delay(100);
 	read_touch();
 	rfid_read();
 	/*****************************************  CURRENT PAGE 1 ****************************************************/
@@ -330,15 +330,6 @@ while(1)
 		{
 #if (USE_EEPROM)
 			attendence_search();
-			scanned_EMPLO_ID =1;
-			calculate_addr = 128+(32*(scanned_EMPLO_ID-1));
-			for(int e=0;e<5;e++)
-			{
-				calculate_addr = FIRST_EMP_ADDR+(32*(scanned_EMPLO_ID-1));
-//				display_Employee();
-				print_string(170,194+e*52,read_details.rd_EMPLO_name,BLACK);
-				scanned_EMPLO_ID++;
-			}
 #endif
 			curr_page = 7;
 		}
@@ -405,7 +396,6 @@ while(1)
 
 			curr_page = 2;
 		}
-		//print_int(next_emp_id, 620, 150, 0, 0, BLACK);
 	}
 
 /*****************************************  CURRENT PAGE 4 ****************************************************/
@@ -579,7 +569,6 @@ while(1)
 		}
 		if(sub_page ==2)
 		{
-			//active_role=0;
 			if(touchX >= 197 && touchX <= 503)
 			{
 				 if(touchY >= 124 && touchY <= 170)
@@ -614,7 +603,6 @@ while(1)
 
 		if(sub_page ==3)
 		{
-			//active_role=0;
 			if(touchX >= 197 && touchX <= 503)
 			{
 				 if(touchY >= 254 && touchY <= 300)
@@ -635,11 +623,13 @@ while(1)
 				 }
 			}
 		}
+		touchX =0;
+		touchY =0;
 	}
 
 
-/*****************************************  CURRENT PAGE 5 ****************************************************/
-		//###################################   FOR ALL USER   ################################################
+/******************************  CURRENT PAGE 5 ***ALL USER ************************************/
+
 	if(curr_page == 5)
 	{
 		if(isTouched( 630, 720, 121, 169))  //SAVE
@@ -775,7 +765,6 @@ while(1)
 			 }
 			}
 		}
-
 		if(sub_page ==5)
 		{
 			if(touchX >= 494 && touchX <= 720)
@@ -830,16 +819,12 @@ while(1)
 		}
 	}
 
-/****************************  CURRENT PAGE 6 ***  KEYPAD_TOUCH**************************/
+	/****************************  CURRENT PAGE 6 ***  KEYPAD_TOUCH  **************************/
 
-	if(curr_page == 6)
-	{
+	if(curr_page == 6){
 		Set_Font(&Font12x18);
-		//static uint8_t pos =0;
-		int x=0,x1=0,y=31,y1=0,k=0;
-		if(isTouched(197, 503, 69, 135)) // hide keypad  197, 503, 69, 135
+		if(isTouched(104, 540, 40, 135)) // hide keypad
 		{
-			keypad_down=!keypad_down;
 			if(keypad_down == 1)
 			 {
 				fill_area(0,800,200,480,PURPLE);
@@ -847,73 +832,34 @@ while(1)
 				curr_page = 4;
 				print_int(next_emp_id, 590, 100, 0, 0, 0x737373);
 				print_string(220,95,emp_name,0x737373);
-
 			 }
-			if(curr_page == 7)
-			{
-			}
 		}
-
-		if(isTouched(150, 215, 290+y, 330+y)) //caps
-		{
-			UC_FLAG = !UC_FLAG;
-		}
-		if(isTouched(275, 515, 340+y, 380+y))		// space
-		{
-			HAL_Delay(100);
-			*(emp_name+pos) =32;
-			print_char(210+(pos*12),95,32,0xe7eefe);
-			if(pos<19){
-				pos++;
-			}
-		}
-		if(isTouched( 575, 640, 290+y, 330+y)) //backspace
-		{
-			if(pos != 0){
-				pos--;
-			}
-			fill_area(220+(pos*12),232+(pos*12),85+5,112+5,0xe7eefe);
-		}
-
-		for(int idx1=0; idx1<3; idx1++)
-		{
-			x1+=25*idx1;
-			for(int idx2=0; idx2<=9-(idx1*2-k); idx2++)
-			{
-				if(isTouched( x1+150+x, x1+190+x, y1+190+y, y1+230+y))
-				{
-					if(pos<19){
-						print_char(220+(pos*12),95,char_key[idx1][idx2],0x737373);
-						*(emp_name+pos) =char_key[idx1][idx2];
-						pos++;
-					}
-				}
-				x+=50;
-			}
-			x=0;
-			k=1;
-			y1+=50;
-		}
+		keypad_touch(1);
 		*(emp_name+pos)= '\0';
+
 	}
 
 /*****************************************  CURRENT PAGE 7 *********************************************/
 	if(curr_page == 7){
+		static bool toggle =1;
 		if(isTouched( 190, 590, 36, 84)){ 			// search attendance
-			PageKeyPad();
-			keypad_down = 2;
-			curr_page = 6;
-			print_string(200,50,emp_name,0x737373);
+			if(toggle){
+				PageKeyPad();
+				Set_Font(&Font12x18);
+			}else{
+				attendence_search();
+			}
+			toggle = !toggle;
+			print_string(150,55,emp_name,0x737373);
 		}
-		if(isTouched( 190, 590, 36, 84)){ // HIDE KEYPAD
-		}
-
 		if(isTouched( 8, 72, 10, 70)){		// back
 			pos=0;
 			memset(emp_name,'\0',19);
 			Admin_screen();
 			curr_page = 2;
 		}
+		keypad_touch(0);
+		*(emp_name+pos)= '\0';
 	}
 
 	/********************  CURRENT PAGE 8 *********************/
@@ -923,6 +869,8 @@ while(1)
 			curr_page = 2;
 		}
 	}
+	touchX =0;
+	touchY =0;
 }
 
 	/* Timebase start 100ms */
@@ -1190,6 +1138,66 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 #endif
 	}
 }
+
+inline void keypad_touch(uint8_t who_called)
+{
+	int x=0,x1=0,y=31,y1=0,k=0;
+
+	if(isTouched(150, 215, 290+31, 330+31)) //caps
+	{
+		UC_FLAG = !UC_FLAG;
+	}
+	if(isTouched(275, 515, 340+31, 380+31))		// space
+	{
+		HAL_Delay(100);
+		*(emp_name+pos) =32;
+		if(who_called){
+			print_char(210+(pos*12),95,32,0xe7eefe);
+		}else{
+			print_char(150+(pos*12),55,32,0xe7eefe);
+		}
+
+		if(pos<19){
+			pos++;
+		}
+	}
+	if(isTouched( 575, 640, 290+31, 330+31)) //backspace
+	{
+		if(pos != 0){
+			pos--;
+		}
+		if(who_called){
+			fill_area(220+(pos*12),232+(pos*12),85+5,112+5,0xe7eefe);
+		}else{
+			fill_area(150+(pos*12),232+(pos*12),55,112-35,0xe7eefe);
+		}
+	}
+
+	for(int idx1=0; idx1<3; idx1++)
+	{
+		x1+=25*idx1;
+		for(int idx2=0; idx2<=9-(idx1*2-k); idx2++)
+		{
+			if(isTouched( x1+150+x, x1+190+x, y1+190+y, y1+230+y))
+			{
+				if(pos<19){
+					if(who_called){
+						print_char(220+(pos*12),95,char_key[idx1][idx2],0x737373);
+					}else{
+						print_char(150+(pos*12),55,char_key[idx1][idx2],0x737373);
+					}
+					*(emp_name+pos) =char_key[idx1][idx2];
+					pos++;
+				}
+			}
+			x+=50;
+		}
+		x=0;
+		k=1;
+		y1+=50;
+	}
+}
+
 
 /**********************************************************************
  * @fn : 	void read_touch(void);
