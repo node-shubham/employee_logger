@@ -297,8 +297,6 @@ HAL_UART_Transmit(&uart1,(uint8_t *)str1,strlen(str1),1000);
 HAL_UART_Transmit(&uart1,(uint8_t *)str2,strlen(str2),1000);
 #endif
 
-HAL_I2C_Mem_Read(&i2c1, dev_addr1, 3700, 2, (uint8_t *)&debug_end_addr, 2, 100);
-
 while(1)
 {
 	touchX = (getX() + 12);
@@ -339,7 +337,7 @@ while(1)
 		{
 #if (USE_EEPROM)
 			attendence_search();
-			scanned_EMPLO_ID =1;
+		/*	scanned_EMPLO_ID =1;
 			calculate_addr = 128+(32*(scanned_EMPLO_ID-1));
 			for(int e=0;e<5;e++)
 			{
@@ -347,7 +345,7 @@ while(1)
 //				display_Employee();
 				print_string(170,194+e*52,read_details.rd_EMPLO_name,BLACK);
 				scanned_EMPLO_ID++;
-			}
+			}*/
 #endif
 			curr_page = 7;
 		}
@@ -924,7 +922,7 @@ while(1)
 /*****************************************  CURRENT PAGE 7 *********************************************/
 	if(curr_page == 7)
 	{
-		if(isTouched( 190, 590, 36, 84))  // search attendance
+		if(isTouched( 104, 540, 36, 84))  // search attendance
 		{
 			PageKeyPad();
 			keypad_down = 2;
