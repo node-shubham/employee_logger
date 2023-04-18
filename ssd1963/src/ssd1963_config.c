@@ -6,7 +6,6 @@
 void front_Page(void)
 {
 	Set_Font(&Font16x26);
-
 	fill_screen(WHITE);
 	print_image(310, 170, 150, 100, logo);
 	print_string(180, 290, "Attendance Management System", 0x1d6791);
@@ -26,37 +25,6 @@ void print_grid(void)
 	}
 }		
 
- void background_page(void)
-	{			
-			fill_screen(BLACK);
-		  for(int j=0; j<75; j++)
-			{
-			 for(int i=0; i<45; i++)
-				 {
-					if(i<45 && j<14)
-					 draw_vl(99+50*j, 30+10*i, 3, 0x999999);   /// 0x808080 final color
-					if (i<10 && j<75)
-						draw_hl(48+10*j, 30+45*i, 3, 0x999999);
-				 }
-			}
-		    Set_Font(&Font12x18);  
-			  print_string(2, 2, "START", YELLOW);
-			  print_string(100, 2, "RECORD :", WHITE);	
-			  print_string(208, 2, "OFF", WHITE);
-			  print_string(300, 2, "SWEEP :     mm/ sec", WHITE);
-			  print_string(590, 2, "PAGES :", WHITE);
-			  print_string(730, 2, "CH- ", WHITE);	
-			  print_string(0, 240, "Ch 1", YELLOW);
-//			  print_string(0, 200, "Ch B", 0x6699ff);
-//			  print_string(0, 290, "Ch C", 0xccff66);
-//			  print_string(0, 380, "Ch D", 0x66ffff);
-//			  print_string(2, 260, "Ch E", 0xff0066);
-//			  print_string(2, 310, "Ch F", 0xff9933);
-//			  print_string(2, 360, "Ch G", 0xcc33ff);
-//			  print_string(2, 410, "Ch H", 0xff7733);
-			
-			  print_string(10, 460, "Ev", WHITE);
-}	
 
 void test_point(void)
 {
@@ -97,7 +65,7 @@ void	fill_DownTriangle(s16 x, s16 y, u16 size, u32 colour)   /// created by nave
  }
 
 
-void	fill_RightTriangle(s16 x, s16 y, u16 size, u32 colour)   /// created by naveen
+void fill_RightTriangle(s16 x, s16 y, u16 size, u32 colour)   /// created by naveen
  {
 	 for(int i =0; i< size; i++)
 	  {
@@ -105,7 +73,7 @@ void	fill_RightTriangle(s16 x, s16 y, u16 size, u32 colour)   /// created by nav
 	  }
  }
 
-void	fill_LeftTriangle(s16 x, s16 y, u16 size, u32 colour)   /// created by naveen
+void fill_LeftTriangle(s16 x, s16 y, u16 size, u32 colour)   /// created by naveen
  {
 	 for(int i =0; i< size; i++)
 	  {
@@ -162,8 +130,6 @@ void Front_screen(void)
 {
 	Set_Font(&Font16x26);
 	fill_screen(PURPLE);
-	//print_string(360,250,"09:00 AM",WHITE);
-	//print_string(350,300,"24/01/2023",WHITE);
 	print_image(355,180,87,120,thumb);
 	v_slider(450, 185,  100, WHITE);
 }
@@ -175,14 +141,6 @@ void Admin_screen(void)
 	Set_Font(&Font16x26);
 	fill_screen(PURPLE);
 	print_string(150,20,"RFID BASED ATTENDANCE MANAGEMENT",WHITE);
-
-//	draw_hl(0,50,800,BLUE);
-//	draw_vl(100,0,480,BLUE);
-//	draw_hl(0,430,800,BLUE);
-//	draw_vl(700,0,480,BLUE);
-//
-//	draw_vl(400,50,380,BLUE);
-//	draw_hl(50,240,700,BLUE);
 
 	Set_Font(&Font12x18);
 	fill_circle(250,145,60,RED);
@@ -236,15 +194,10 @@ void User_Management(void)
 void NewEntry_page(void)
 {
 	int x=0,y=0;
-	//fill_screen(PURPLE);//0x00ffff);
 	Set_Font(&Font12x18);
-
-
 
 	fill_roundrect(100+x,700+x,40+y,440+y,0xcccccc,PURPLE);
 	fill_roundrect(104+x,696+x,44+y,436+y,0xfffafa,0xcccccc);
-
-
 
 	fill_roundrect(547,653,69,135,0xcedcfd,0xfffafa);// emp id
 	fill_roundrect(550,650,72,132,0xe7eefe,0xcedcfd);
@@ -255,18 +208,15 @@ void NewEntry_page(void)
 	fill_roundrect(550,650,256,316,0xe7eefe,0xcedcfd);
 	print_string(573+x,280+y,"SAVE",0x737373);
 
-	//Set_Font(&Font16x24);
 	fill_roundrect(547,653,345,411,0xcedcfd,0xfffafa);// scan
 	fill_roundrect(550,650,348,408,0xe7eefe,0xcedcfd);
 	print_string(573+x,370+y,"SCAN",0x737373);
-		Set_Font(&Font12x18);
+	Set_Font(&Font12x18);
 
 	NewUser_Name();
 	NewUser_Desig(0,0,0,0);
 	NewUser_Role();
 	NewUser_Card();
-	//BackBtn();
-//	draw_rect(104, 540, 40, 135, GREEN);
 
 }
 
@@ -275,28 +225,26 @@ void NewUser_Name(void)
 {
 	Set_Font(&Font12x18);
 	int x=0,y=0;
-		fill_roundrect(197,503,69,135,0xcedcfd,0xfffafa);
-		fill_roundrect(200+x,500+x,72+y,132+y,0xe7eefe,0xcedcfd);
-		fill_roundrect(210+x,280+x,62+y,82+y,WHITE,WHITE);
-		print_string(218+x,65+y,"Name",0x737373);
+	fill_roundrect(197,503,69,135,0xcedcfd,0xfffafa);
+	fill_roundrect(200+x,500+x,72+y,132+y,0xe7eefe,0xcedcfd);
+	fill_roundrect(210+x,280+x,62+y,82+y,WHITE,WHITE);
+	print_string(218+x,65+y,"Name",0x737373);
+	fill_area(210,400,80,120,0xe7eefe);
 
-		fill_area(210,400,80,120,0xe7eefe);
-		print_string(220,90,emp_name,0x737373);
 }
 
 //######################  NEW_USER(DESIG)  #############################
 void NewUser_Desig(s32 x1, s32 x2, s32 y1, s32 y2)
 {
 	Set_Font(&Font12x18);
-		fill_roundrect(x1+197,x2+503,y1+161,y2+227,0xcedcfd,0xfffafa);
-		fill_roundrect(x1+200,x2+500,y1+164,y2+224,0xe7eefe,0xcedcfd);
-		fill_roundrect(210+x1,290+x2,154+y1,174+y2,WHITE,WHITE);
-		print_string(218+x1,155+y1,"Desig.",0x737373);
-		symbol(470+x1,168+y1,'D',0x999999);
-		symbol(470+x1,161+y1,'D',0xe7eefe);
-		fill_area(210+x1,400+x2,180+y1,210+y2,0xe7eefe);
-		print_string(220+x1,190+x2,desgn_ptr,0x737373);
-		//draw_rect(450,500,170,220,BLUE);
+	fill_roundrect(x1+197,x2+503,y1+161,y2+227,0xcedcfd,0xfffafa);
+	fill_roundrect(x1+200,x2+500,y1+164,y2+224,0xe7eefe,0xcedcfd);
+	fill_roundrect(210+x1,290+x2,154+y1,174+y2,WHITE,WHITE);
+	print_string(218+x1,155+y1,"Desig.",0x737373);
+	symbol(470+x1,168+y1,'D',0x999999);
+	symbol(470+x1,161+y1,'D',0xe7eefe);
+	fill_area(210+x1,400+x2,180+y1,210+y2,0xe7eefe);
+	print_string(220+x1,190+x2,desgn_ptr,0x737373);
 }
 
 //######################  NEW_USER(ROLE)  #############################
@@ -304,15 +252,14 @@ void NewUser_Role(void)
 {
 	Set_Font(&Font12x18);
 	int x=0,y=0;
-		fill_roundrect(197,503,253,319,0xcedcfd,0xfffafa);
-		fill_roundrect(200+x,500+x,256+y,316+y,0xe7eefe,0xcedcfd);
-		fill_roundrect(210+x,280+x,246+y,266+y,WHITE,WHITE);
-		print_string(218+x,251+y,"Role",0x737373);
-		symbol(470,264,'D',0x999999);
+	fill_roundrect(197,503,253,319,0xcedcfd,0xfffafa);
+	fill_roundrect(200+x,500+x,256+y,316+y,0xe7eefe,0xcedcfd);
+	fill_roundrect(210+x,280+x,246+y,266+y,WHITE,WHITE);
+	print_string(218+x,251+y,"Role",0x737373);
+	symbol(470,264,'D',0x999999);
 	symbol(470,257,'D',0xe7eefe);
-		fill_area(210,400,270,310,0xe7eefe);
-		print_string(220,280,role_ptr,0x737373);
-		//draw_rect(450,500,260,310,BLUE);
+	fill_area(210,400,270,310,0xe7eefe);
+	print_string(220,280,role_ptr,0x737373);
 }
 
 //######################  NEW_USER(CARD)  #############################
@@ -320,14 +267,14 @@ void NewUser_Card(void)
 {
 	Set_Font(&Font12x18);
 	int x=0,y=0;
-		fill_roundrect(197,503,345,411,0xcedcfd,0xfffafa);
-		fill_roundrect(200+x,500+x,348+y,408+y,0xe7eefe,0xcedcfd);
-		fill_roundrect(210+x,340+x,338+y,358+y,WHITE,WHITE);
-		print_string(218+x,340+y,"Card/Thumb",0x737373);
-		symbol(470,353,'D',0x999999);
+	fill_roundrect(197,503,345,411,0xcedcfd,0xfffafa);
+	fill_roundrect(200+x,500+x,348+y,408+y,0xe7eefe,0xcedcfd);
+	fill_roundrect(210+x,340+x,338+y,358+y,WHITE,WHITE);
+	print_string(218+x,340+y,"Card/Thumb",0x737373);
+	symbol(470,353,'D',0x999999);
 	symbol(470,346,'D',0xe7eefe);
-		fill_area(210,400,370,400,0xe7eefe);
-		print_string(220,375,card_ptr,0x737373);
+	fill_area(210,400,370,400,0xe7eefe);
+	print_string(220,375,card_ptr,0x737373);
 		//draw_rect(450,500,355,405,BLUE);
 
 
@@ -343,19 +290,6 @@ void BackBtn(void)
 	draw_line(30, 39, 50, 39, WHITE);
 	draw_line(30, 40, 50, 40, WHITE);
 	draw_line(30, 41, 50, 41, WHITE);
-//	for(int i=0; i<3; i++)
-//	{
-//		draw_line(25, 38+i, 55, 38+i, WHITE);
-//		draw_line(22+i, 40+i, 38+i, 25+i, WHITE);
-//		draw_line(22+i, 40-i, 38+i, 53-i, WHITE);
-//	}
-
-
-	//Set_Font(&Font12x18);
-//	draw_vl(38, 26, 27, GREEN);
-//	draw_line(22, 40, 38, 26, GREEN);
-//	draw_line(22, 40, 38, 53, GREEN);
-
 }
 
 
@@ -440,12 +374,9 @@ void PageKeyPad(void)
 void dropdown(char *dpdown [], u32 NumOfBox,s16 x1, s16 x2, s16 y1)
 {
   int y=0;
-	//fill_area(197,503,234,430,WHITE);
 
 	for(idx=0; idx<NumOfBox;idx++)
 	{
-		//fill_roundrect(197,503,y1+234+y,y1+280+y,0xb3b3b3,0xb3b3b3);
-		//Set_Font(&Font16x24);
 		if(active_role == idx)
 		{
 			fill_roundrect(197+x1,503+x2,y1+234+y,y1+280+y,0x999999,0x999999);  //b3b3b3
@@ -508,8 +439,6 @@ void attendence_search(void)
 ////////////////////////// for table  ///////////////////////////////////////////////////////////
 
   	fill_roundrect(94, 684, 115, 440, 0xcedcfd, PURPLE);
-//	fill_area(20,730,90,140+3,0x74c69d);
-//	fill_area(100,678,149-table_y,192+3-table_y,0xcedcfd);
 	fill_area(100,678,200-table_y,245+3-table_y,table_color);
 	fill_area(100,678,252-table_y,297+3-table_y,table_color_2);
 	fill_area(100,678,304-table_y,349+3-table_y,table_color);
@@ -523,23 +452,11 @@ void attendence_search(void)
 	draw_vl(390+120,143-table_y,318,table_border_color);
 	draw_vl(170+425,143-table_y,318,table_border_color);
 
-/*
-//	draw_hl(20,143,710,table_border_color);
-	draw_hl(70,196-table_y,650,table_border_color);
-	draw_hl(70,249-table_y,650,table_border_color);
-	draw_hl(70,302-table_y,650,table_border_color);
-	draw_hl(70,355-table_y,650,table_border_color);
-	draw_hl(70,408-table_y,650,table_border_color);
-*/
 /////////////////////////////for string  ///////////////////////////////////////////////////////
 
 	Set_Font(&Font12x18);
 	print_string(585,55,"SEARCH",0x737373);
 
-
-//	print_int(4, 400, 25+5, 1, 1, WHITE);
-//	print_string(200,50,"NAVEEN PRAKASH MAURYA",0x737373);
-//	print_string(760,20+5,"6",WHITE);
 	print_string(122,163-table_y,"ID",0x737373);
 	print_string(330,163-table_y,"NAME",0x737373);
 	print_string(535,163-table_y,"IN",0x737373);
@@ -549,7 +466,7 @@ void attendence_search(void)
 	print_string(520,216-table_y,"09:30",0x737373);
 	print_string(605,216-table_y,"06:00",0x737373);
 	BackBtn();
-	print_string(200,50,emp_name,0x737373);
+	//print_string(200,50,emp_name,0x737373);
 }
 
 //######################################    ROLE PAGE   #######################################
@@ -562,7 +479,6 @@ void Role_Page(void)
 
 ///////////////////////////// for button  //////////////////////////////////////////////////////
 
-	//draw_circle(760, 180-table_y+1, 20, 0x9900ff);
 	fill_circle(760, 180-table_y, 20, 0xcedcfd);
 	fill_circle(760, 180-table_y, 18, 0xe7eefe);
 	symbol(760, 175-table_y, '^', 0x737373);
@@ -593,10 +509,7 @@ void Role_Page(void)
 
 	draw_vl(70+90,143-table_y,318,table_border_color);
 	draw_vl(550,143-table_y,318,table_border_color);
-//	draw_vl(120+460,143-table_y,318,table_border_color);
 
-
-//	draw_hl(20,143,710,table_border_color);
 	draw_hl(70,196-table_y,650,table_border_color);
 	draw_hl(70,249-table_y,650,table_border_color);
 	draw_hl(70,302-table_y,650,table_border_color);
@@ -632,11 +545,6 @@ void AllUser_Page(void)
 	fill_area(150,720,80,439,PURPLE);
 	fill_roundrect(95, 685, 96, 464,0xcccccc,PURPLE);
 	fill_roundrect(99,681,100,460,0xfffafa,0xcccccc);
-	//button_2(20,90,15,65,table_color,0x74c69d);  //   Back button
-	//button_2(600,750,36,84,0xe7eefe,0x74c69d);
-
-
-//	NewUser_Desig(297,217,38,52);
 
 ///////////////////////////// for scroll up/down button  //////////////////////////////////////////////////////
 
@@ -644,13 +552,7 @@ void AllUser_Page(void)
 	fill_circle(760, 180-table_y, 20, 0xcedcfd);
 	fill_circle(760, 180-table_y, 18, 0xe7eefe);
 	symbol(760, 175-table_y, '^', 0x737373);
-/*
-	for(int i = 4; i<195; i=i+8)
-	 {
-	   draw_vl(760, 179+i, 3, 0xe7eefe);
-		 draw_vl(759, 179+i, 3, 0xe7eefe);
-	 }
-*/
+
 	//draw_circle(760, 418-table_y+1, 20, 0x9900ff);
 	fill_circle(760, 418-table_y, 20, 0xcedcfd);
 	fill_circle(760, 418-table_y, 18, 0xe7eefe);
@@ -667,38 +569,13 @@ void AllUser_Page(void)
 	fill_area(120,470,356-table_y,401+3-table_y,table_color_2);
 	fill_area(120,470,408-table_y,453+3-table_y,table_color);
 
-
-
-//	draw_rect(70,470,143-table_y,461-table_y,table_border_color);
-
 	draw_vl(70+115,143-table_y,318,table_border_color);
-//	draw_vl(470,143-table_y,318,table_border_color);
-//	draw_vl(120+460,143-table_y,318,table_border_color);
 
-/*
-//	draw_hl(20,143,710,table_border_color);
-	draw_hl(70,196-table_y,400,table_border_color);
-	draw_hl(70,249-table_y,400,table_border_color);
-	draw_hl(70,302-table_y,400,table_border_color);
-	draw_hl(70,355-table_y,400,table_border_color);
-	draw_hl(70,408-table_y,400,table_border_color);
-*/
-/////////////////////////////for drop down  ///////////////////////////////////////////////////////
-
-
-
-
-/////////////////////////////for string  ///////////////////////////////////////////////////////
-
+	/////////////////////////////for string  ///////////////////////////////////////////////////////
 	Set_Font(&Font12x18);
-
 	print_string(142,163-table_y,"ID",0x737373);
 	print_string(320,163-table_y,"NAME",0x737373);
 	print_string(595,40,"SEARCH",0x737373);
-	print_string(130,216-table_y,"E999",0x737373);
-	//print_string(170,216-table_y,"NAVEEN PRAKASH MAURYA",0x9900ff);
-
-	//BackBtn();
 
 	NewUser_Desig1(0xcedcfd);
 	NewUser_Role1(0xcedcfd);
@@ -713,15 +590,13 @@ void AllUser_Page(void)
 void NewUser_Desig1(u32 Fill_colour)
 {
 	Set_Font(&Font12x18);
-		fill_roundrect(494,670,199,259,0xcedcfd,0xfffafa);  // DESIG 0xe7eefe
-		fill_roundrect(499,665,204,254,Fill_colour,0xcedcfd);
+	fill_roundrect(494,670,199,259,0xcedcfd,0xfffafa);  // DESIG 0xe7eefe
+	fill_roundrect(499,665,204,254,Fill_colour,0xcedcfd);
 
-		symbol(640,200,'D',0x999999);
-		symbol(640,195,'D',Fill_colour);
+	symbol(640,200,'D',0x999999);
+	symbol(640,195,'D',Fill_colour);
 
-
-		//fill_area(499,615,204,254,0xe7eefe);
-		print_string(510,220,desgn_ptr,0x737373);
+	print_string(510,220,desgn_ptr,0x737373);
 }
 
 //######################  NEW_USER(ROLE)  #############################
@@ -744,27 +619,21 @@ void NewUser_Role1(u32 Fill_colour)
 void NewUser_Card1(u32 Fill_colour)
 {
 	Set_Font(&Font12x18);
-	//int x=0,y=0;
-		fill_roundrect(494,670,379,439,0xcedcfd,0xfffafa);  // CARD  Fill_colour =  0xe7eefe
-		fill_roundrect(499,665,384,434,Fill_colour,0xcedcfd);
+	fill_roundrect(494,670,379,439,0xcedcfd,0xfffafa);  // CARD  Fill_colour =  0xe7eefe
+	fill_roundrect(499,665,384,434,Fill_colour,0xcedcfd);
 
-		symbol(640,386,'D',0x999999);
-		symbol(640,381,'D',Fill_colour);
-
-
-		//fill_area(499,615,384,434,0xe7eefe);
-		print_string(510,400,card_ptr,0x737373);
+	symbol(640,386,'D',0x999999);
+	symbol(640,381,'D',Fill_colour);
+	print_string(510,400,card_ptr,0x737373);
 }
 
 void SaveAndEdit (void)
 {
 	fill_roundrect(590,670,121,169,0xcedcfd,0xfffafa);	//   Save and Modify button
 	fill_roundrect(593,667,124,166,0xe7eefe,0xcedcfd);
-	//draw_roundrect(630,720,121,169,BLUE);
 
 	fill_roundrect(494,574,121,169,0xcedcfd,0xfffafa); //delete
 	fill_roundrect(497,571,124,166,0xe7eefe,0xcedcfd);
-	//draw_roundrect(494,584,121,169,BLUE);
 
 	Set_Font(&Font12x18);
 	print_string(500,138,"DELETE",0x737373);
@@ -772,74 +641,8 @@ void SaveAndEdit (void)
 
 }
 
-	/*
- void test_color(void)
-		{
-			fill_screen(BLACK);
-			HAL_Delay(500);
-			fill_screen(WHITE);
-			HAL_Delay(500);
-			fill_screen(RED);
-			HAL_Delay(500);
-			fill_screen(GREEN);
-			HAL_Delay(500);
-			fill_screen(BLUE);
-			HAL_Delay(500);
-			fill_screen(YELLOW);
-			HAL_Delay(500);
-			fill_screen(PURPLE);
-			HAL_Delay(500);
-			fill_screen(GREY);
-			HAL_Delay(500);
-		}	
-
- void test_pixel(void)
-		{
-			set_pixel(100, 100, RED);
-			set_pixel(100, 101, RED);
-			set_pixel(100, 102, RED);
-			set_pixel(100, 103, RED);
-			set_pixel(100, 104, RED);
-			set_pixel(100, 105, RED);
-			set_pixel(100, 106, RED);
-			set_pixel(100, 107, RED);
-		}	
-		
- void test_increment(u32 p, s16 q)
-		{
-			int i;
-			float j=0;
-			for(i=0;i<p;i++)
-			{
-				print_int(i, 400,280,0,0,GREEN);
-				HAL_Delay(500);
-				fill_area(390,450,220,290, BLACK);		
-				}
-					
-			while(j<q)
-			{	
-				j= j+0.1;
-				print_float(j,2, 400,250,'.',0,0,GREEN);
-				HAL_Delay(500);
-				fill_area(390,500,200,290, BLACK);		
-			}	
-		}
-		
- void v_slider(u32 x, u32 y,u32 len, u32 color)
-		{
-			draw_roundrect(x,x+20,y,y+len,color);
-			fill_area(x+3,x+17,y+3,y+len-3,0x00627d);
-			//fill_circle(x+10,y+len-40,14,0x00627d);
-			//draw_circle(x+10,y+len-40, 15, color);
-		}
-		
- void h_slider(u32 x, u32 y,u32 len, u32 color)
-		{
-			draw_roundrect(x,x+len,y,y+15,color);
-			fill_area(x+2,x+len-2,y+2,y+13,0x00627d);
-		}*/
 	
-//############################################## BackSpace Btn ##################################################################
+//############################ BackSpace Btn ###############################################
 
 void BackSpaceBtn(u32 x, u32 y)
 {
@@ -865,6 +668,4 @@ void BackSpaceBtn(u32 x, u32 y)
 	draw_line(55+x, 215+y, 65+x, 205+y, 0x737373);
 	draw_line(56+x, 215+y, 66+x, 205+y, 0x737373);
 
-	//print_char(55+x, 205+y, '', 0x737373);
-	//draw_vl(30+x, 210+y, 1, GREEN);
 }
