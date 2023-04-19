@@ -20,6 +20,7 @@
 #include <ctype.h>
 
 bool fingerMatchFlag =0;
+bool enrollOkFlag =0;
 FPM finger;
 FPM_System_Params params;
 
@@ -35,6 +36,7 @@ void search_database(void);
 
 
 void fingerprint_match_loop(void);	/* app specific */
+void fingerprint_enroll_loop(void); /* app specific */
 
 void enroll_mainloop(void);
 void templates_mainloop(void);

@@ -38,17 +38,16 @@ void r307_init(void)
 void enroll_mainloop(void)
 {
     while (1) {
-        printf("Send any character to enroll a finger...\r\n");
-        while (uart_avail(USART1) == 0);
         printf("Searching for a free slot to store the template...\r\n");
         int16_t fid;
-
-        if (get_free_id(&fid))
+        if (get_free_id(&fid)){
             enroll_finger(fid);
-        else
+            //break;
+            //return 1;
+        }else{
             printf("No free slot in flash library!\r\n");
-
-        while (uart_read_byte(USART1) != -1);  // clear buffer
+            //return 1;
+        }
     }
 }
 
@@ -130,6 +129,26 @@ void fingerprint_match_loop()
     }
     HAL_Delay(1000);
     fill_area(140, 700, 350, 380, PURPLE);
+}
+
+void fingerprint_enroll_loop()
+{
+    while (1)
+    {
+        printf("Searching for a free slot to store the template...\r\n");
+        int16_t fid;
+		if (get_free_id(&fid)){
+			enroll_finger(fid);
+		}else{
+			printf("No free slot in flash library!\r\n");
+		}
+	    if(enrollOkFlag){
+			enrollOkFlag=0;
+			break;
+        }
+    }
+    HAL_Delay(1000);
+   // fill_area(140, 700, 350, 380, PURPLE);
 }
 
 void searchdb_mainloop(void)
@@ -294,6 +313,7 @@ void enroll_finger(int16_t fid)
     switch (p) {
         case FPM_OK:
             printf("Stored!\r\n");
+            enrollOkFlag=1;
             break;
         default:
             printf("Error code: 0x%X!\r\n", p);

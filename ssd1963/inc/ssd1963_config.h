@@ -61,10 +61,10 @@
 	void test_point(void);
 	void test_point1(void);
 	void background_page(void);
-	void Front_Page(void);
+	void logo_page(void);
 
 
-	void Front_screen(void);
+	void thumb_screen(void);
 	void Admin_screen(void);
 	void User_Management(void);
 	void login_page(s16 x, s16 y);
@@ -90,6 +90,8 @@
 	void NewUser_Desig(s32 x1, s32 x2, s32 y1, s32 y2);
 	void NewUser_Role(void);
 	void NewUser_Card(void);
+	void NewUserSideBtn(void);
+	void search_table(void);
 
 	void NewUser_Desig1(u32 Fill_colour);
 	void NewUser_Role1(u32 Fill_colour);

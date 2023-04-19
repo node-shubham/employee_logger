@@ -245,20 +245,21 @@ int main()
 	ssd1963_setup();
 	XPT2046_Init();
 
-	Front_screen();
+	//front_Page();
+
+	//Front_screen();
 #endif
-	curr_page = 1 ;
+
 
 #if (USE_FINGERPRINT)
-  uart_init(USART1,9600);
-  uart_init(USART6,57600);
+	uart_init(USART1,9600);
+	uart_init(USART6,57600);
 
-  /* disable stdout buffering */
-  setvbuf(stdout, NULL, _IONBF, 0);
-
+	/* disable stdout buffering */
+	setvbuf(stdout, NULL, _IONBF, 0);
 	r307_init();
 	fingerprint_match_loop();
-
+	//enroll_mainloop();
 	HAL_GPIO_WritePin(GPIOB,GPIO_PIN_2,GPIO_PIN_SET);
 	HAL_Delay(50);
 	HAL_GPIO_WritePin(GPIOB,GPIO_PIN_2,GPIO_PIN_RESET);
@@ -271,25 +272,16 @@ int main()
 	HAL_Delay(100);*/
 #endif
 
-#if 0
-	HAL_I2C_Mem_Write(&i2c1,dev_addr,0x00,2,(uint8_t *)&emp_id_read,2,100);
-	HAL_Delay(100);
-
-	HAL_I2C_Mem_Read(&i2c1, dev_addr1, 0x00, 2, (uint8_t *)&test_id, 2, 100);
-#endif
-
 HAL_I2C_Mem_Read(&i2c1, dev_addr1, 0x00, 2, (uint8_t *)&next_emp_id, 2, 100);
 
-//erase_EEPROM();
-
 #if (USE_RFID)
-status = Read_MFRC522(VersionReg);
-sprintf(str1,"Running RC522");
-sprintf(str2,"\r\t version:%x\r\n", status);
-HAL_UART_Transmit(&uart1,(uint8_t *)str1,strlen(str1),1000);
-HAL_UART_Transmit(&uart1,(uint8_t *)str2,strlen(str2),1000);
+	status = Read_MFRC522(VersionReg);
+	sprintf(str1,"Running RC522");
+	sprintf(str2,"\r\t version:%x\r\n", status);
+	HAL_UART_Transmit(&uart1,(uint8_t *)str1,strlen(str1),1000);
+	HAL_UART_Transmit(&uart1,(uint8_t *)str2,strlen(str2),1000);
 #endif
-
+	curr_page = 0 ;
 
 while(1)
 {
@@ -299,6 +291,13 @@ while(1)
 	read_touch();
 	rfid_read();
 	/*****************************************  CURRENT PAGE 1 ****************************************************/
+
+	if(curr_page == 0)
+	{
+		logo_page();
+		curr_page = 1;
+		HAL_Delay(5000);
+	}
 
 	if(curr_page == 1)
 	{
@@ -410,7 +409,6 @@ while(1)
 			fill_area(210,400,80,120,0xe7eefe);
 			Set_Font(&Font12x18);
 			print_string(220,95,emp_name,0x737373);
-
 		}
 		if(isTouched( 450, 500, 170, 220)) // DESGI.
 		{
@@ -418,8 +416,6 @@ while(1)
 			drop_btn = !drop_btn;
 			if(drop_btn)
 			{
-				NewUser_Name();
-				NewUser_Desig(0,0,0,0);
 				dropdown(&dropdown_desgn[0],4,0,0,0);
 			}
 			else
@@ -436,8 +432,6 @@ while(1)
 			drop_btn = !drop_btn;
 			if(drop_btn)
 			{
-				NewUser_Role();
-				NewUser_Card();
 				dropdown(&dropdown_role[0],3,0,0,-120);
 			}
 			else
@@ -452,15 +446,10 @@ while(1)
 		{
 			sub_page =3;
 			drop_btn = ! drop_btn;
-			if(drop_btn)
-			{
-				NewUser_Name();
-				NewUser_Desig(0,0,0,0);
-				NewUser_Card();
+			if(drop_btn){
 				dropdown(&dropdown_CardThumb[0],2,0,0,10);
 			}
-			else
-			{
+			else{
 				sub_page=0;
 				fill_area(197,503,244,300+40,WHITE);
 				NewUser_Role();
@@ -476,7 +465,17 @@ while(1)
 			}
 			if(active_role == 1)
 			{
+#if (USE_FINGERPRINT)
 				Front_screen();
+				fingerprint_enroll_loop();
+				HAL_GPIO_WritePin(GPIOB,GPIO_PIN_2,GPIO_PIN_SET);
+				HAL_Delay(50);
+				HAL_GPIO_WritePin(GPIOB,GPIO_PIN_2,GPIO_PIN_RESET);
+				HAL_Delay(50);
+#endif
+				NewEntry_page();
+				curr_page = 4;
+				print_int(next_emp_id, 590, 100, 0, 0, GREY);
 			}
 		}
 
@@ -693,8 +692,6 @@ while(1)
 						{
 							sub_page=0;
 							fill_area(494,670,154,200+80,0xfffafa);
-							//AllUser_Page();
-							//NewUser_Name();
 							NewUser_Desig1(0xe7eefe);
 							SaveAndEdit();
 						}
@@ -827,8 +824,11 @@ while(1)
 		{
 			if(keypad_down == 1)
 			 {
-				fill_area(0,800,200,480,PURPLE);
-				NewEntry_page();
+				fill_area(135,655,208,430,WHITE);
+				NewUserSideBtn();
+				NewUser_Desig(0,0,0,0);
+				NewUser_Role();
+				NewUser_Card();
 				curr_page = 4;
 				print_int(next_emp_id, 590, 100, 0, 0, 0x737373);
 				print_string(220,95,emp_name,0x737373);
@@ -836,7 +836,6 @@ while(1)
 		}
 		keypad_touch(1);
 		*(emp_name+pos)= '\0';
-
 	}
 
 /*****************************************  CURRENT PAGE 7 *********************************************/
@@ -847,7 +846,7 @@ while(1)
 				PageKeyPad();
 				Set_Font(&Font12x18);
 			}else{
-				attendence_search();
+				search_table();
 			}
 			toggle = !toggle;
 			print_string(150,55,emp_name,0x737373);
