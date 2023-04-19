@@ -420,21 +420,19 @@ void attendence_search(void)
 
 ///////////////////////////// for button  //////////////////////////////////////////////////////
 
-	//draw_circle(760, 180-table_y+1, 20, 0x9900ff);
-	fill_circle(760, 180-table_y, 20, 0xcedcfd);
+	/*fill_circle(760, 180-table_y, 20, 0xcedcfd);
 	fill_circle(760, 180-table_y, 18, 0xe7eefe);
 	symbol(760, 175-table_y, '^', 0x737373);
 
 	for(int i = 4; i<195; i=i+8)
-	 {
-	   draw_vl(760, 179+i, 3, 0xe7eefe);
-		 draw_vl(759, 179+i, 3, 0xe7eefe);
-	 }
+		 {
+		   draw_vl(760, 179+i, 3, 0xe7eefe);
+			 draw_vl(759, 179+i, 3, 0xe7eefe);
+		 }
 
-	//draw_circle(760, 418-table_y+1, 20, 0x9900ff);
 	fill_circle(760, 418-table_y, 20, 0xcedcfd);
 	fill_circle(760, 418-table_y, 18, 0xe7eefe);
-    symbol_dwn_Arrow (760, 423-table_y, 0x737373);  /// for DOWN Arrow  symbol
+    symbol_dwn_Arrow (760, 423-table_y, 0x737373);  /// for DOWN Arrow  symbol*/
 
 ////////////////////////// for table  ///////////////////////////////////////////////////////////
 
@@ -482,6 +480,7 @@ void Role_Page(void)
 
 ///////////////////////////// for button  //////////////////////////////////////////////////////
 
+/*
 	fill_circle(760, 180-table_y, 20, 0xcedcfd);
 	fill_circle(760, 180-table_y, 18, 0xe7eefe);
 	symbol(760, 175-table_y, '^', 0x737373);
@@ -496,6 +495,7 @@ void Role_Page(void)
 	fill_circle(760, 418-table_y, 20, 0xcedcfd);
 	fill_circle(760, 418-table_y, 18, 0xe7eefe);
   symbol_dwn_Arrow (760, 423-table_y, 0x737373);  /// for DOWN Arrow  symbol
+*/
 
 ////////////////////////// for table  ///////////////////////////////////////////////////////////
 
@@ -551,15 +551,21 @@ void AllUser_Page(void)
 
 ///////////////////////////// for scroll up/down button  //////////////////////////////////////////////////////
 
-	//draw_circle(760, 180-table_y+1, 20, 0x9900ff);
+//void arrowBar(u16 x, u16 y)  // x = 760,  y = 180
+{
 	fill_circle(760, 180-table_y, 20, 0xcedcfd);
 	fill_circle(760, 180-table_y, 18, 0xe7eefe);
 	symbol(760, 175-table_y, '^', 0x737373);
+	for(int i = 4; i<195; i=i+8)
+	{
+		draw_vl(760, 179+i, 3, 0xe7eefe);
+		draw_vl(759, 179+i, 3, 0xe7eefe);
+	}
 
-	//draw_circle(760, 418-table_y+1, 20, 0x9900ff);
-	fill_circle(760, 418-table_y, 20, 0xcedcfd);
+    fill_circle(760, 418-table_y, 20, 0xcedcfd);
 	fill_circle(760, 418-table_y, 18, 0xe7eefe);
-  symbol_dwn_Arrow (760, 423-table_y, 0x737373);  /// for DOWN Arrow  symbol
+	symbol_dwn_Arrow (760, 423-table_y, 0x737373);  /// for DOWN Arrow  symbol
+}
 
 /////////////////////////////////////////////// for table  ///////////////////////////////////////////////////////////
 
