@@ -78,8 +78,7 @@ extern uint32_t scanned_UID;
 extern uint16_t next_emp_id;
 extern uint16_t last_emp_id;
 
-char wr_str_512[10] = "naveen p.";
-char rd_str_512[10] = {0};
+uint16_t debug_end_addr=0;
 
 uint8_t value = 0;
 char str1[40]={'\0'};
@@ -281,7 +280,7 @@ HAL_I2C_Mem_Read(&i2c1, dev_addr1, 0x00, 2, (uint8_t *)&next_emp_id, 2, 100);
 	HAL_UART_Transmit(&uart1,(uint8_t *)str1,strlen(str1),1000);
 	HAL_UART_Transmit(&uart1,(uint8_t *)str2,strlen(str2),1000);
 #endif
-	curr_page = 0 ;
+	curr_page = 1 ;
 
 while(1)
 {
@@ -346,9 +345,9 @@ while(1)
 			//if(touchX >= 200 && touchX <= 350 && touchY >= 200 && touchY <= 250) // SYSTEM RESET
 		   {
 #if (USE_EEPROM)
-			    fill_circle(30, 30, 5, GREEN);
+			    fill_circle(550, 290, 5, GREEN);
 			    erase_EEPROM();
-			    fill_circle(30, 30, 5, PURPLE);
+			    fill_circle(550, 290, 5, RED);
 #endif
 			    HAL_GPIO_WritePin(GPIOB,GPIO_PIN_2,GPIO_PIN_SET);
 				HAL_Delay(200);
@@ -381,9 +380,13 @@ while(1)
 			{
 				calculate_addr = FIRST_EMP_ADDR+(32*(scanned_EMPLO_ID-1));
 				HAL_I2C_Mem_Read(&i2c1, dev_addr1, calculate_addr, 2, (uint8_t *) &(read_details), sizeof(read_details), 100);
-				//display_Employee();
-				print_int(read_details.rd_EMPLO_id, 160, 194+e*52, 0, 0, BLACK);
-				print_string(200,194+e*52,read_details.rd_EMPLO_name,BLACK);
+				if((read_details.rd_EMPLO_id >0)&&(read_details.rd_EMPLO_id <700)){
+					print_int(read_details.rd_EMPLO_id, 160, 194+e*52, 0, 0, BLACK);
+					print_string(200,194+e*52,read_details.rd_EMPLO_name,BLACK);
+				}
+//				else{
+//					continue;
+//				}
 				scanned_EMPLO_ID++;
 			}
 #endif
@@ -484,13 +487,18 @@ while(1)
 			if((*emp_name != '\0')&&(FLAG_SCAN ==1)){
 #if (USE_EEPROM)
 				HAL_Delay(500);
-				//next_emp_id = emp_id_read;
 				scanned_UID = (((0xffffffff & issue_uid[3])<<24)|((0xffffffff & issue_uid[2])<<16)|((0xffffffff & issue_uid[1])<<8)|issue_uid[0]);
 				strcpy(write_details.wr_EMPLO_name, emp_name);
 				write_details.wr_employee_code = 'E';
 				write_details.wr_EMPLO_id = next_emp_id;
 				write_details.wr_EMPLO_desig = desgn_id;
 				write_details.wr_EMPLO_role = role_id;
+
+				write_details.wr_entry_HH = 9;
+				write_details.wr_entry_MM = 30;
+				write_details.wr_exit_HH = 6;
+				write_details.wr_exit_MM = 0;
+
 				write_details.wr_EMPLO_RFID = scanned_UID;
 
 				add_Employee();
@@ -502,6 +510,9 @@ while(1)
 				HAL_Delay(2000);
 				print_string(530,220,"Saved",WHITE);
 				FLAG_SCAN =0;
+
+				pos=0;
+				memset(emp_name,'\0',19);
 			}
 			else if((*emp_name == '\0')&& (FLAG_SCAN ==0)){
 				print_string(530,220,"Name Empty",RED);
@@ -665,7 +676,6 @@ while(1)
 					drop_btn = !drop_btn;
 					if(drop_btn)
 					{
-					//	NewUser_Name();
 						NewUser_Desig1(0xe7eefe);
 						dropdown(&dropdown_desgn[0],4,297,167,32);
 					}
@@ -673,7 +683,6 @@ while(1)
 					{
 				    	sub_page=0;
 						fill_area(494,670,266,320+120,0xfffafa);
-							//AllUser_Page();
 						NewUser_Role1(0xe7eefe);
 						NewUser_Card1(0xe7eefe);
 					}
@@ -820,7 +829,7 @@ while(1)
 
 	if(curr_page == 6){
 		Set_Font(&Font12x18);
-		if(isTouched(104, 540, 40, 135)) // hide keypad
+		if(isTouched(197, 503, 69, 135)) // hide keypad
 		{
 			if(keypad_down == 1)
 			 {
@@ -834,31 +843,50 @@ while(1)
 				print_string(220,95,emp_name,0x737373);
 			 }
 		}
+
 		keypad_touch(1);
 		*(emp_name+pos)= '\0';
+		touchX =0;
+		touchY =0;
 	}
 
-/*****************************************  CURRENT PAGE 7 *********************************************/
+/*****************************************  CURRENT PAGE 7 ****  search attendance  *****************************************/
 	if(curr_page == 7){
-		static bool toggle =1;
-		if(isTouched( 190, 590, 36, 84)){ 			// search attendance
+		static bool toggle =1, touchON = 0;
+		if(isTouched( 94, 535, 36, 95)) {	 //  open keypad
 			if(toggle){
 				PageKeyPad();
 				Set_Font(&Font12x18);
-			}else{
+				touchON = 1;
+			}
+			else{      // hide keypad
+				touchON = 0;
 				search_table();
 			}
 			toggle = !toggle;
-			print_string(150,55,emp_name,0x737373);
 		}
+
+		if(touchON) // keypad_touch
+		{
+			keypad_touch(0);
+		    *(emp_name+pos)= '\0';
+		}
+
+		if(isTouched(575, 689, 40, 88)) // Search
+		{
+			search_table();
+
+			search_Employee();
+			toggle =1;
+			touchON = 0;
+		}
+
 		if(isTouched( 8, 72, 10, 70)){		// back
 			pos=0;
 			memset(emp_name,'\0',19);
 			Admin_screen();
 			curr_page = 2;
 		}
-		keypad_touch(0);
-		*(emp_name+pos)= '\0';
 	}
 
 	/********************  CURRENT PAGE 8 *********************/

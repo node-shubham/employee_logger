@@ -9,6 +9,7 @@ calculate_addr = FRIST_EMP_ADDR+(32*(scanned_EMPLO_ID-1));  // employee details 
 
 extern uint16_t emp_id_read;
 extern uint16_t test_id;
+extern uint16_t debug_end_addr;
 
 bool del = 0;
 uint8_t dev_addr = 0xA0;
@@ -55,13 +56,7 @@ void collect_id (void)
 #if 0
 void next_empID(void)
 {
-<<<<<<< HEAD
 	//HAL_I2C_Mem_Read(&hi2c, dev_addr1,)
-=======
-
-	//HAL_I2C_Mem_Read(&hi2c, dev_addr1,)
-
->>>>>>> d05b5518be381acc935c129616e6250dc7bdd599
 }
 #endif
 
@@ -157,12 +152,14 @@ void search_Employee (void)
 
 	uint16_t char_addr = 3648+(2*(frist_char - 65));     	//   page 57 = 3648
 	HAL_I2C_Mem_Read(&i2c1, dev_addr1, char_addr, 2, (uint8_t *) &(end_addr), sizeof(end_addr), 100);   // find end address
+	debug_end_addr = end_addr;
 	if(0xffff == end_addr)
 	 {
-	   print_string(15,20,"this employee is not available",WHITE);
+	   print_string(190,194,"employee not available",0x737373);
 	 }
 	else
 	 {
+//	   print_string(190,194,"enter in else",0x737373);  ///this statement only  for test
 	   uint8_t j=0, cnt_indx=0, total_emp=0;
 	   uint16_t start_addr = 3712+(256*(frist_char - 65));
 	   total_emp = (end_addr - start_addr)+1;
@@ -197,11 +194,11 @@ void search_Employee (void)
 	   for(int i = 0; i < serch_emp_no; i++)
 		  {
 			HAL_I2C_Mem_Read(&i2c1, dev_addr1, all_addr[i], 2, (uint8_t *) &(read_details), sizeof(read_details), 100);
-			print_string(90, (194+(53*i)), "E", 0x9900ff);
-			print_int(read_details.rd_EMPLO_id, 99, (194+(53*i)), 1, 1, 0x9900ff);
-			print_string(170, (194+(53*i)), read_details.rd_EMPLO_name, 0x9900ff);
-			sprintf(display_arr, "%u:%u       %u:%u", read_details.rd_entry_HH, read_details.rd_entry_MM, read_details.rd_exit_HH, read_details.rd_exit_MM);
-			print_string(505, (194+(53*i)), display_arr, 0x9900ff);
+			print_string(103, (194+(53*i)), "E", 0x9900ff);
+			print_int(read_details.rd_EMPLO_id, 117, (194+(53*i)), 1, 1, 0x9900ff);
+			print_string(180, (194+(53*i)), read_details.rd_EMPLO_name, 0x9900ff);
+			sprintf(display_arr, "%02u:%02u  %02u:%02u", read_details.rd_entry_HH, read_details.rd_entry_MM, read_details.rd_exit_HH, read_details.rd_exit_MM);
+			print_string(520, (194+(53*i)), display_arr, 0x9900ff);
 			if(1 == del)
 			  {
 				del_addr[i] = all_addr[i];
@@ -257,11 +254,11 @@ void delete_Employee (void)
 void erase_EEPROM (void)
 {
 	uint16_t strt_erse_addr = 0;
-	uint64_t erase_data = 0xfffffffffffffff;
+	uint64_t erase_data = 0xffffffffffffffff;
 	while(strt_erse_addr<EEPROM_LAST_ADDR)  // EEPROM_LAST_ADDR means witch address is last for erase.
 	{
 	  HAL_I2C_Mem_Write(&i2c1, dev_addr, strt_erse_addr, 2, (uint8_t *) &(erase_data), sizeof(erase_data), 100);  ///  write employee_id
-	  HAL_Delay(1);
+	  HAL_Delay(5);
 	  strt_erse_addr += 8;
 	}
 }
