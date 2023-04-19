@@ -194,8 +194,8 @@ void search_Employee (void)
 	   for(int i = 0; i < serch_emp_no; i++)
 		  {
 			HAL_I2C_Mem_Read(&i2c1, dev_addr1, all_addr[i], 2, (uint8_t *) &(read_details), sizeof(read_details), 100);
-			print_string(100, (194+(53*i)), "E", 0x9900ff);
-			print_int(read_details.rd_EMPLO_id, 114, (194+(53*i)), 1, 1, 0x9900ff);
+			print_string(103, (194+(53*i)), "E", 0x9900ff);
+			print_int(read_details.rd_EMPLO_id, 117, (194+(53*i)), 1, 1, 0x9900ff);
 			print_string(180, (194+(53*i)), read_details.rd_EMPLO_name, 0x9900ff);
 			sprintf(display_arr, "%02u:%02u  %02u:%02u", read_details.rd_entry_HH, read_details.rd_entry_MM, read_details.rd_exit_HH, read_details.rd_exit_MM);
 			print_string(520, (194+(53*i)), display_arr, 0x9900ff);
