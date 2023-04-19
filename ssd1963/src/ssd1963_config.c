@@ -3,7 +3,7 @@
 #include "ssd1963.h"
 #include "main.h"	
 
-void front_Page(void)
+void logo_page(void)
 {
 	Set_Font(&Font16x26);
 	fill_screen(WHITE);
@@ -126,7 +126,7 @@ void symbol_dwn_Arrow (u32 x, u32 y, u32 color)   /// for DOWN Arrow  symbol
 //########################   FRONT_SCREEN  ###################################
 
 
-void Front_screen(void)
+void thumb_screen(void)
 {
 	Set_Font(&Font16x26);
 	fill_screen(PURPLE);
@@ -230,7 +230,7 @@ void NewUser_Name(void)
 	fill_roundrect(210+x,280+x,62+y,82+y,WHITE,WHITE);
 	print_string(218+x,65+y,"Name",0x737373);
 	fill_area(210,400,80,120,0xe7eefe);
-
+	print_string(220,95,emp_name,0x737373);
 }
 
 //######################  NEW_USER(DESIG)  #############################
@@ -278,6 +278,23 @@ void NewUser_Card(void)
 		//draw_rect(450,500,355,405,BLUE);
 
 
+}
+
+void NewUserSideBtn(void)
+{
+	int x=0,y=0;
+	fill_roundrect(547,653,69,135,0xcedcfd,0xfffafa);// emp id
+	fill_roundrect(550,650,72,132,0xe7eefe,0xcedcfd);
+	fill_roundrect(560,640,62,82,WHITE,WHITE);
+	print_string(565+x,65+y,"Emp.ID",0x737373);
+
+	fill_roundrect(547,653,253,319,0xcedcfd,0xfffafa);// save
+	fill_roundrect(550,650,256,316,0xe7eefe,0xcedcfd);
+	print_string(573+x,280+y,"SAVE",0x737373);
+
+	fill_roundrect(547,653,345,411,0xcedcfd,0xfffafa);// scan
+	fill_roundrect(550,650,348,408,0xe7eefe,0xcedcfd);
+	print_string(573+x,370+y,"SCAN",0x737373);
 }
 
 //#######################   BACK_BUTTON   #############################
@@ -420,7 +437,7 @@ void attendence_search(void)
 
 ///////////////////////////// for button  //////////////////////////////////////////////////////
 
-	//draw_circle(760, 180-table_y+1, 20, 0x9900ff);
+
 	fill_circle(760, 180-table_y, 20, 0xcedcfd);
 	fill_circle(760, 180-table_y, 18, 0xe7eefe);
 	symbol(760, 175-table_y, '^', 0x737373);
@@ -430,45 +447,12 @@ void attendence_search(void)
 	   draw_vl(760, 179+i, 3, 0xe7eefe);
 		 draw_vl(759, 179+i, 3, 0xe7eefe);
 	 }
-
-	//draw_circle(760, 418-table_y+1, 20, 0x9900ff);
 	fill_circle(760, 418-table_y, 20, 0xcedcfd);
 	fill_circle(760, 418-table_y, 18, 0xe7eefe);
     symbol_dwn_Arrow (760, 423-table_y, 0x737373);  /// for DOWN Arrow  symbol
 
-////////////////////////// for table  ///////////////////////////////////////////////////////////
-
-  	fill_roundrect(94, 684, 115, 440, 0xcedcfd, PURPLE);
-	fill_area(100,678,200-table_y,245+3-table_y,table_color);
-	fill_area(100,678,252-table_y,297+3-table_y,table_color_2);
-	fill_area(100,678,304-table_y,349+3-table_y,table_color);
-	fill_area(100,678,356-table_y,401+3-table_y,table_color_2);
-	fill_area(100,678,408-table_y,453+3-table_y,table_color);
-
-
-	//draw_rect(70,720,143-table_y,461-table_y,table_border_color);
-
-	draw_vl(100+65,143-table_y,318,table_border_color);
-	draw_vl(390+120,143-table_y,318,table_border_color);
-	draw_vl(170+425,143-table_y,318,table_border_color);
-
-/////////////////////////////for string  ///////////////////////////////////////////////////////
-
-	Set_Font(&Font12x18);
-	print_string(585,55,"SEARCH",0x737373);
-
-	print_string(122,163-table_y,"ID",0x737373);
-	print_string(330,163-table_y,"NAME",0x737373);
-	print_string(535,163-table_y,"IN",0x737373);
-	print_string(615,163-table_y,"OUT",0x737373);
-//	print_string(170,216-table_y,"NAVEEN PRAKASH MAURYA",0x9900ff);
-//	print_string(90,216-table_y,"E001",0x9900ff);
-//	print_string(520,216-table_y,"09:30",0x737373);
-//	print_string(605,216-table_y,"06:00",0x737373);
+    search_table();
 	BackBtn();
-
-	//print_string(200,55,emp_name,0x737373);
-
 
 }
 
@@ -670,5 +654,33 @@ void BackSpaceBtn(u32 x, u32 y)
 
 	draw_line(55+x, 215+y, 65+x, 205+y, 0x737373);
 	draw_line(56+x, 215+y, 66+x, 205+y, 0x737373);
+
+}
+
+
+void search_table(void)
+{
+	////////////////////////// for table  ///////////////////////////////////////////////////////////
+	uint8_t table_y = 22;
+	fill_roundrect(94, 684, 115, 440, 0xcedcfd, PURPLE);
+	fill_area(100,678,200-table_y,245+3-table_y,table_color);
+	fill_area(100,678,252-table_y,297+3-table_y,table_color_2);
+	fill_area(100,678,304-table_y,349+3-table_y,table_color);
+	fill_area(100,678,356-table_y,401+3-table_y,table_color_2);
+	fill_area(100,678,408-table_y,453+3-table_y,table_color);
+
+	draw_vl(100+65,143-table_y,318,table_border_color);
+	draw_vl(390+120,143-table_y,318,table_border_color);
+	draw_vl(170+425,143-table_y,318,table_border_color);
+
+	Set_Font(&Font12x18);
+	print_string(585,55,"SEARCH",0x737373);
+
+	print_string(122,163-table_y,"ID",0x737373);
+	print_string(330,163-table_y,"NAME",0x737373);
+	print_string(535,163-table_y,"IN",0x737373);
+	print_string(615,163-table_y,"OUT",0x737373);
+	print_string(520,216-table_y,"09:30",0x737373);
+	print_string(605,216-table_y,"06:00",0x737373);
 
 }
