@@ -258,7 +258,7 @@ void erase_EEPROM (void)
 	while(strt_erse_addr<EEPROM_LAST_ADDR)  // EEPROM_LAST_ADDR means witch address is last for erase.
 	{
 	  HAL_I2C_Mem_Write(&i2c1, dev_addr, strt_erse_addr, 2, (uint8_t *) &(erase_data), sizeof(erase_data), 100);  ///  write employee_id
-	  HAL_Delay(5);
+	  HAL_Delay(2);
 	  strt_erse_addr += 8;
 	}
 }

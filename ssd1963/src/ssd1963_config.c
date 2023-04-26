@@ -680,7 +680,7 @@ void search_table(void)
 	print_string(330,163-table_y,"NAME",0x737373);
 	print_string(535,163-table_y,"IN",0x737373);
 	print_string(615,163-table_y,"OUT",0x737373);
-	print_string(520,216-table_y,"09:30",0x737373);
-	print_string(605,216-table_y,"06:00",0x737373);
+	//print_string(520,216-table_y,"09:30",0x737373);
+	//print_string(605,216-table_y,"06:00",0x737373);
 
 }

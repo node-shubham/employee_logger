@@ -28,27 +28,27 @@
 	extern uint8_t sub_page;
 	extern uint8_t idx;
 		
-//  #define SSD1963_PIN_CS	(1 << 8)
-//	#define SSD1963_PIN_RS	(1 << 7)
-//	#define SSD1963_PIN_RD	(1 << 0)
-//	#define SSD1963_PIN_WR	(1 << 1)
-//	#define SSD1963_PIN_RST	(1 << 2)
 
-	
+	/*@fn	write_8bit(data) :  first reset data port
+	 * 					extract LSB and shift it assigned D0 pin
+	 * 					e,g if D0 is at PA3 then extract LSB from given data and shift it thrice
+	 * 					extract all bits and perform shift until MSB
+	 * 					e,g if D5 is at PA9  --> (data &(1<<5))<<4;  A9 : 5+4
+	 *
+	 */
+
 	#define write_8bit(data) \
-	{ \
-			  GPIOB->BSRR = (0x07C0 <<16); \
-			  GPIOC->BSRR = (0xE000 <<16); \
-		                                 \
-				GPIOC->BSRR = (((data) & (1<<0)) <<15); \
-				GPIOC->BSRR = (((data) & (1<<1)) <<13); \
-				GPIOC->BSRR = (((data) & (1<<2)) <<11); \
-				GPIOB->BSRR = (((data) & (1<<3)) <<6); \
-				GPIOB->BSRR = (((data) & (1<<4)) <<4); \
-				GPIOB->BSRR = (((data) & (1<<5)) <<2); \
-				GPIOB->BSRR = (((data) & (1<<6)) <<0); \
-				GPIOB->BSRR = (((data) & (1<<7)) <<3); \
-	}
+			{ \
+		SSD1963_DATAPORT->BSRR = (0x01DF <<16); \
+		GPIOA->BSRR = (((data) & (1<<0)) <<0); \
+		GPIOA->BSRR = (((data) & (1<<1)) <<0); \
+		GPIOA->BSRR = (((data) & (1<<2)) <<0); \
+		GPIOA->BSRR = (((data) & (1<<3)) <<0); \
+		GPIOA->BSRR = (((data) & (1<<4)) <<0); \
+		GPIOA->BSRR = (((data) & (1<<5)) <<3); \
+		GPIOA->BSRR = (((data) & (1<<6)) <<0); \
+		GPIOA->BSRR = (((data) & (1<<7)) <<0); \
+			}
 	
 ///////////////////////  APLLICATION SPECIFIC FUNCTIONS  /////////////////////////
 
@@ -121,6 +121,7 @@
 
 	void table_init(void);
 	void table_update(u32 touchX, u32 touchY);
+
 	//////////////////////////////////THEME SPECIFIC COLORS ////////////////////////////////////////
 	
 	#define bg_color	0xDF711B			//0x007267

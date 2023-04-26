@@ -16,7 +16,8 @@
 		float Time = 1.0;
 		void write_cmd(unsigned int commandToWrite)
 		{
-			SSD1963_DATAPORT->ODR  = commandToWrite;
+			//SSD1963_DATAPORT->ODR  = commandToWrite;
+			write_8bit(commandToWrite);
 			SSD1963_CTRLPORT2->BSRR = SSD1963_PIN_RD;
 			SSD1963_CTRLPORT1->BSRR  = (SSD1963_PIN_RS | SSD1963_PIN_CS | SSD1963_PIN_WR)<<16;
 			__asm("nop");
@@ -25,7 +26,8 @@
 		
 		void write_data(unsigned int dataToWrite)
 		{
-			SSD1963_DATAPORT->ODR  = dataToWrite;
+			//SSD1963_DATAPORT->ODR  = dataToWrite;
+			write_8bit(dataToWrite);
 			SSD1963_CTRLPORT1->BSRR = SSD1963_PIN_RS;
 			SSD1963_CTRLPORT2->BSRR = SSD1963_PIN_RD;
 			SSD1963_CTRLPORT1->BSRR  = (SSD1963_PIN_CS | SSD1963_PIN_WR)<<16;

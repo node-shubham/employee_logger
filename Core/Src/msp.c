@@ -50,14 +50,19 @@ void HAL_SPI_MspInit(SPI_HandleTypeDef *hspi)
 	{
 		__HAL_RCC_SPI1_CLK_ENABLE();
 		__HAL_RCC_GPIOB_CLK_ENABLE();
+		__HAL_RCC_GPIOA_CLK_ENABLE();
 
-		spi_pins.Pin = (GPIO_PIN_3 | GPIO_PIN_4 |GPIO_PIN_5);
+		spi_pins.Pin = (GPIO_PIN_4 |GPIO_PIN_5);
 		spi_pins.Mode = GPIO_MODE_AF_PP;
 		spi_pins.Pull = GPIO_NOPULL;
 		spi_pins.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
 		spi_pins.Alternate = GPIO_AF5_SPI1;
 
 		HAL_GPIO_Init(GPIOB, &spi_pins);
+
+		spi_pins.Pin = GPIO_PIN_5;
+		HAL_GPIO_Init(GPIOA, &spi_pins);
+
 	}
 
 	if(hspi->Instance == SPI2)		/* using in touch  */
@@ -107,12 +112,17 @@ void HAL_I2C_MspInit(I2C_HandleTypeDef *hi2c)
 	{
 		__HAL_RCC_I2C2_CLK_ENABLE();
 		__HAL_RCC_GPIOB_CLK_ENABLE();
-		i2c_pins.Pin = (GPIO_PIN_10 | GPIO_PIN_11);
+		i2c_pins.Pin = GPIO_PIN_10 ;
 		i2c_pins.Mode = GPIO_MODE_AF_OD;
 		i2c_pins.Pull = GPIO_NOPULL;
 		i2c_pins.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
 		i2c_pins.Alternate = GPIO_AF4_I2C2;
 		HAL_GPIO_Init(GPIOB, &i2c_pins);
+
+		i2c_pins.Pin = GPIO_PIN_3;
+		i2c_pins.Alternate = GPIO_AF9_I2C2;
+		HAL_GPIO_Init(GPIOB, &i2c_pins);
+
 	}
 
 }
