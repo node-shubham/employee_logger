@@ -28,6 +28,7 @@ uint8_t check_validcard(uint16_t emp_id){
 
 void rfid_read(void)
 {
+	//char time_to_str[5] ={'\0'};
 	status = 0;
 	status = MFRC522_Request(PICC_REQIDL, cardstr);
 	if(status == MI_OK)
@@ -68,6 +69,16 @@ void rfid_read(void)
 			}
 			if((read_empId >0)&&(read_empId<700)){
 				if(1==check_validcard(read_empId)){
+					/*
+					ds1307_get_time(&current_time);
+					calculate_addr = FIRST_EMP_ADDR +(32*(read_empId-1))+9;
+					sprintf(time_to_str, "%u%u%u%u", current_time.hour, current_time.min, current_time.hour, current_time.min);
+					HAL_I2C_Mem_Write(&i2c1, dev_addr, calculate_addr, 2, (uint8_t *) &(time_to_str), sizeof(time_to_str), 100);
+										memset(time_to_str,0,5);
+					//HAL_I2C_Mem_Read(&i2c1, dev_addr1, calculate_addr, 2, (uint8_t *) &(time_to_str), sizeof(time_to_str), 100);
+					HAL_I2C_Mem_Read(&i2c1, dev_addr1, calculate_addr, 2, (uint8_t *) &(read_details), sizeof(read_details), 100);
+					*/
+
 					HAL_GPIO_WritePin(GPIOB,GPIO_PIN_2,GPIO_PIN_SET);
 					HAL_Delay(100);
 					HAL_GPIO_WritePin(GPIOB,GPIO_PIN_2,GPIO_PIN_RESET);
