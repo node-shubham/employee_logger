@@ -17,7 +17,7 @@ uint8_t dev_addr1 = 0xA1;
 uint8_t serch_emp_no = 0;
 uint16_t next_emp_id = 0;
 //uint16_t last_emp_id = 0;
-uint16_t scanned_EMPLO_ID = 0;
+uint16_t dispEmpID = 0;
 uint16_t calculate_addr = 0;
 uint16_t del_addr[5] = {0};
 uint32_t scanned_UID = 0;
@@ -105,6 +105,22 @@ void add_Employee (void)
 			   }
 		   }
      }
+}
+
+void display5User(void)
+{
+	for(int e=0;e<5;e++)
+				{
+					calculate_addr = FIRST_EMP_ADDR+(32*(dispEmpID-1));
+					HAL_I2C_Mem_Read(&i2c1, dev_addr1, calculate_addr, 2, (uint8_t *) &(read_details), sizeof(read_details), 100);
+					if((read_details.rd_EMPLO_id >0)&&(read_details.rd_EMPLO_id <700)){
+						print_int(read_details.rd_EMPLO_id, 160, 194+e*52, 0, 0, BLACK);
+						print_string(200,194+e*52,read_details.rd_EMPLO_name,BLACK);
+					}
+					else
+						print_string(200, 194+e*52, "employee not available",BLACK);
+					dispEmpID++;
+				}
 }
 
 #if 0

@@ -117,7 +117,7 @@
 	void Down_Button(s16 x, s16 y, u16 size, u32 circle_colour, u32 Button_colour);   /// created by naveen
 	void Left_Button(s16 x, s16 y, u16 size, u32 circle_colour, u32 Button_colour);   /// created by naveen
 	void Right_Button(s16 x, s16 y, u16 size, u32 circle_colour, u32 Button_colour);   /// created by naveen
-
+	void arrowBar(u16 x, u16 y);
 
 	void table_init(void);
 	void table_update(u32 touchX, u32 touchY);

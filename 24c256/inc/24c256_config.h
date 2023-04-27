@@ -58,6 +58,7 @@ void erase_EEPROM(void);
 void search_Employee(void);
 void delete_Employee(void);
 void next_empID(void);
+void display5User(void);
 
 
 //////*********************************** Global variable ***************////////////

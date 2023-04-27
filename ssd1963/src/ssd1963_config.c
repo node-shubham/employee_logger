@@ -122,6 +122,20 @@ void symbol_dwn_Arrow (u32 x, u32 y, u32 color)   /// for DOWN Arrow  symbol
 		draw_line(x, y-3, x-6, y-9, color);
 }
 
+void arrowBar(u16 x, u16 y)
+{
+	fill_circle(x, y, 20, 0xcedcfd);
+	symbol(x, y-5, '^', 0x737373);
+	for(int i = 4; i<195; i=i+8)
+	{
+		draw_vl(x, y+21+i, 3, 0xe7eefe);
+		draw_vl(x-1, y+21+i, 3, 0xe7eefe);
+	}
+
+    fill_circle(x, y+238, 20, 0xcedcfd);
+	symbol_dwn_Arrow (x, y+243, 0x737373);  /// for DOWN Arrow  symbol
+}
+
 
 //########################   FRONT_SCREEN  ###################################
 
@@ -437,32 +451,6 @@ void attendence_search(void)
 
 ///////////////////////////// for button  //////////////////////////////////////////////////////
 
-
-	/*fill_circle(760, 180-table_y, 20, 0xcedcfd);
-
-
-	fill_circle(760, 180-table_y, 20, 0xcedcfd);
->>>>>>> c105fdbc14359a145b50db96db1a31f80e8eaf38
-	fill_circle(760, 180-table_y, 18, 0xe7eefe);
-	symbol(760, 175-table_y, '^', 0x737373);
-
-	for(int i = 4; i<195; i=i+8)
-
-		 {
-		   draw_vl(760, 179+i, 3, 0xe7eefe);
-			 draw_vl(759, 179+i, 3, 0xe7eefe);
-		 }
-
-
-	 {
-	   draw_vl(760, 179+i, 3, 0xe7eefe);
-		 draw_vl(759, 179+i, 3, 0xe7eefe);
-	 }
->>>>>>> c105fdbc14359a145b50db96db1a31f80e8eaf38
-	fill_circle(760, 418-table_y, 20, 0xcedcfd);
-	fill_circle(760, 418-table_y, 18, 0xe7eefe);
-    symbol_dwn_Arrow (760, 423-table_y, 0x737373);  /// for DOWN Arrow  symbol*/
-
     search_table();
 	BackBtn();
 
@@ -475,25 +463,6 @@ void Role_Page(void)
 
   uint8_t table_y = 22;
 	fill_screen(PURPLE);
-
-///////////////////////////// for button  //////////////////////////////////////////////////////
-
-/*
-	fill_circle(760, 180-table_y, 20, 0xcedcfd);
-	fill_circle(760, 180-table_y, 18, 0xe7eefe);
-	symbol(760, 175-table_y, '^', 0x737373);
-
-	for(int i = 4; i<195; i=i+8)
-	 {
-	   draw_vl(760, 179+i, 3, 0xe7eefe);
-		 draw_vl(759, 179+i, 3, 0xe7eefe);
-	 }
-
-	//draw_circle(760, 418-table_y+1, 20, 0x9900ff);
-	fill_circle(760, 418-table_y, 20, 0xcedcfd);
-	fill_circle(760, 418-table_y, 18, 0xe7eefe);
-  symbol_dwn_Arrow (760, 423-table_y, 0x737373);  /// for DOWN Arrow  symbol
-*/
 
 ////////////////////////// for table  ///////////////////////////////////////////////////////////
 
@@ -549,21 +518,7 @@ void AllUser_Page(void)
 
 ///////////////////////////// for scroll up/down button  //////////////////////////////////////////////////////
 
-//void arrowBar(u16 x, u16 y)  // x = 760,  y = 180
-{
-	fill_circle(760, 180-table_y, 20, 0xcedcfd);
-	fill_circle(760, 180-table_y, 18, 0xe7eefe);
-	symbol(760, 175-table_y, '^', 0x737373);
-	for(int i = 4; i<195; i=i+8)
-	{
-		draw_vl(760, 179+i, 3, 0xe7eefe);
-		draw_vl(759, 179+i, 3, 0xe7eefe);
-	}
-
-    fill_circle(760, 418-table_y, 20, 0xcedcfd);
-	fill_circle(760, 418-table_y, 18, 0xe7eefe);
-	symbol_dwn_Arrow (760, 423-table_y, 0x737373);  /// for DOWN Arrow  symbol
-}
+    arrowBar(745, 158);  // x = 745,  y = 158
 
 /////////////////////////////////////////////// for table  ///////////////////////////////////////////////////////////
 

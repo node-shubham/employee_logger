@@ -71,7 +71,7 @@ TIM_HandleTypeDef tim5;
 
 extern uint8_t dev_addr;
 extern uint8_t dev_addr1;
-extern uint16_t scanned_EMPLO_ID;
+extern uint16_t dispEmpID;
 extern uint16_t calculate_addr;
 extern uint32_t scanned_UID;
 
@@ -375,22 +375,12 @@ while(1)
 		{
 			AllUser_Page();
 #if (USE_EEPROM)
-			scanned_EMPLO_ID = 1;
-			for(int e=0;e<5;e++)
-			{
-				calculate_addr = FIRST_EMP_ADDR+(32*(scanned_EMPLO_ID-1));
-				HAL_I2C_Mem_Read(&i2c1, dev_addr1, calculate_addr, 2, (uint8_t *) &(read_details), sizeof(read_details), 100);
-				if((read_details.rd_EMPLO_id >0)&&(read_details.rd_EMPLO_id <700)){
-					print_int(read_details.rd_EMPLO_id, 160, 194+e*52, 0, 0, BLACK);
-					print_string(200,194+e*52,read_details.rd_EMPLO_name,BLACK);
-				}
-//				else{
-//					continue;
-//				}
-				scanned_EMPLO_ID++;
-			}
+			dispEmpID = 1;
+			display5User();
 #endif
 			curr_page = 5;
+			sub_page = 8;
+
 		}
 		if(isTouched( 8, 72, 10, 70)) // BACK
 		{
@@ -822,6 +812,22 @@ while(1)
 					dropdown(&dropdown_CardThumb[0],2,297,167,50);
 				 }
 			}
+		}
+
+		if(sub_page ==8){
+            #if (USE_EEPROM)
+			    static uint16_t y = 250;
+		//	    static uint8_t  = 1;
+				if(isTouched(725, 765, 138, 178) && (10 < dispEmpID) ){  //  scroll up
+					dispEmpID -= 10;
+						display5User();
+				}
+				if(isTouched(725, 765, 376, 416) && (700 > dispEmpID) )  //  scroll down
+					display5User();
+		//		if(isTouched(150, 500, y*i, y+(50*i)) ){  //  select employee
+
+		//		}
+            #endif
 		}
 	}
 
